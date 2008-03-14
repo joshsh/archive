@@ -44,7 +44,7 @@ public class ParserExceptionSink implements Sink<Exception>
 
 		else
 		{
-System.out.println("GOT AN ERROR!!!!!!!!!");
+//System.out.println("GOT AN ERROR!!!!!!!!!");
 			alert( "Error: " + e.toString() );
 			( new RippleException( e ) ).logError();
 		}

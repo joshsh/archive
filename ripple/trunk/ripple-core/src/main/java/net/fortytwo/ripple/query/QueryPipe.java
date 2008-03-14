@@ -62,10 +62,13 @@ public class QueryPipe implements Sink<String>
 							? queryResultHistory.getSource( 1 ) : nilSource;
 
 					ModelConnection mc = queryEngine.getConnection();
-					new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
-					mc.close();
+                    try {
+                        new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
+                    } finally {
+                        mc.close();
+                    }
 
-					lastQueryContinued = false;
+                    lastQueryContinued = false;
 					queryResultHistory.advance();
 				}
 			}
@@ -82,10 +85,13 @@ public class QueryPipe implements Sink<String>
 							? queryResultHistory.getSource( 1 ) : nilSource;
 
 					ModelConnection mc = queryEngine.getConnection();
-					new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
-					mc.close();
+                    try {
+                        new RippleQueryCmd( ast, resultBuffer, composedWith ).execute( queryEngine, mc );
+                    } finally {
+                        mc.close();
+                    }
 
-					lastQueryContinued = true;
+                    lastQueryContinued = true;
 					queryResultHistory.advance();
 				}
 			}
@@ -97,9 +103,12 @@ public class QueryPipe implements Sink<String>
 			public void put( final Command cmd ) throws RippleException
 			{
 				ModelConnection mc = queryEngine.getConnection();
-				cmd.execute( queryEngine, mc );
-				mc.close();
-			}
+                try {
+                    cmd.execute( queryEngine, mc );
+                } finally {
+                    mc.close();
+                }
+            }
 		};
 
 		// Handling of parser events

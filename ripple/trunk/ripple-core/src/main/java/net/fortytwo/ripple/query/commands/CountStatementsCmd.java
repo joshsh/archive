@@ -19,7 +19,7 @@ public class CountStatementsCmd extends Command
 	public void execute( final QueryEngine qe, final ModelConnection mc )
 		throws RippleException
 	{
-		System.out.println( "\n" + qe.getModel().countStatements() + "\n" );
+		System.out.println( "\n" + mc.countStatements() + "\n" );
 	}
 
 	protected void abort()

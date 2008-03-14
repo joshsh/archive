@@ -74,7 +74,7 @@ public interface ModelConnection
 	void removeStatementsAbout( RdfValue subj, URI context ) throws RippleException;
 
 // FIXME: Resources should not be part of the ModelConnection API
-	public long countStatements( Resource context ) throws RippleException;
+	public long countStatements( Resource... contexts ) throws RippleException;
 
 // FIXME: Sesame URIs should not be part of the ModelConnection API
 	URI createUri( String s ) throws RippleException;

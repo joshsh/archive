@@ -60,14 +60,17 @@ public class QueryEngine
 
         // Set the default namespace.
 		ModelConnection mc = getConnection( "Demo connection" );
+
+        try {
 //System.out.println("--- w2");
 //System.out.println("--- Ripple.defaultNamespace() = " + Ripple.defaultNamespace());
-
-		mc.setNamespace( "", defaultNamespace, false );
+            mc.setNamespace( "", defaultNamespace, false );
 //System.out.println("--- w3");
-		mc.commit();
+            mc.commit();
 //System.out.println("--- w4");
-		mc.close();
+        } finally {
+            mc.close();
+        }
 //System.out.println("--- e");
 		
 		getLexicon().add( new org.openrdf.model.impl.NamespaceImpl( "", defaultNamespace ) );
@@ -173,23 +176,11 @@ public class QueryEngine
 	public void executeCommand( final Command cmd ) throws RippleException
 	{
 		ModelConnection mc = getConnection( "for executeCommand" );
-		RippleException ex = null;
 
-		try
-		{
-			cmd.execute( this, mc );
-		}
-
-		catch ( RippleException e )
-		{
-			ex = e;
-		}
-
-		mc.close();
-
-		if ( null != ex )
-		{
-			throw ex;
+        try {
+            cmd.execute( this, mc );
+		} finally {
+            mc.close();
 		}
 	}
 
@@ -200,15 +191,18 @@ public class QueryEngine
 		LexiconUpdater updater = new LexiconUpdater( lexicon );
 
 		ModelConnection mc = getConnection();
-		
-		if ( Ripple.getProperties().getBoolean( Ripple.PULL_ENTIRE_MODEL ) );
-		{
-			mc.getStatements( null, null, null, updater.adderSink().statementSink(), false );
-		}
-		
-		mc.getNamespaces( updater.adderSink().namespaceSink() );
-		mc.close();
-	}
+
+        try {
+            if ( Ripple.getProperties().getBoolean( Ripple.PULL_ENTIRE_MODEL ) );
+            {
+                mc.getStatements( null, null, null, updater.adderSink().statementSink(), false );
+            }
+
+            mc.getNamespaces( updater.adderSink().namespaceSink() );
+        } finally {
+            mc.close();
+        }
+    }
 }
 
 // kate: tab-width 4

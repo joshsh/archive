@@ -668,7 +668,7 @@ public class SesameModelConnection implements ModelConnection
 	}
 	
 	//FIXME: Resources should be absent from the ModelConnection API
-	public long countStatements( final Resource context )
+	public long countStatements( final Resource... contexts )
 			throws RippleException
 	{
 		int count = 0;
@@ -679,7 +679,7 @@ public class SesameModelConnection implements ModelConnection
 			{
 				CloseableIteration<? extends Statement, SailException> stmtIter
 					= sailConnection.getStatements(
-						null, null, null, Ripple.useInference(), context );
+						null, null, null, Ripple.useInference(), contexts );
 	
 				while ( stmtIter.hasNext() )
 				{

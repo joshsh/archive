@@ -81,40 +81,20 @@ public class Interpreter
 				active = false;
 			}
 
-/*			catch ( TokenStreamIOException e )
+            // TokenStreamIOException is considered fatal.  Two scenarios in
+            // which it occurs are when the Interpreter thread has been
+            // interrupted, and when the lexer has reached the end of input.
+            catch ( TokenStreamIOException e )
 			{
 				LOGGER.error( e );
 				break;
-			}*/
+			}
 			
 			catch ( Exception e )
 			{
-				/*Throwable cause = e.getCause();
-				if ( null != cause && cause instanceof IOException )
-				{
-					LOGGER.error( e );
-					break;
-				}
-				
-				else
-				{*/
-					exceptionSink.put( e );
-				//}
+                // Handle non-fatal errors in an application-specific way.
+                exceptionSink.put( e );
 			}
-
-/*
-catch ( Throwable t )
-{
-System.out.println( "caught some odd Throwable: " + t );
-}
-*/
-
-/*
-			catch ( InterruptedException e )
-			{
-System.out.println( "-- interrupted" );
-			}
-*/
 		}
 	}
 

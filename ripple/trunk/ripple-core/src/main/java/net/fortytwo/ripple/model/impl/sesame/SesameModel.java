@@ -67,30 +67,25 @@ public class SesameModel implements Model
 		}
 	}
 	
-	private void loadSymbols( final UriMap uf )
+	private void loadSymbols( final UriMap uriMap )
 		throws RippleException
 	{
 		ModelConnection mc = getConnection( "for Model.loadSymbols" );
 
-		// At the moment, op needs to be a special value for the sake of the
-		// evaluator.  This has the side-effect of making it a keyword.
-		bridge.add( Operator.OP, mc );
+        try {
+            // At the moment, op needs to be a special value for the sake of the
+            // evaluator.  This has the side-effect of making it a keyword.
+            bridge.add( Operator.OP, mc );
 
-		LibraryLoader loader = new LibraryLoader();
+            LibraryLoader loader = new LibraryLoader();
 
-		try
-		{
-			loader.load( uf, mc );
-		}
-
-		catch ( RippleException e )
-		{
-			mc.close();
+			loader.load( uriMap, mc );
+		} catch ( RippleException e ) {
 			throw e;
-		}
-
-		mc.close();
-	}
+		} finally {
+		    mc.close();
+        }
+    }
 
 	public ModelConnection getConnection( final String name )
 		throws RippleException
@@ -101,31 +96,5 @@ public class SesameModel implements Model
 	public ModelConnection getConnection( final String name, final LexiconUpdater updater ) throws RippleException
 	{
 		return new SesameModelConnection( this, name, updater );
-	}
-	
-	////////////////////////////////////////////////////////////////////////////
-
-	// Note: this may be a very expensive operation (see Sesame API).
-	public long countStatements()
-		throws RippleException
-	{
-return 0;
-/* TODO
-		long size;
-
-		try
-		{
-			RepositoryConnection rc = repository.getConnection();
-			size = rc.size();
-			rc.close();
-		}
-
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-
-		return size;
-*/
 	}
 }

@@ -51,42 +51,44 @@ public class Lexicon
 	{
 		ModelConnection mc = model.getConnection( "for Lexicon constructor" );
 
-		keywordToUriMap = new HashMap<String, List<URI>>();
-		uriToKeywordMap = new HashMap<URI, String>();
+        try {
+            keywordToUriMap = new HashMap<String, List<URI>>();
+            uriToKeywordMap = new HashMap<URI, String>();
 
-		ModelBridge bridge = model.getBridge();
-		
-		for ( Value key : bridge.keySet() )
-		{
-			// An extra trip through the bridge replaces aliases with
-			// "definitive" values.
-			Value v = bridge.get( key ).toRdf( mc ).getRdfValue();
+            ModelBridge bridge = model.getBridge();
 
-			if ( v instanceof URI )
-			{
-				String keyword = ( (URI) v ).getLocalName();
+            for ( Value key : bridge.keySet() )
+            {
+                // An extra trip through the bridge replaces aliases with
+                // "definitive" values.
+                Value v = bridge.get( key ).toRdf( mc ).getRdfValue();
 
-				List<URI> siblings = keywordToUriMap.get( keyword );
-		
-				if ( null == siblings )
-				{
-					siblings = new ArrayList<URI>();
-					keywordToUriMap.put( keyword, siblings );
+                if ( v instanceof URI )
+                {
+                    String keyword = ( (URI) v ).getLocalName();
 
-					uriToKeywordMap.put( (URI) v, keyword );
-				}
+                    List<URI> siblings = keywordToUriMap.get( keyword );
 
-				// The presence of aliases will cause the same URI / keyword
-				// pair to appear more than once.
-				if ( !siblings.contains( (URI) v ) )
-				{
-					siblings.add( (URI) v );
-				}
-			}
-		}
+                    if ( null == siblings )
+                    {
+                        siblings = new ArrayList<URI>();
+                        keywordToUriMap.put( keyword, siblings );
 
-		mc.close();
-	}
+                        uriToKeywordMap.put( (URI) v, keyword );
+                    }
+
+                    // The presence of aliases will cause the same URI / keyword
+                    // pair to appear more than once.
+                    if ( !siblings.contains( (URI) v ) )
+                    {
+                        siblings.add( (URI) v );
+                    }
+                }
+            }
+        } finally {
+            mc.close();
+        }
+    }
 
 	public List<URI> uriForKeyword( final String localName )
 	{

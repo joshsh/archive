@@ -58,8 +58,7 @@ public class SwoogleIt extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
-	)
+						 final Sink<StackContext> sink )
 		throws RippleException
 	{
 		final ModelConnection mc = arg.getModelConnection();

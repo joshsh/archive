@@ -19,8 +19,6 @@ public interface Model
 
 	ModelConnection getConnection( String name ) throws RippleException;
 	ModelConnection getConnection( String name, final LexiconUpdater updater ) throws RippleException;
-
-	long countStatements() throws RippleException;
 	
 	Collection<ModelConnection> openConnections();
 	void closeOpenConnections() throws RippleException;
