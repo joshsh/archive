@@ -51,10 +51,6 @@ public class Interpreter
 		// Break out when a @quit directive is encountered
 		while ( active )
 		{
-			// If there's anything in the input buffer, it's because the parser
-			// ran across a syntax error.  Clear the buffer, create a new lexer
-			// and parser instance, and start afresh.
-			clear( input );
 //System.out.println( "-- construct" );
 
 			RippleLexer lexer = new RippleLexer( input );
@@ -67,7 +63,7 @@ public class Interpreter
 //System.out.println( "-- antlr" );
 				parser.nt_Document();
 
-				// If the parser has exited normally, then we're done.
+                // If the parser has exited normally, then we're done.
 //System.out.println( "-- normal exit" );
 				active = false;
 			}
@@ -86,7 +82,7 @@ public class Interpreter
             // interrupted, and when the lexer has reached the end of input.
             catch ( TokenStreamIOException e )
 			{
-				LOGGER.error( e );
+				LOGGER.debug( e );
 				break;
 			}
 			
@@ -95,7 +91,15 @@ public class Interpreter
                 // Handle non-fatal errors in an application-specific way.
                 exceptionSink.put( e );
 			}
-		}
+
+            // If there's anything in the input buffer, it's because the parser
+            // ran across a syntax error.  Clear the buffer, create a new lexer
+            // and parser instance, and start afresh.
+            // Note: this is a command-line usage scenario, and rules out
+            // recovery from errors when the Interpreter is reading from a
+            // pre-populated buffer.
+            clear( input );            
+        }
 	}
 
 	private static void clear( final InputStream is ) throws RippleException

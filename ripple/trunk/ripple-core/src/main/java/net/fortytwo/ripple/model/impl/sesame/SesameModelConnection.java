@@ -1160,7 +1160,8 @@ public class SesameModelConnection implements ModelConnection
 								final boolean includeInferred)
 		throws RippleException
 	{
-		Value rdfSubj = ( null == subj ) ? null : subj.getRdfValue();
+//System.out.println("getStatements(" + subj + ", " + pred + ", " + obj + ")");
+        Value rdfSubj = ( null == subj ) ? null : subj.getRdfValue();
 		Value rdfPred = ( null == pred ) ? null : pred.getRdfValue();
 		Value rdfObj = ( null == obj ) ? null : obj.getRdfValue();
 	
@@ -1189,7 +1190,9 @@ public class SesameModelConnection implements ModelConnection
 	
 					while ( stmtIter.hasNext() )
 					{
-						buffer.put( stmtIter.next() );
+                        Statement st = stmtIter.next();
+//System.out.println("    result: " + st);
+                        buffer.put( st );
 					}
 	
 					stmtIter.close();

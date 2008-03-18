@@ -17,33 +17,26 @@ import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.Source;
 
 import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
+/**
+ * A simple query pipeline.  Each submitted String must be a complete, valid
+ * expression.
+ */
 public class QueryPipe implements Sink<String>
 {
-	private static final long WAIT_INTERVAL = 100l;
-	
-	private Interpreter interpreter;
 	private RecognizerAdapter recognizerAdapter;
+    private Sink<Exception> parserExceptionSink;
 
-	private PipedIOStream inOut;
-
-	private Buffer<RippleList> resultBuffer;
+    private Buffer<RippleList> resultBuffer;
 	
 	private CollectorHistory<RippleList> queryResultHistory
 		= new CollectorHistory<RippleList>( 2 );
 	private boolean lastQueryContinued = false;
 
-	private Thread interpreterThread;
-	
 	public QueryPipe( final QueryEngine queryEngine, final Sink<RippleList> resultSink ) throws RippleException
 	{
-		 inOut = new PipedIOStream();
-/*final Sink<RippleList> tempSink = new Sink<RippleList>() {
-	public void put( final RippleList l ) throws RippleException {
-		System.out.println( "received list: " + l );
-		resultBuffer.put(l);
-	}
-};*/
 		resultBuffer = new Buffer<RippleList>( resultSink );
 		final Object mutex = resultBuffer;
 
@@ -129,90 +122,29 @@ public class QueryPipe implements Sink<String>
 		recognizerAdapter = new RecognizerAdapter(
 				querySink, continuingQuerySink, commandSink, eventSink, queryEngine.getErrorPrintStream() );
 
-		Sink<Exception> parserExceptionSink = new ParserExceptionSink(
+		parserExceptionSink = new ParserExceptionSink(
 				queryEngine.getErrorPrintStream() );
-		
-/*		inOut = new PipedInputStream();
-		try {
-			readOut = new PipedOutputStream( inOut );
-		} catch ( IOException e ) {
-			throw new RippleException( e );
-		}*/
-		
-		// Create interpreter.
-		interpreter = new Interpreter( recognizerAdapter, inOut, parserExceptionSink );
-//System.out.println("main thread: " + Thread.currentThread());
-
-		Runnable r = new Runnable() {
-			public void run() {
-				try
-				{
-//System.out.println("parser thread: " + Thread.currentThread());
-					interpreter.parse();
-				}
-				
-				catch ( RippleException e )
-				{
-					e.logError();
-				}
-			}
-		};
-		
-		// Note: this thread is never terminated unless there is an error.
-		interpreterThread = new Thread( r );
-		interpreterThread.start();
 	}
 	
 	public void close() throws RippleException
 	{
-//System.out.println("CLOSING THE PIPE");
-		try
-		{
-			//recognizerAdapter.putEvent( RecognizerEvent.QUIT );
-			interpreter.quit();
-			interpreterThread.interrupt();
-//System.out.println("CLOSING THE BUFFER");
-			inOut.close();
-		}
-		
-		catch ( IOException e )
-		{
-			throw new RippleException( e );
-		}
 	}
 	
 	public void put( final String expr ) throws RippleException
 	{
-//System.out.println("evaluating: " + expr);
-		try
-		{
-			inOut.write( expr.getBytes() );
-		}
-		
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-		
-		// Wait until the interpreter thread is idle
-		do
-		{
-//System.out.println( "waiting " + WAIT_INTERVAL + " milliseconds" );
-			synchronized ( this )
-			{
-				// FIXME: the first wait depends on a race condition
-				try
-				{
-					wait( WAIT_INTERVAL );
-				}
-				
-				catch ( InterruptedException e )
-				{
-					throw new RippleException( e );
-				}
-			}
-		} while ( Thread.State.RUNNABLE == interpreterThread.getState() );
-		
+//System.out.println("interpreting query: " + expr);
+        InputStream is = new ByteArrayInputStream( expr.getBytes() );
+
+        // TODO: creating a new Interpreter for each expression is not very efficient
+        Interpreter interpreter = new Interpreter( recognizerAdapter, is, parserExceptionSink );
+        interpreter.parse();
+
+        try {
+            is.close();
+        } catch ( IOException e ) {
+            throw new RippleException( e );
+        }
+
 		resultBuffer.flush();
 	}
 }
