@@ -52,7 +52,6 @@ public class Interpreter
 		while ( active )
 		{
 //System.out.println( "-- construct" );
-
 			RippleLexer lexer = new RippleLexer( input );
 			lexer.initialize( recognizerAdapter );
 			RippleParser parser = new RippleParser( lexer );

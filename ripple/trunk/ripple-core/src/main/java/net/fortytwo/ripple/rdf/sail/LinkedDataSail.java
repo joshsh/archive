@@ -19,6 +19,8 @@ import net.fortytwo.ripple.io.HttpUriDereferencer;
 import net.fortytwo.ripple.io.JarUriDereferencer;
 import net.fortytwo.ripple.io.VerbatimRdfizer;
 import net.fortytwo.ripple.io.WebClosure;
+import net.fortytwo.ripple.io.ImageRdfizer;
+import net.fortytwo.ripple.io.Rdfizer;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.util.UriMap;
@@ -33,6 +35,7 @@ import org.openrdf.sail.SailChangedListener;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
+import org.restlet.data.MediaType;
 
 import java.io.File;
 import java.util.Map;
@@ -53,8 +56,8 @@ public class LinkedDataSail implements StackableSail
 		"asp", "asx", "avi", "bat", "bin", "bmp", "c", "cab", "cfg", "cgi",
 		"com", "cpl", "cpp", "css", "csv", "dat", "db", "dll", "dmg", "dmp",
 		"doc", "drv", "drw", "dxf", "eps", "exe", "fnt", "fon", "gif", "gz",
-		"h", "hqx", "htm", "html", "iff", "indd", "ini", "iso", "java", "jpeg",
-		"jpg", "js", "jsp", "key", "log", "m3u", "mdb", "mid", "midi", "mim",
+		"h", "hqx", "htm", "html", "iff", "indd", "ini", "iso", "java", /*"jpeg",*/
+		/*"jpg",*/ "js", "jsp", "key", "log", "m3u", "mdb", "mid", "midi", "mim",
 		"mng", "mov", "mp3", "mp4", "mpa", "mpg", "msg", "msi", "otf", "pct",
 		"pdf", "php", "pif", "pkg", "pl", "plugin", "png", "pps", "ppt", "ps",
 		"psd", "psp", "qt", "qxd", "qxp", "ra", "ram", "rar", "reg", "rm",
@@ -209,8 +212,14 @@ public WebClosure getClosureManager()
 		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIG ), new VerbatimRdfizer( RDFFormat.TRIG ), 0.8 );
 		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIX ), new VerbatimRdfizer( RDFFormat.TRIX ), 0.8 );
 		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.NTRIPLES ), new VerbatimRdfizer( RDFFormat.NTRIPLES ), 0.5 );
+        Rdfizer imageRdfizer = new ImageRdfizer();
+        // Mainstream EXIF-compatible image types: JPEG, TIFF
+        wc.addRdfizer( MediaType.IMAGE_JPEG, imageRdfizer );
+        wc.addRdfizer( new MediaType( "image/tiff" ), imageRdfizer );
+        wc.addRdfizer( new MediaType( "image/tiff-fx" ), imageRdfizer );
+        // TODO: add an EXIF-based Rdfizer for RIFF WAV audio files
 
-		// Don't bother trying to dereference terms in these common namespaces.
+        // Don't bother trying to dereference terms in these common namespaces.
 		wc.addMemo( "http://www.w3.org/XML/1998/namespace#", new ContextMemo( ContextMemo.Status.Ignored ) );
 		wc.addMemo( "http://www.w3.org/2001/XMLSchema", new ContextMemo( ContextMemo.Status.Ignored ) );
 		wc.addMemo( "http://www.w3.org/2001/XMLSchema#", new ContextMemo( ContextMemo.Status.Ignored ) );

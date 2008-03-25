@@ -30,7 +30,8 @@ public class StreamLibrary extends Library
 		registerPrimitive( Each.class, NS + "each", mc );
 		registerPrimitive( Intersect.class, NS + "intersect", mc );
 		registerPrimitive( Limit.class, NS + "limit", mc );
-		registerPrimitive( Scrap.class, NS + "scrap", mc );
+        registerPrimitive( Require.class, NS + "require", mc );
+        registerPrimitive( Scrap.class, NS + "scrap", mc );
 		registerPrimitive( Union.class, NS + "union", mc );
 		registerPrimitive( Unique.class, NS + "unique", mc );
 	}

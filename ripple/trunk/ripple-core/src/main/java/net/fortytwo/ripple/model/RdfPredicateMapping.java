@@ -34,8 +34,7 @@ public class RdfPredicateMapping implements StackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
-	) throws RippleException
+						 final Sink<StackContext> sink ) throws RippleException
 	{
 		final ModelConnection mc = arg.getModelConnection();
 		RippleList stack = arg.getStack();
