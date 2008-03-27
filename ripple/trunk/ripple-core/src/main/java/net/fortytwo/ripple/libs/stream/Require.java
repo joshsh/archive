@@ -16,10 +16,8 @@ import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.model.StackMapping;
+import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.Sink;
-
-// kate: tab-width 4
 
 /**
  * A filter which discards the stack unless the topmost item is the boolean
@@ -41,23 +39,57 @@ public class Require extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
-	)
+						 final Sink<StackContext> sink )
 		throws RippleException
 	{
-		RippleList stack = arg.getStack();
+        ModelConnection mc = arg.getModelConnection();
+        RippleList stack = arg.getStack();
+        RippleValue mapping = stack.getFirst();
+        final RippleList rest = stack.getRest();
 
-        PrimitiveStackMapping inner = new RequireInner( stack.getRest() );
-
-        // TODO: it is inefficient to reduce the stack once to determine the boolean value, then again after the rest has been transmitted
-        sink.put( arg.with( stack.push( Operator.OP ).push( inner ).push( Operator.OP ) ) );
+        Sink<Operator> opSink = new Sink<Operator>()
+        {
+            public void put( final Operator op ) throws RippleException
+            {
+                CriterionApplicator applicator = new CriterionApplicator( op );
+                sink.put( arg.with( rest.push( new Operator( applicator ) ) ) );
+            }
+        };
+        
+        Operator.createOperator(mapping, opSink, mc);
     }
 
-    private class RequireInner extends PrimitiveStackMapping
+    private class CriterionApplicator extends PrimitiveStackMapping
+    {
+        private Operator criterion;
+
+        public CriterionApplicator( final Operator criterion )
+        {
+            this.criterion = criterion;
+        }
+
+        // FIXME: the criterion's arity had better be accurate (which it currently may not be, if the criterion is a list dequotation)
+        public int arity()
+        {
+            return criterion.getMapping().arity();
+        }
+
+        public void applyTo( final StackContext arg,
+                             final Sink<StackContext> sink ) throws RippleException
+        {
+            RippleList stack = arg.getStack();
+            Decider decider = new Decider( stack );
+
+            // Apply the criterion, sending the result into the Decider.
+            sink.put( arg.with( stack.push( criterion ).push( new Operator( decider ) ) ) );
+        }
+    }
+
+    private class Decider extends PrimitiveStackMapping
     {
         private RippleList rest;
 
-        public RequireInner( final RippleList rest )
+        public Decider( final RippleList rest )
         {
             this.rest = rest;
         }

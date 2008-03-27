@@ -1,6 +1,7 @@
 package net.fortytwo.ripple;
 
 import java.util.Properties;
+import java.io.File;
 
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.model.enums.ExpressionOrder;
@@ -115,6 +116,13 @@ public class RippleProperties
         }
 
         return style;
+    }
+
+    public File getFile( final String name ) throws RippleException
+    {
+        String value = getProperty( name );
+        
+        return new File( value );
     }
 
     private String getProperty( final String name ) throws RippleException
