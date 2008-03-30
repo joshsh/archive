@@ -25,7 +25,7 @@ public class ParserExceptionSink implements Sink<Exception>
 		}
 
 		// Non-fatal.
-		else if ( e instanceof antlr.RecognitionException )
+		/*else if ( e instanceof antlr.RecognitionException )
 		{
 			alert( "Parser error: " + e.toString() );
 		}
@@ -33,14 +33,8 @@ public class ParserExceptionSink implements Sink<Exception>
 		// Non-fatal.
 		else if ( e instanceof antlr.TokenStreamException )
 		{
-			/*Throwable cause = e.getCause();
-			if ( null != cause && cause instanceof IOException )
-			{
-				
-			}*/
-			
 			alert( "Lexer error: " + e.toString() );
-		}
+		}*/
 
 		else
 		{

@@ -15,6 +15,9 @@ import java.io.InputStream;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.util.Sink;
 
+import org.antlr.runtime.ANTLRInputStream;
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.CommonTokenStream;
 import org.apache.log4j.Logger;
 
 import antlr.TokenStreamIOException;
@@ -52,9 +55,17 @@ public class Interpreter
 		while ( active )
 		{
 //System.out.println( "-- construct" );
-			RippleLexer lexer = new RippleLexer( input );
+			// TODO: learn more about these ANTLR 3.0 classes
+			CharStream cs;
+			try {
+				cs = new ANTLRInputStream( input );
+			} catch ( IOException e ) {
+				throw new RippleException( e );
+			}			
+			RippleLexer lexer = new RippleLexer( cs );
 			lexer.initialize( recognizerAdapter );
-			RippleParser parser = new RippleParser( lexer );
+	       	CommonTokenStream tokens = new CommonTokenStream( lexer );
+			RippleParser parser = new RippleParser( tokens );
 			parser.initialize( recognizerAdapter );
 
 			try
@@ -76,6 +87,8 @@ public class Interpreter
 				active = false;
 			}
 
+// FIXME: parser will not stop at end of input
+			/*
             // TokenStreamIOException is considered fatal.  Two scenarios in
             // which it occurs are when the Interpreter thread has been
             // interrupted, and when the lexer has reached the end of input.
@@ -83,7 +96,7 @@ public class Interpreter
 			{
 				LOGGER.debug( e );
 				break;
-			}
+			}*/
 			
 			catch ( Exception e )
 			{
