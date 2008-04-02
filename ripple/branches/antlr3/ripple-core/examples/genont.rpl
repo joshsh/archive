@@ -1,0 +1,25 @@
+
+<http://www.w3.org/2006/gen/ont>.
+
+# A document which uses this ontology: http://www.w3.org/2007/ont/meta.rdf
+
+# Note: own prefix
+@prefix genont: <http://www.w3.org/2006/gen/ont#>.
+
+@define genOntTerms:
+    genont:Content-TypeGenericResource
+    genont:Content-TypeSpecificResource
+    genont:FixedResource
+    genont:InformationResource
+    genont:LanguageGenericResource
+    genont:LanguageSpecificResource
+    genont:TimeGenericResource
+    genont:TimeSpecificResource
+    genont:content-TypeGeneric
+    genont:content-TypeSpecific
+    genont:languageGeneric
+    genont:languageSpecific
+    genont:timeGeneric
+    genont:timeSpecific
+    .
+

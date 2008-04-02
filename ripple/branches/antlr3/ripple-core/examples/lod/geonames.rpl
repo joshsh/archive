@@ -1,0 +1,31 @@
+# Note: own prefix.
+@prefix geo: <http://www.geonames.org/ontology#>.
+
+@define geoTerms:
+    geo:alternateName
+    geo:name
+    .
+
+# Spokane
+<http://sws.geonames.org/5811696/>.
+
+
+# Alternate place names in various languages.
+<http://sws.geonames.org/5811696/>
+    /<http://www.geonames.org/ontology#alternateName>
+    /xml:lang.
+
+
+
+
+
+@define berlin: <http://sws.geonames.org/2950159/>.
+
+# Guillestre (P)
+<http://sws.geonames.org/3014258/>.
+
+# Guillestre (A)
+<http://sws.geonames.org/6446645/>.
+
+# (not dereferenceable)
+<http://sws.geonames.org/6446645/>/owl:sameAs.

@@ -1,0 +1,12 @@
+
+(: some blog software used by Semantic Web developers -- see http://journal.dajobe.org/journal/2003/07/semblogs/
+http://www.semsol.com/home
+Drupal -- TBL et al.
+b2evolution
+WordPress
+moveabletype
+:)
+
+
+
+foaf:weblog;

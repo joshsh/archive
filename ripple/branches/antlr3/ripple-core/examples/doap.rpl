@@ -1,0 +1,64 @@
+@prefix doap: <http://usefulinc.com/ns/doap#>.
+
+doap:.
+
+@define doapTerms:
+    doap:ArchRepository
+    doap:BKRepository
+    doap:CVSRepository
+    doap:Project
+    doap:Repository
+    doap:SVNRepository
+    doap:Version
+    doap:anon-root
+    doap:browse
+    doap:bug-database
+    doap:category
+    doap:created
+    doap:description
+    doap:developer
+    doap:documenter
+    doap:download-mirror
+    doap:download-page
+    doap:file-release
+    doap:helper
+    doap:homepage
+    doap:license
+    doap:location
+    doap:mailing-list
+    doap:maintainer
+    doap:module
+    doap:name
+    doap:old-homepage
+    doap:os
+    doap:programming-language
+    doap:release
+    doap:repository
+    doap:revision
+    doap:screenshots
+    doap:shortdesc
+    doap:tester
+    doap:translator
+    doap:wiki
+    .
+
+:doapTerms/each/rdf:type/unique.
+
+# Ripple's DOAP
+<http://fortytwo.net/2007/03/ripple/doap#>.
+
+
+(: Miscellaneous interesting projects :::::::::::::::::::::::::::::::::::::::::)
+
+# Mspace
+"http://triplestore.aktors.org/~das301/mspace-doap.xrdf" grab;
+
+(: http://brownsauce.sourceforge.net/ :)
+
+# Tabulator
+<http://widgets.opera.com/xml/rdf/doap/5053#my>.
+
+(: Semantic Web Client Library :)
+"http://www4.wiwiss.fu-berlin.de/is-group/sparql?query=DESCRIBE+%3Chttp%3A%2F%2Fwww4.wiwiss.fu-berlin.de%2Fis-group%2Fresource%2Fprojects%2FProject5%3E" grab;
+(: Disco browser -- based on the SWCL :)
+"http://www4.wiwiss.fu-berlin.de/is-group/sparql?query=DESCRIBE+%3Chttp%3A%2F%2Fwww4.wiwiss.fu-berlin.de%2Fis-group%2Fresource%2Fprojects%2FProject11%3E" grab;

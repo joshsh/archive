@@ -1,0 +1,15 @@
+# wget http://vocab.org/bio/0.1/bio-vocab-20040305.rdf
+
+@prefix bio: <http://purl.org/vocab/bio/0.1/>.
+
+@define bioTerms:
+    bio:Birth
+    bio:Death
+    bio:Event
+    bio:Marriage
+    bio:date
+    bio:event
+    bio:keywords
+    bio:olb
+    bio:place
+    .

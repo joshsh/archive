@@ -1,0 +1,226 @@
+# Note: [resource], [uri], [bnode], [literal] and [list] stand in for types which are not yet fully understood
+#       [boolean] stands in for xsd:boolean, which is currently represented by stack:true and stack:false
+#       [number] stands in for either xsd:integer or xsd:double
+
+# type signature of a property:  ('a -> range(p))
+# type signature of list dequotation:  !!!
+
+@define etcPrimitives:
+    etc:get			# !!!
+    etc:time			# (-> xsd:integer)
+    .
+
+@define graphPrimitives:
+    graph:assert		# ('a[resource] [uri] 'b -> 'a)
+    graph:back			# !!!
+    graph:comments		# !!! ([uri] -> xsd:string)
+    graph:compare		# ('a 'b -> [boolean])
+    graph:contains		# !!! ([list] 'a -> [boolean])
+    graph:deny			# !!! ('a[resource] [uri] 'b -> 'a)
+    graph:equal			# ('a 'b -> [boolean])
+    graph:forget		# !!! ('a[resource] -> 'a)
+    graph:links			# !!!
+    graph:namespaces		# !!! ([uri] -> ...
+    graph:new			# !!!
+    graph:toDouble		# !!!
+    graph:toInteger		# !!!
+    graph:toString		# !!!
+    graph:toUri			# !!!
+    graph:triples		# !!! ([uri] -> list[[resource] [uri] [any])
+    xml:lang			# (xsd:string -> xsd:string)
+    xsd:type			# (xsd:string -> [XSD type])
+    .
+
+@define mathPrimitives:
+    math:abs			# ([number] -> [number])
+    math:acos			# ([number] -> [number])
+    math:add			# ([number] [number] -> [number])
+    math:asin			# ([number] -> [number])
+    math:atan			# ([number] -> [number])
+    math:cbrt			# ([number] -> [number])
+    math:ceil			# ([number] -> [number])
+    math:cos			# ([number] -> [number])
+    math:cosh			# ([number] -> [number])
+    math:div			# ([number] -> [number])
+    math:exp			# ([number] -> [number])
+    math:floor			# ([number] -> [number])
+    math:gt			# ([number] [number] -> [number])
+    math:log			# ([number] -> [number])
+    math:log10			# ([number] -> [number])
+    math:lt			# ([number] [number] -> [number])
+    math:mod			# ([number] [number] -> [number])
+    math:mul			# ([number] [number] -> [number])
+    math:neg			# ([number] -> [number])
+    math:pow			# ([number] [number] -> [number])
+    math:random			# (-> [number])
+    math:signum			# ([number] -> [number])
+    math:sin			# ([number] -> [number])
+    math:sinh			# ([number] -> [number])
+    math:sqrt			# ([number] -> [number])
+    math:sub			# ([number] [number] -> [number])
+    math:tan			# ([number] -> [number])
+    math:tanh			# ([number] -> [number])
+    .
+
+@define servicesPrimitives:
+    services:pingTheSemanticWeb	# !!!
+    services:sindice		# !!!
+    services:swoogleIt		# !!!
+    services:uriqr		# !!!
+    .
+
+@define stackPrimitives:
+    stack:and			# ([boolean] [boolean] -> [boolean])
+    stack:ary			# !!!
+    stack:at			# (list['a] xsd:integer -> 'a)
+    stack:branch		# ('A [boolean] ('A -> 'B) ('A -> 'B) -> 'B)
+    stack:cat			# (list['a] list['a] -> list['a])
+    stack:choice		# ([boolean] 'a 'a -> 'a)
+    stack:cons			# ('a list['a] -> list['a])
+    stack:dip			# ('A 'a ('A -> 'B) -> 'B 'a)
+    stack:dipd			# ('A 'a 'b ('A -> 'B) -> 'B 'a 'b)
+    stack:dup			# ('a -> 'a 'a)
+    stack:dupd			# ('a 'b -> 'a 'a 'b)
+    stack:dupdd			# ('a 'b 'c -> 'a 'a 'b 'c)
+    stack:false			# !!!
+    stack:fold			# (list['a] 'b ('b 'a -> 'b) -> 'b)
+    stack:has			# (list['a] 'a -> [boolean])
+    stack:i			# ('A ('A -> 'B) -> 'B)
+    stack:id			# (R -> R)
+    stack:in			# ('a list['a] -> [boolean])
+    stack:max			# (list['a] -> 'a)
+    stack:min			# (list['a] -> 'a)
+    stack:not			# ([boolean] -> [boolean])
+    stack:of			# (xsd:integer list['a] -> 'a)
+    stack:or			# ([boolean] [boolean] -> [boolean])
+    stack:pop			# ('a -> )
+    stack:popd			# ('a 'b -> 'b)
+    stack:popdd			# ('a 'b 'c -> 'b 'c)
+    stack:rolldown		# ('a 'b 'c -> 'b 'c 'a)
+    stack:rolldownd		# ('a 'b 'c 'd -> 'b 'c 'a 'd)
+    stack:rollup		# ('a 'b 'c -> 'c 'a 'b)
+    stack:rollupd		# ('a 'b 'c 'd -> 'c 'a 'b 'd)
+    stack:rotate		# ('a 'b 'c -> 'c 'b 'a)
+    stack:rotated		# ('a 'b 'c 'd -> 'c 'b 'a 'd)
+    stack:size			# (list['a] -> xsd:integer)
+    stack:stack			# !!!
+    stack:swap			# ('a 'b -> 'b 'a)
+    stack:swapd			# ('a 'b 'c -> 'b 'a 'c)
+    stack:swapdd		# ('a 'b 'c 'd -> 'b 'a 'c 'd)
+    stack:swons			# (list['a] 'a -> list['a])
+    stack:times			# !!!
+    stack:true			# !!!
+    stack:uncons		# (list['a] -> 'a list['a])
+    stack:unstack		# !!!
+    stack:unswons		# (list['a] -> list['a] 'a)
+    stack:x			# ('A ('A -> 'B) -> 'B ('A -> 'B))
+    stack:xor			# ([boolean] [boolean] -> [boolean])
+    .
+
+@define streamPrimitives:
+    stream:each			# !!!
+    stream:limit		# ('a -> 'a)
+    stream:scrap		# !!! ('a -> 'a)
+    stream:union		# ('A 'A -> 'A)
+    stream:unique		# ('a -> 'a)
+    .
+
+@define stringPrimitives:
+    string:endsWith		# (xsd:string xsd:string -> [boolean])
+    string:indexOf		# (xsd:string xsd:string -> xsd:integer)
+    string:lastIndexOf		# (xsd:string xsd:string -> xsd:integer)
+    string:length		# (xsd:string -> xsd:integer)
+    string:matches		# (xsd:string xsd:string -> [boolean])
+    string:percentDecode	# (xsd:string -> xsd:string)
+    string:percentEncode	# (xsd:string -> xsd:string)
+    string:replaceAll		# (xsd:string xsd:string xsd:string -> xsd:string)
+    string:sha1			# (xsd:string -> xsd:string)
+    string:split		# !!! (xsd:string xsd:string -> [list(xsd:string)])
+    string:startsWith		# (xsd:string xsd:string -> [boolean])
+    string:strCat		# (xsd:string xsd:string -> xsd:string)
+    string:substring		# (xsd:string xsd:integer xsd:integer -> xsd:string)
+    string:toLowerCase		# (xsd:string -> xsd:string)
+    string:toUpperCase		# (xsd:string -> xsd:string)
+    string:trim			# (xsd:string -> xsd:string)
+    string:urlDecode		# (xsd:string -> xsd:string)
+    string:urlEncode		# (xsd:string -> xsd:string)
+    .
+
+@define libraries:
+    :etcPrimitives
+    :graphPrimitives
+    :mathPrimitives
+    :servicesPrimitives
+    :stackPrimitives
+    :streamPrimitives
+    :stringPrimitives
+    .
+
+@define allPrimitives:
+    :libraries/each/each.
+
+# Count the primitives.
+/:allPrimitives.
+
+# Make sure they all have a type.
+/:allPrimitives /rdf:type.
+
+# Make sure the only type is rpl:Function.
+/:allPrimitives /rdf:type/unique.
+
+# Make sure they all have a label.
+/:allPrimitives /rdfs:label.
+
+# Make sure all primitives have hash URIs.
+/:allPrimitives/toString "#"/indexOf -1/gt /unique.
+
+@define substringAfterLastOccurrence:
+    /dupd /lastIndexOf 1 /add
+    /dupd/swap /length
+    /substring.
+
+# Make sure the label is the same as the local part of the URI.
+/:allPrimitives
+    /dup/toString "#"/:substringAfterLastOccurrence
+    /swap /rdfs:label
+    /equal /unique.
+
+# Make sure all primitives have comments.
+/:allPrimitives /rdfs:comment.
+
+
+
+
+
+
+
+
+
+@define hello:
+    "Hello world!".
+
+
+# If predicates and primitive functions are really equivalent to quoations in
+# Ripple, then the following expressions should be equivalent:
+(3) dup /cat.
+(3 /dup).
+
+
+
+# Isn't this a little inconsistent?
+2 /swap.  # nothing.
+2 /swap 3  # 2 /swap 3
+
+
+
+
+# Use 'triples' together with 'assert' to manually import RDF documents
+# (including statements involving blank nodes and literals).
+# Note: namespace prefix definitions are not imported.
+<http://example.org/ns#a>.
+<http://fortytwo.net/2007/07/notDereferenceable.ttl> /triples/i/assert.
+<http://example.org/ns#a>.
+
+
+
+<http://projects.semwebcentral.org/projects/ripple>.

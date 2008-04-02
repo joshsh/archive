@@ -1,0 +1,49 @@
+# PRJ Project Vocabulary
+# wget http://dannyayers.com:88/xmlns/project/project.owl
+
+@prefix prj: <http://purl.org/stuff/project/>.
+
+<http://purl.org/stuff/project>.
+
+# Note: not dereferenceable.
+@define prjTerms:
+    prj:Agent
+    prj:Goal
+    prj:Module
+    prj:Project
+    prj:Session
+    prj:Task
+    prj:TaskList
+    prj:agentType
+    prj:branchTag
+    prj:dependsOn
+    prj:duration
+    prj:finishDate
+    prj:goalType
+    prj:hasAgent
+    prj:hasGoal
+    prj:hasReport
+    prj:hasSubGoal
+    prj:hasSubTask
+    prj:hasTask
+    prj:helps
+    prj:isDependentOf
+    prj:isHelpedBy
+    prj:logo
+    prj:name
+    prj:owner
+    prj:priority
+    prj:reporter
+    prj:role
+    prj:startDate
+    prj:status
+    prj:subGoalOf
+    prj:subTaskOf
+    prj:submittedDate
+    prj:targetDate
+    prj:taskType
+    prj:version
+    .
+
+# Note: slow due to hash namespace.
+:prjTerms/each/rdf:type/unique.

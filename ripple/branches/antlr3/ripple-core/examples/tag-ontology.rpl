@@ -1,0 +1,21 @@
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/>.
+
+# Note: own prefix.
+@prefix tags: <http://www.holygoat.co.uk/owl/redwood/0.1/tags/>.
+
+@define tagTerms:
+    tags:RestrictedTagging
+    tags:Tag
+    tags:Tagging
+    tags:associatedTag
+    tags:equivalentTag
+    tags:isTagOf
+    tags:name
+    tags:relatedTag
+    tags:tag
+    tags:tagName
+    tags:taggedBy
+    tags:taggedOn
+    tags:taggedResource
+    tags:taggedWithTag
+    .

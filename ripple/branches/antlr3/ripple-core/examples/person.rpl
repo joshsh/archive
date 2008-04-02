@@ -1,0 +1,36 @@
+@prefix person: <http://ebiquity.umbc.edu/ontology/person.owl#>.
+
+@define personTerms:
+    person:AdjunctFaculty
+    person:AffiliatedFaculty
+    person:Alumnus
+    person:AssistantProfessor
+    person:AssociateProfessor
+    person:BSAlumnus
+    person:BSStudent
+    person:Collaborator
+    person:Faculty
+    person:GuestSpeaker
+    person:MSAlumnus
+    person:MSStudent
+    person:Person
+    person:PhDAlumnus
+    person:PhDStudent
+    person:PrincipalFaculty
+    person:PrincipalInvestigator
+    person:Professor
+    person:Sponsor
+    person:Student
+    person:Visitor
+    person:associatedWith
+    person:biography
+    person:face
+    person:firstName
+    person:graduationDate
+    person:lastName
+    person:middleName
+    person:name
+    person:person
+    person:relatedPublication
+    person:workContact
+    .

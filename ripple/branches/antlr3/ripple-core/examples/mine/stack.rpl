@@ -1,0 +1,14 @@
+# a b -> a b a b
+@redefine dupTwo:
+    /dupd /dup /swapd.
+
+    
+    
+    
+
+
+# Cause a stack overflow.
+0 (/dupd/swap 100 /gt pop (/swap 1/add /swap/dup/i) /branch) /dup/i.
+
+# Simpler way to cause a stack overflow:
+0 (1 /add) 300/times.

@@ -1,0 +1,41 @@
+# http://ramonantonio.net/doac/0.1/doac.rdfs
+
+# Sindice revealed this document which uses DOAC:
+#     http://alexandre.alapetite.net/cv/foaf.rdf.xml
+
+@prefix doac: <http://ramonantonio.net/doac/0.1/#>.
+
+@define doacTerms:
+    doac:ComputerSkill
+    doac:Course
+    doac:Degree
+    doac:DrivingSkill
+    doac:Education
+    doac:Experience
+    doac:LanguageLevel
+    doac:LanguageSkill
+    doac:OrganisationalSkill
+    doac:PrimarySchool
+    doac:Reference
+    doac:SecondarySchool
+    doac:Skill
+    doac:SocialSkill
+    doac:education
+    doac:end-date
+    doac:experience
+    doac:isco88-code
+    doac:language
+    doac:organisation
+    doac:organisation
+    doac:publication
+    doac:reads
+    doac:reference
+    doac:reference-type
+    doac:referer
+    doac:skill
+    doac:speaks
+    doac:start-date
+    doac:title
+    doac:title
+    doac:writes
+    .

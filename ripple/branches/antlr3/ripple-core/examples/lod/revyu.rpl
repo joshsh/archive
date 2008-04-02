@@ -1,0 +1,159 @@
+# Would be nice:
+#     * dereferenceable openguides.org URIs
+
+# http://revyu.com/
+# http://www.hoonoh.com/
+
+<http://revyu.com/>.
+
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738>.
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> /reviewer.
+<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> /reviewer/made.
+@quit;
+
+# Revyu + book mashup
+<http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869> /primaryTopic /sameAs.
+	# --> <http://www4.wiwiss.fu-berlin.de/bookmashup/books/0735712018>
+<http://revyu.com/reviews/a0fce142ede50a4c03ca4fece5f78f5fbdcc6869>/primaryTopic/sameAs/hasOffer/scom:hasPrice/unique.
+
+
+@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+# Note: the document at this namespaces apparently uses rdf:about where it should use rdf:ID
+@prefix scom:  <http://sites.wiwiss.fu-berlin.de/suhl/bizer/bookmashup/simpleCommerceVocab01.rdf#>.
+
+# r => r, if r is a book review, otherwise nothing
+@define bookReviewsOnly:
+    (   /foaf:primaryTopic          # from review to topic
+        /owl:sameAs                 # from topic to possible book
+        /rdf:type scom:Book /equal  # is it really a book?
+    )/:restrict.
+
+@define tomsReviews:  <http://revyu.com/people/tom> /foaf:made.
+/:tomsReviews /:bookReviewsOnly (/rev:rating 3 /gt)/:filter /rdfs:label.
+
+########################################
+# Links into openguides.org
+########################################
+
+# Note: these don't appear to be dereferenceable resources
+/:tomsReviews/foaf:primaryTopic
+    /dup /owl:sameAs
+    (/toString "http://miltonkeynes.openguides.org" /startsWith) /:restrict.
+# e.g.
+<http://miltonkeynes.openguides.org/?id=The_New_Queen_Victoria%2C_Wolverton;format=rdf#obj>.
+# Note: statements in this document are about a different URI, but this isn't dereferenceable, either:
+<http://miltonkeynes.openguides.org/?The_New_Queen_Victoria%2C_Wolverton>.
+
+
+########################################
+# Links into dbpedia.org
+########################################
+
+# Reciprocal owl:sameAs links with dbpedia
+/:tomsReviews/foaf:primaryTopic
+    /dup /owl:sameAs
+    (/toString "http://dbpedia.org" /startsWith) /:restrict.
+# e.g.
+<http://revyu.com/things/licence-to-kill-james-bond-film-movie-action>.
+# ...links to...
+<http://dbpedia.org/resource/Licence_to_Kill>.
+
+
+########################################
+# Revyu's dereferenceable RDF news feeds
+########################################
+
+# Note: own prefix
+@prefix rss: <http://purl.org/rss/1.0/>.
+
+# The "latest reviews" channel.
+<http://revyu.com/latest/rss>.
+
+# All of the latest reviews.
+<http://revyu.com/latest/rss> rss:items! contains!.
+
+# Paddy's channel.
+<http://revyu.com/latest/rss/people/Paddy>
+# Paddy's new items.
+<http://revyu.com/latest/rss/people/Paddy> /rss:items /contains.
+
+
+
+
+
+
+
+# reviewer's name (e.g. "Paddy") => reviewer resource (e.g. <http://revyu.com/people/Paddy>)
+@define reviewerByName:
+    "http://revyu.com/people/" swap! strCat! toUri!.
+
+@define revyuFeedByName:
+    "http://revyu.com/latest/rss/people/" swap! strCat! toUri!.
+
+# From feed to reviewer.
+<http://revyu.com/latest/rss/people/Paddy> :localName! :reviewerByName!.
+
+# From reviewer to feed.
+<http://revyu.com/people/Paddy> :localName! :revyuFeedByName!.
+
+
+
+
+
+
+
+
+
+
+# My account.
+<http://revyu.com/people/iamthewalnut>.
+
+
+
+# => rating reviewer [for each review of Casino Royale]
+<http://revyu.com/things/casino-royale-1164058953>
+    /rev:hasReview /dup
+    /rev:rating
+    /swap /rev:reviewer/toString.
+
+
+========================================
+SPARQL
+========================================
+
+PREFIX rev: <http://purl.org/stuff/rev#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?thing ?name ?review ?createdOn
+WHERE
+{
+ ?thing rdfs:label ?name .
+ ?thing rev:hasReview ?review .
+ ?review rev:reviewer <people/tom> .
+ ?review rev:createdOn ?createdOn
+}
+
+
+PREFIX rev: <http://purl.org/stuff/rev#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+CONSTRUCT {  ?review rev:reviewer <people/tom> }
+WHERE
+{
+ ?thing rdfs:label ?name .
+ ?thing rev:hasReview ?review .
+ ?review rev:reviewer <people/tom> .
+ ?review rev:createdOn ?createdOn
+}
+
+
+
+
+
+ba  has no type:
+	tag:associatedTag
+	<http://revyu.com/reviews/3329debe1bdde9d518734455aca064446c537738> primaryTopic  tag;
+
+
+

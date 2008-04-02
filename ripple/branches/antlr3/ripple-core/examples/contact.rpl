@@ -1,0 +1,69 @@
+@prefix con: <http://www.w3.org/2000/10/swap/pim/contact#>.
+
+@define contactTerms:
+    con:Address
+    con:ContactLocation
+    con:Date
+    con:Fax
+    con:Female
+    con:LanguageCode
+    con:Mailbox
+    con:Male
+    con:MobilePhone
+    con:Pager
+    con:Person
+    con:Phone
+    con:SocialEntity
+    con:_EmailAddress
+    con:_SubjectToChange
+    con:_URI
+    con:_addressProperty
+    con:_example
+    con:address
+    con:birthday
+    con:child
+    con:city
+    con:country
+    con:departmentName
+    con:description
+    con:emailAddress
+    con:emergency
+    con:familyName
+    con:fax
+    con:firstName
+    con:fullName
+    con:givenName
+    con:home
+    con:homePage
+    con:homePageAddress
+    con:knownAs
+    con:lastName
+    con:mailbox
+    con:mailboxURI
+    con:middleInitial
+    con:middleName
+    con:mobile
+    con:motherTongue
+    con:nearestAirport
+    con:office
+    con:organization
+    con:partner
+    con:personalSuffix
+    con:personalTitle
+    con:phone
+    con:postalCode
+    con:publicHomePage
+    con:sortName
+    con:stateOrProvince
+    con:street
+    con:street2
+    con:street3
+    con:title
+    con:vacationHome
+    con:webPage
+    con:zip
+    .
+
+
+<http://www.pipian.com/rdf/places/3615268#3615268>/con:nearestAirport.
+

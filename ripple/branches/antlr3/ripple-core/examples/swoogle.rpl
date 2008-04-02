@@ -1,0 +1,227 @@
+@prefix swoogle: <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#>.
+
+# Note: served as text/plain.
+@define swoogleTerms:
+    swoogle:EmptyResult
+    swoogle:ParseSuccess
+    swoogle:ParseUnknown
+    swoogle:ParseWithError
+    swoogle:ParseWithWarning
+    swoogle:PingAlive
+    swoogle:PingCannotConnect
+    swoogle:PingCannotDownload
+    swoogle:PingDisallow
+    swoogle:PingModified
+    swoogle:PingResponseForbidden
+    swoogle:PingResponseRedirected
+    swoogle:PingUnknown
+    swoogle:QueryResponse
+    swoogle:SwoogleParseState
+    swoogle:SwooglePingState
+    swoogle:SwoogleQueryResult
+    swoogle:SwoogleQueryType
+    swoogle:Website
+    swoogle:digest_ns
+    swoogle:digest_swd
+    swoogle:digest_swt
+    swoogle:error
+    swoogle:error_bad_param
+    swoogle:error_quota_violation
+    swoogle:error_search_failure
+    swoogle:error_unauthorized
+    swoogle:hasAltPrefix
+    swoogle:hasCntInstance
+    swoogle:hasCntSwt
+    swoogle:hasCntSwtDef
+    swoogle:hasCntTriple
+    swoogle:hasDateCache
+    swoogle:hasDateDiscovered
+    swoogle:hasDateLastmodified
+    swoogle:hasDatePing
+    swoogle:hasDescDef
+    swoogle:hasDescDoc
+    swoogle:hasDescNs
+    swoogle:hasDescPop
+    swoogle:hasDescRef
+    swoogle:hasDescTerm
+    swoogle:hasDescType
+    swoogle:hasDocumentFrequency
+    swoogle:hasEncoding
+    swoogle:hasErrorMessage
+    swoogle:hasFiletype
+    swoogle:hasInstanceDomain
+    swoogle:hasInstanceFrequency
+    swoogle:hasInstanceRange
+    swoogle:hasLength
+    swoogle:hasLocalname
+    swoogle:hasMd5sum
+    swoogle:hasNamespaceUsageIn
+    swoogle:hasNormalizedURI
+    swoogle:hasOfficialOntology
+    swoogle:hasOntoRank
+    swoogle:hasOntoRatio
+    swoogle:hasParseState
+    swoogle:hasPingState
+    swoogle:hasPrefix
+    swoogle:hasQueryResult
+    swoogle:hasQueryType
+    swoogle:hasRdfDefaultNamespace
+    swoogle:hasResult
+    swoogle:hasSearchLimit
+    swoogle:hasSearchResource
+    swoogle:hasSearchSortField
+    swoogle:hasSearchSortReverse
+    swoogle:hasSearchStart
+    swoogle:hasSearchString
+    swoogle:hasSearchTime
+    swoogle:hasSearchTotalResults
+    swoogle:hasSwoogleID
+    swoogle:hasTermFrequency
+    swoogle:hasTermRank
+    swoogle:rel_ns_swd
+    swoogle:rel_ns_swt
+    swoogle:rel_swd_instance_domain_c2p
+    swoogle:rel_swd_instance_domain_p2c
+    swoogle:rel_swd_instance_range_c2p
+    swoogle:rel_swd_instance_range_p2c
+    swoogle:rel_swd_ns
+    swoogle:rel_swd_swd_from
+    swoogle:rel_swd_swd_to
+    swoogle:rel_swd_swt
+    swoogle:rel_swt_swd
+    swoogle:rel_swt_swt_from
+    swoogle:rel_swt_swt_to
+    swoogle:search_swd_all
+    swoogle:search_swd_ontology
+    swoogle:search_swt
+    swoogle:success
+    swoogle:usesNamespace
+    .
+
+@prefix wob: <http://daml.umbc.edu/ontologies/webofbelief/1.4/wob.owl#>.
+
+# A Swoogle URI in Disco:
+#     http://www4.wiwiss.fu-berlin.de/rdf_browser/?browse_uri=http%3A%2F%2Fdaml.umbc.edu%2Fontologies%2Fwebofbelief%2F1.4%2Fswoogle.owl%23hasTermFrequency
+
+
+ContainerMembershipProperty
+    uriToString (rel_swt_swt_from ("demo" swoogleIt)) hasResult listElements;
+
+"Ubuntu" swoogle:search_swt "demo" /swoogleIt/swoogle:hasResult/contains.
+
+# search_swd_ontology ##########################################################
+#    Search semantic web documents which are classified as ontologies
+
+"Monkey" swoogle:search_swd_ontology "demo" /swoogleIt
+    /swoogle:hasResult /contains.
+
+# search_swd_all ###############################################################
+#     Search all semantic web documents
+
+# search_swt ###################################################################
+#     Search all semantic web terms
+
+"Eider"
+    (search_swt ("demo" swoogleIt)) hasResult member;
+
+# digest_swd ###################################################################
+#     Show Swoogle metadata for the present semantic web document and list
+#     triples annotating it
+
+# digest_swt ###################################################################
+#     Show Swoogle metadata for the present semantic web term and list triples
+#     defining it
+#    [ba] hasResult's object here is a URI, so results bunch up around it
+
+"http://xmlns.com/wordnet/1.6/Parakeet"
+    (digest_swt ("demo" swoogleIt))
+    hasResult hasDescriptionIn isUnionOf listElements;
+
+# => about 66 results
+rdfs:Class/toString
+    swoogle:digest_swt "demo" /swoogleIt
+    /swoogle:hasResult
+    /wob:hasDescriptionIn
+    /wob:isUnionOf/each.
+
+# digest_ns ####################################################################
+#     Show Swoogle metadata for the present semantic web namespace
+#     [ba] hasResult's object here is a URI, so results bunch up around it
+
+"http://xmlns.com/wordnet/1.6/"
+    swoogle:digest_ns "demo" /swoogleIt
+    /swoogle:hasResult
+    /wob:hasDescriptionIn
+    /wob:isUnionOf/each.
+
+# rel_swd_swd_from #############################################################
+#     List semantic web documents linked by the present semantic web document
+
+# rel_swd_swd_to ###############################################################
+#     List semantic web documents linking to the present semantic web document
+
+# rel_swd_swt ##################################################################
+#     List semantic web terms defined/referenced/populated by the present
+#     semantic web document
+
+# rel_swd_ns ###################################################################
+#     List semantic web namespaces used by the present semantic web document
+
+# rel_ns_swt ###################################################################
+#     List semantic web terms using  the present namespace
+
+# rel_ns_swd ###################################################################
+#     List semantic web documents using the present namespace
+
+# rel_swt_swd ##################################################################
+#     List semantic web documents defining/referencing/populating the present
+#     semantic web term
+
+# rel_swt_swt_from #############################################################
+#     List triples contributing definition of the present semantic web term
+
+"http://xmlns.com/wordnet/1.6/Parakeet"
+    (rel_swt_swt_from ("demo" swoogleIt))
+    hasResult listElements;
+
+# rel_swt_swt_to ###############################################################
+#     List semantic web terms whose definition depends on the present semantic
+#     web term
+
+"http://xmlns.com/wordnet/1.6/Parakeet"
+    (rel_swt_swt_to ("demo" swoogleIt))
+    hasResult listElements;
+
+# rel_swd_instance_domain_p2c ##################################################
+#     List semantic web terms which are used as the "rdfs:domain" of the present
+#     semantic web in class-instances
+
+# rel_swd_instance_domain_c2p ##################################################
+#    List semantic web terms which use the present semantic web term as their
+#    "rdfs:domain" in class-instances
+
+# rel_swd_instance_range_p2c ###################################################
+#     List semantic web terms which are used as the "rdfs:range" of the present
+#     semantic web in class-instances
+
+# rel_swd_instance_range_c2p ###################################################
+#     List semantic web terms which use the present semantic web term as their
+#     "rdfs:range" in class-instances
+
+################################################################################
+
+
+
+
+(:
+Parakeet.uriToString rel_swt_swt_from "demo" .swoogleIt.hasResult.listElements ;
+
+Parakeet/uriToString rel_swt_swt_from "demo" /swoogleIt/hasResult/listElements ;
+
+
+Beau/?sibling/parent
+
+Beau.?sibling.parent
+
+Beau/parent/!father  ==  Beau (/parent/!father)
+:)

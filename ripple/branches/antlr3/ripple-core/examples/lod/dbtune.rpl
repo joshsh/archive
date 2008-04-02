@@ -1,0 +1,32 @@
+# http://moustaki.org/dbtune/
+
+### Magnatune ##################################################################
+
+# D2R Server contents
+<http://dbtune.org/magnatune/all>.
+
+
+<http://dbtune.org/magnatune/all/magnatune_album>.
+<http://dbtune.org/magnatune/all/magnatune_performance>.
+<http://dbtune.org/magnatune/all/magnatune_timeline>.
+
+# With current settings, this fails to resolve, as the document is too large.
+<http://dbtune.org/magnatune/all/magnatune_song>.
+
+<http://dbtune.org/magnatune/all/magnatune_artist>.
+<http://dbtune.org/magnatune/all/magnatune_signal>.
+<http://dbtune.org/magnatune/all/magnatune_time_interval>.
+
+
+### Jamendo ####################################################################
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+<http://dbtune.org/jamendo/artist/5>.
+<http://dbtune.org/jamendo/artist/5>/foaf:based_near.
+<http://dbtune.org/jamendo/artist/5>/foaf:made.
+
+# Links into Zitgist, but with a permissions error.
+<http://dbtune.org/jamendo/artist/5>/foaf:made/owl:sameAs.
+
+...

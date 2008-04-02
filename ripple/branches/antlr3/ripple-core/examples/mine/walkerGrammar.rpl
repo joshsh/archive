@@ -1,0 +1,17 @@
+
+@prefix : <http://fortytwo.net/2007/10/10/grammars#>.
+@prefix krs: <http://www.knowledgereefsystems.com#>.
+@prefix wn: <http://www.w3.org/2006/03/wn/wn20/schema/>.
+
+# Grammar for walking the wn:similarTo graph from an AdjectiveSynset.
+# Note: intended for a special "walker" evaluator.  The "lazy" query evaluator
+#       won't do anything useful with an infinite loop like this.
+@define walkSynsets:
+    /krs:incrSubmitCount /wn:similarTo /:walkSynsets.
+
+# Let's walk.
+<http://www.w3.org/2006/03/wn/wn20/instances/synset-heavy-adjective-1>
+/:walkSynsets.
+
+
+<http://fortytwo.net/2007/10/10/grammars#walkSynsets>.

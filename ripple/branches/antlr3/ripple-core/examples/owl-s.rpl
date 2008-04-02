@@ -1,0 +1,24 @@
+<http://www.daml.org/services/owl-s/1.0/Service.owl>.
+
+# Note: own prefix.
+@prefix owls: <http://www.daml.org/services/owl-s/1.0/Service.owl#>.
+
+@define owlsTerms:
+    owls:Service
+    owls:ServiceGrounding
+    owls:ServiceModel
+    owls:ServiceProfile
+    owls:describedBy
+    owls:describes
+    owls:isDescribedBy
+    owls:isPresentedBy
+    owls:isSupportedBy
+    owls:presentedBy
+    owls:presents
+    owls:providedBy
+    owls:provides
+    owls:supportedBy
+    owls:supports
+    .
+
+:owlsTerms/each/rdf:type/unique.

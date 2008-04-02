@@ -1,0 +1,68 @@
+@prefix airport: <http://www.daml.org/2001/10/html/airport-ont#>.
+@prefix atomowl: <http://atomowl.org/ontologies/atomowl#>.
+@prefix atomrdf: <http://atomowl.org/ontologies/atomrdf#>.
+@prefix bio: <http://purl.org/vocab/bio/0.1/>.
+@prefix con: <http://www.w3.org/2000/10/swap/pim/contact#>.
+@prefix crypto: <http://www.w3.org/2000/10/swap/crypto#>.
+@prefix currency: <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#>.
+@prefix d2r: <http://sites.wiwiss.fu-berlin.de/suhl/bizer/d2r-server/config.rdf#>.
+@prefix dc: <http://purl.org/dc/elements/1.1/>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix doap: <http://usefulinc.com/ns/doap#>.
+@prefix doc: <http://www.w3.org/2000/10/swap/pim/doc#>.
+@prefix ebnf: <http://www.w3.org/2000/10/swap/grammar/ebnf#>.
+@prefix ecs: <http://rdf.ecs.soton.ac.uk/ontology/ecs#>.
+@prefix f: <http://www.w3.org/2004/09/fresnel#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix foafMusic: <http://foafing-the-music.iua.upf.edu/music-ontology#>.
+@prefix geo: <http://www.geonames.org/ontology#>.
+@prefix iswc: <http://annotation.semanticweb.org/iswc/iswc.daml#>.
+@prefix lingvoj: <http://www.lingvoj.org/ontology#>.
+@prefix log: <http://www.w3.org/2000/10/swap/log#>.
+@prefix math: <http://www.w3.org/2000/10/swap/math#>.
+@prefix mo: <http://purl.org/ontology/mo/>.
+@prefix nso: <http://www.daml.org/2001/09/countries/iso-3166-ont#>.
+@prefix os: <http://www.w3.org/2000/10/swap/os#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix owls: <http://www.daml.org/services/owl-s/1.0/Service.owl#>.
+@prefix person: <http://ebiquity.umbc.edu/ontology/person.owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix reason: <http://www.w3.org/2000/10/swap/reason#>.
+@prefix rev: <http://dannyayers.com/xmlns/rev/#>.
+@prefix service: <http://www.daml.org/services/daml-s/0.7/Service.daml#>.
+@prefix sioc: <http://rdfs.org/sioc/ns#>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix string: <http://www.w3.org/2000/10/swap/string#>.
+@prefix time: <http://www.w3.org/2000/10/swap/time#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@prefix tzont: <http://www.w3.org/2006/timezone#>.
+@prefix vann: <http://purl.org/vocab/vann/>.
+@prefix vcard: <http://www.w3.org/2001/vcard-rdf/3.0#>.
+@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#>.
+
+
+# Not RDF/XML:
+@prefix list: <http://www.w3.org/2000/10/swap/list#>.
+
+
+# Weird file extension or MIME type
+@prefix cc: <http://web.resource.org/cc/>.
+@prefix daml: <http://www.daml.org/2001/03/daml+oil#>.
+@prefix dolce: <http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#>.
+@prefix earthrealm: <http://sweet.jpl.nasa.gov/ontology/earthrealm.owl#>.
+@prefix numerics:  <http://sweet.jpl.nasa.gov/ontology/numerics.owl#>.
+@prefix property:  <http://sweet.jpl.nasa.gov/ontology/property.owl#>.
+@prefix space:  <http://sweet.jpl.nasa.gov/ontology/space.owl#>.
+@prefix swoogle: <http://daml.umbc.edu/ontologies/webofbelief/1.4/swoogle.owl#>.
+@prefix tags: <http://www.holygoat.co.uk/owl/redwood/0.1/tags/>.
+@prefix units:  <http://sweet.jpl.nasa.gov/ontology/units.owl#>.
+@prefix wob: <http://daml.umbc.edu/ontologies/webofbelief/1.4/wob.owl#>.
+
+
+# Not dereferenceable.
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#>.
+@prefix doac: <http://ramonantonio.net/doac/0.1/#>.
+@prefix gforge: <http://swc.projects.semwebcentral.org/owl/gforge-ont#>.
+@prefix prj: <http://purl.org/stuff/project/>.
+@prefix rss: <http://purl.org/rss/1.0/>.

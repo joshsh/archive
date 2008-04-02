@@ -1,0 +1,38 @@
+<http://foafing-the-music.iua.upf.edu/music-ontology>.
+<http://foafing-the-music.iua.upf.edu/music-ontology#>.
+
+# Note: own prefix.
+@prefix foafMusic: <http://foafing-the-music.iua.upf.edu/music-ontology#>.
+
+@define foafMusicTerms:
+    foafMusic:Artist
+    foafMusic:Track
+    foafMusic:city
+    foafMusic:decades
+    foafMusic:descriptor
+    foafMusic:duration
+    foafMusic:dynamicComplexity
+    foafMusic:fingerprint
+    foafMusic:followersOf
+    foafMusic:genre
+    foafMusic:hasInfluenced
+    foafMusic:intensity
+    foafMusic:itms
+    foafMusic:key
+    foafMusic:keyMode
+    foafMusic:meter
+    foafMusic:name
+    foafMusic:nationality
+    foafMusic:playedBy
+    foafMusic:plays
+    foafMusic:relatedWith
+    foafMusic:rhythmDescriptor
+    foafMusic:soundsLike
+    foafMusic:swingRatio
+    foafMusic:tempo
+    foafMusic:title
+    foafMusic:tonalityDescriptor
+    foafMusic:tonalness
+    foafMusic:undanceability
+    foafMusic:workedWith
+    .

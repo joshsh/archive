@@ -1,0 +1,133 @@
+# Currency ontology ############################################################
+
+@prefix nso: <http://www.daml.org/2001/09/countries/iso-3166-ont#>.
+
+# Note: own prefix.
+@prefix currency: <http://www.daml.ecs.soton.ac.uk/ont/currency.owl#>.
+
+@define currencyTerms:
+    currency:Currency
+    currency:code
+    currency:country
+    currency:name
+    .
+
+:currencyTerms/each/rdf:type/unique.
+
+@define currencies:
+    currency:AFA
+    currency:ANG
+    currency:ARS
+    currency:AUD
+    currency:AWG
+    currency:AZM
+    currency:BAM
+    currency:BBD
+    currency:BIF
+    currency:BMD
+    currency:BND
+    currency:BRL
+    currency:BSD
+    currency:BWP
+    currency:BYR
+    currency:BZD
+    currency:CDF
+    currency:CHF
+    currency:CNY
+    currency:CRC
+    currency:CUP
+    currency:CYP
+    currency:DKK
+    currency:DZD
+    currency:EGP
+    currency:ERN
+    currency:ETB
+    currency:EUR
+    currency:FJD
+    currency:FKP
+    currency:GBP
+    currency:GEL
+    currency:GHC
+    currency:GNF
+    currency:GTQ
+    currency:GYD
+    currency:HKD
+    currency:IDR
+    currency:ILS
+    currency:INR
+    currency:IRR
+    currency:ISK
+    currency:JMD
+    currency:JOD
+    currency:JPY
+    currency:KGS
+    currency:KRW
+    currency:KYD
+    currency:LRD
+    currency:LSL
+    currency:LVL
+    currency:MDL
+    currency:MKD
+    currency:MNT
+    currency:MRO
+    currency:MXN
+    currency:MYR
+    currency:MZM
+    currency:NAD
+    currency:NOK
+    currency:NZD
+    currency:OMR
+    currency:PAB
+    currency:PEN
+    currency:PGK
+    currency:PLN
+    currency:QAR
+    currency:ROL
+    currency:RUR
+    currency:RWF
+    currency:SAR
+    currency:SBD
+    currency:SCR
+    currency:SDD
+    currency:SEK
+    currency:SKK
+    currency:STD
+    currency:SVC
+    currency:SYP
+    currency:TMM
+    currency:TND
+    currency:TOP
+    currency:TRL
+    currency:TVD
+    currency:TZS
+    currency:UAH
+    currency:USD
+    currency:VEB
+    currency:VUV
+    currency:WST
+    currency:XAF
+    currency:XAG
+    currency:XAU
+    currency:XCD
+    currency:XPF
+    currency:YUM
+    currency:ZAR
+    currency:ZWD
+    .
+
+:currencies/each/dup
+    /dup /<http://www.daml.ecs.soton.ac.uk/ont/currency.owl#name>
+    /swap/<http://www.daml.ecs.soton.ac.uk/ont/currency.owl#country>/nso:name.
+
+# Currency converter web service ###############################################
+
+# (sic)
+<http://www.daml.ecs.soton.ac.uk/services/daml-s0.7/cc/currencyconverter-service.daml#CurrenctConverterWebService>.
+
+# My own currency stuff ########################################################
+
+# This should work, but, unsuprisingly, doesn't.  Dunno whether it's the Evaluator or my logic which is at fault.
+<http://fortytwo.net/2007/02/06/context_2007-02-01.rdf#now> (currency:GPB (currency:USD (currency:rateProperty (concatenateStrings (B (S B B)) B B B (T B) W)))).
+
+
+

@@ -1,0 +1,8 @@
+
+
+
+# Convert RDF/XML to JSON.
+# http://triplr.org/json/http://sws.geonames.org/5352844/about.rdf
+
+# This is rather pointless, as it converts RDF/XML to RDF/XML.
+# http://triplr.org/rdf/http://sws.geonames.org/5352844/about.rdf
