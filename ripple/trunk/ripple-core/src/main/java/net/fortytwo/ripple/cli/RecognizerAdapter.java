@@ -83,7 +83,7 @@ public class RecognizerAdapter
 
 	public void putEvent( final RecognizerEvent event )
 	{
-System.out.println("putting event: " + event);
+//System.out.println("putting event: " + event);
         try
 		{
 			eventSink.put( event );

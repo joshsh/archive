@@ -41,14 +41,14 @@ public class PipedIOStream extends InputStream //, OutputStream
 	@Override
 	public synchronized int available()
 	{
-System.out.println("available = " + length);
+//System.out.println("available = " + length);
         return length;
 	}
 
 	@Override
 	public int read() throws IOException
 	{
-System.out.println("    ---> length = " + length );
+//System.out.println("    ---> length = " + length );
 		// FIXME: race condition
 		if ( 0 == length )
 		{
@@ -72,14 +72,14 @@ System.out.println("    ---> length = " + length );
 			int c = data[pos];
 			pos = ( 1 + pos ) % size;
 			length--;
-System.out.println("    [" + this + "] read(" + c + " -- '" + (char) c + "') -- length = " + length + " -- thread = " + Thread.currentThread());
+//System.out.println("    [" + this + "] read(" + c + " -- '" + (char) c + "') -- length = " + length + " -- thread = " + Thread.currentThread());
 			return c;
 		}
 	}
 
 	public synchronized void write( int b ) throws IOException
 	{
-System.out.println("[" + this + "] write(" + b + ")");
+//System.out.println("[" + this + "] write(" + b + ")");
 		if ( null == data )
 		{
 			throw new IOException( "can't write: pipe has been closed" );
@@ -129,7 +129,7 @@ System.out.println("[" + this + "] write(" + b + ")");
     @Override
     public long skip(final long n) throws IOException
     {
-System.out.println("skip(" + n + ")");
+//System.out.println("skip(" + n + ")");
         long i;
         for ( i = 0; i < n ; i++ ) {
             int c = read();
@@ -144,6 +144,6 @@ System.out.println("skip(" + n + ")");
 
     public void flush() throws IOException
     {
-System.out.println("flush()");
+//System.out.println("flush()");
     }
 }

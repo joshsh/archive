@@ -80,17 +80,23 @@
           </archive>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>antlr3-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>antlr</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-antlr-plugin</artifactId>
+                                <configuration>
+                                        <grammars>net/fortytwo/ripple/cli/Ripple.g</grammars>
+                                        <outputDirectory>${basedir}/target/generated-sources/main/java</outputDirectory>
+                                </configuration>
+                                <!-- Compile the ANTLR grammar. -->
+                                <executions>
+                                        <execution>
+                                                <phase>generate-sources</phase>
+                                                <goals>
+                                                        <goal>generate</goal>
+                                                </goals>
+                                        </execution>
+                                </executions>
+                        </plugin>
       <plugin>
         <artifactId>maven-doap-plugin</artifactId>
         <version>1.0-beta-1</version>
@@ -151,14 +157,9 @@
       <version>1.0.5</version>
     </dependency>
     <dependency>
-      <groupId>org.antlr</groupId>
-      <artifactId>antlr-runtime</artifactId>
-      <version>3.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.antlr</groupId>
+      <groupId>antlr</groupId>
       <artifactId>antlr</artifactId>
-      <version>3.0.1</version>
+      <version>2.7.2</version>
     </dependency>
     <dependency>
       <groupId>jdom</groupId>

@@ -15,11 +15,9 @@ import java.io.InputStream;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Sink;
 
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RippleCharStream;
-import org.antlr.runtime.ModifiedANTLRInputStream;
 import org.apache.log4j.Logger;
+
+import antlr.TokenStreamIOException;
 
 public class Interpreter
 {
@@ -49,29 +47,19 @@ public class Interpreter
 	{
 		active = true;
 
-System.out.println( "-- parse" );
+//System.out.println( "-- parse" );
 		// Break out when a @quit directive is encountered
 		while ( active )
 		{
-System.out.println( "-- construct" );
-			// TODO: learn more about these ANTLR 3.0 classes
-			CharStream cs;
-			try {
-                cs = new ModifiedANTLRInputStream( input, 1024, 1, null );
-                //cs = new RippleCharStream( input );
-			} catch ( IOException e ) {
-				throw new RippleException( e );
-			}
-
-			RippleLexer lexer = new RippleLexer( cs );
+//System.out.println( "-- construct" );
+			RippleLexer lexer = new RippleLexer( input );
 			lexer.initialize( recognizerAdapter );
-	       	CommonTokenStream tokens = new CommonTokenStream( lexer );
-			RippleParser parser = new RippleParser( tokens );
+			RippleParser parser = new RippleParser( lexer );
 			parser.initialize( recognizerAdapter );
 
 			try
 			{
-System.out.println( "-- antlr" );
+//System.out.println( "-- antlr" );
 				parser.nt_Document();
 
                 // If the parser has exited normally, then we're done.
@@ -88,8 +76,6 @@ System.out.println( "-- antlr" );
 				active = false;
 			}
 
-// FIXME: parser will not stop at end of input
-			/*
             // TokenStreamIOException is considered fatal.  Two scenarios in
             // which it occurs are when the Interpreter thread has been
             // interrupted, and when the lexer has reached the end of input.
@@ -97,7 +83,7 @@ System.out.println( "-- antlr" );
 			{
 				LOGGER.debug( e );
 				break;
-			}*/
+			}
 			
 			catch ( Exception e )
 			{

@@ -211,10 +211,10 @@ System.out.println( "reader.getTerminal() = " + term );
 		{
 			++lineNumber;
 			String prefix = "" + lineNumber + " >>  ";
-System.out.println( "reading a line" );
-System.out.println( "    consoleReaderInput.available() = " + consoleReaderInput.available() );
+//System.out.println( "reading a line" );
+//System.out.println( "    consoleReaderInput.available() = " + consoleReaderInput.available() );
 			String line = reader.readLine( prefix );
-System.out.println( "done reading the line: " + line );
+//System.out.println( "done reading the line: " + line );
 	
 			if ( null != line )
 			{
