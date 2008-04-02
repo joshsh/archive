@@ -10,13 +10,13 @@
 package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.Closure;
 import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
 import org.apache.log4j.Logger;
 
 // Note: not thread-safe, on account of stop()
@@ -28,12 +28,12 @@ public class LazyEvaluator extends StackEvaluator
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class MappingSink implements Sink<StackContext>
+	protected class MappingSink implements Sink<StackContext, RippleException>
 	{
 		private StackMapping mapping;
-		private Sink<StackContext> sink;
+		private Sink<StackContext, RippleException> sink;
 
-		public MappingSink( final StackMapping mapping, final Sink<StackContext> sink )
+		public MappingSink( final StackMapping mapping, final Sink<StackContext, RippleException> sink )
 		{
 			this.mapping = mapping;
 			this.sink = sink;
@@ -70,11 +70,11 @@ public class LazyEvaluator extends StackEvaluator
 
 	////////////////////////////////////////////////////////////////////////////
 
-	protected class EvaluatorSink implements Sink<StackContext>
+	protected class EvaluatorSink implements Sink<StackContext, RippleException>
 	{
-		private Sink<StackContext> sink;
+		private Sink<StackContext, RippleException> sink;
 
-		public EvaluatorSink( final Sink<StackContext> sink )
+		public EvaluatorSink( final Sink<StackContext, RippleException> sink )
 		{
 			this.sink = sink;
 //System.out.println( this + "( " + sink + ")" );
@@ -142,7 +142,7 @@ public class LazyEvaluator extends StackEvaluator
 	////////////////////////////////////////////////////////////////////////////
 
 	public void applyTo( final StackContext arg,
-						final Sink<StackContext> sink )
+						final Sink<StackContext, RippleException> sink )
 		throws RippleException
 	{
 if ( RippleList.NIL == arg.getStack() )

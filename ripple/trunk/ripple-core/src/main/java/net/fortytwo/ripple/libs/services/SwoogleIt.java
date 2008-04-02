@@ -10,6 +10,8 @@
 package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Buffer;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.io.RdfImporter;
@@ -18,9 +20,7 @@ import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Buffer;
 import net.fortytwo.ripple.rdf.RdfUtils;
-import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 
 import org.openrdf.model.URI;
@@ -58,7 +58,7 @@ public class SwoogleIt extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink )
+						 final Sink<StackContext, RippleException> sink )
 		throws RippleException
 	{
 		final ModelConnection mc = arg.getModelConnection();
@@ -102,11 +102,11 @@ URI ctx = mc.createUri( url.toString() );
 
 		// Output is buffered so that the entire document is imported into the
 		// model before results are processed.
-		final Buffer<StackContext> buffer = new Buffer<StackContext>( sink );
+		final Buffer<StackContext, RippleException> buffer = new Buffer<StackContext, RippleException>( sink );
 
 		RdfSink responseWatcher = new RdfSink()
 		{
-			private Sink<Statement> stSink = new Sink<Statement>()
+			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
 				public void put( final Statement st )
 					throws RippleException
@@ -122,7 +122,7 @@ URI ctx = mc.createUri( url.toString() );
 				}
 			};
 
-			private Sink<Namespace> nsSink = new Sink<Namespace>()
+			private Sink<Namespace, RippleException> nsSink = new Sink<Namespace, RippleException>()
 			{
 				public void put( final Namespace ns )
 					throws RippleException
@@ -131,7 +131,7 @@ URI ctx = mc.createUri( url.toString() );
 				}
 			};
 
-			private Sink<String> cmtSink = new Sink<String>()
+			private Sink<String, RippleException> cmtSink = new Sink<String, RippleException>()
 			{
 				public void put( final String comment )
 					throws RippleException
@@ -140,17 +140,17 @@ URI ctx = mc.createUri( url.toString() );
 				}
 			};
 
-			public Sink<Statement> statementSink()
+			public Sink<Statement, RippleException> statementSink()
 			{
 				return stSink;
 			}
 		
-			public Sink<Namespace> namespaceSink()
+			public Sink<Namespace, RippleException> namespaceSink()
 			{
 				return nsSink;
 			}
 		
-			public Sink<String> commentSink()
+			public Sink<String, RippleException> commentSink()
 			{
 				return cmtSink;
 			}

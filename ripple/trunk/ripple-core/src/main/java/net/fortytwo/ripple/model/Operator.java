@@ -13,7 +13,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.query.ListDequotation;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 import org.openrdf.model.vocabulary.RDF;
 
@@ -95,7 +95,7 @@ return rdfEquivalent;
 	 *  Finds the type of a value and creates an appropriate "active" wrapper.
 	 */
 	public static void createOperator( final RippleValue v,
-										final Sink<Operator> opSink,
+										final Sink<Operator, RippleException> opSink,
 										final ModelConnection mc )
 		throws RippleException
 	{
@@ -119,7 +119,7 @@ return rdfEquivalent;
 		{
 			if ( isRdfList( (RdfValue) v, mc ) )
 			{
-				Sink<RippleList> listSink = new Sink<RippleList>()
+				Sink<RippleList, RippleException> listSink = new Sink<RippleList, RippleException>()
 				{
 					public void put( final RippleList list )
 						throws RippleException

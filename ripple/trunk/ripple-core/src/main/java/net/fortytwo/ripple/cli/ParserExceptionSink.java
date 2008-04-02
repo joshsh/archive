@@ -1,12 +1,11 @@
 package net.fortytwo.ripple.cli;
 
-import java.io.IOException;
 import java.io.PrintStream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
-public class ParserExceptionSink implements Sink<Exception>
+public class ParserExceptionSink implements Sink<Exception, RippleException>
 {
 	private PrintStream errorPrintStream;
 	

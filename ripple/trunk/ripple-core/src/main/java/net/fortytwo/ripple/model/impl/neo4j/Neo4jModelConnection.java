@@ -8,7 +8,7 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.RdfSource;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 import org.openrdf.model.URI;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Resource;
@@ -67,7 +67,7 @@ public class Neo4jModelConnection implements ModelConnection {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void toList(RippleValue v, Sink<RippleList> sink) throws RippleException {
+    public void toList(RippleValue v, Sink<RippleList, RippleException> sink) throws RippleException {
 //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -95,7 +95,7 @@ public class Neo4jModelConnection implements ModelConnection {
 //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void putContainerMembers(RippleValue head, Sink<RippleValue> sink) throws RippleException {
+    public void putContainerMembers(RippleValue head, Sink<RippleValue, RippleException> sink) throws RippleException {
 //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -103,7 +103,7 @@ public class Neo4jModelConnection implements ModelConnection {
 //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void findPredicates(RippleValue subject, Sink<RippleValue> sink) throws RippleException {
+    public void findPredicates(RippleValue subject, Sink<RippleValue, RippleException> sink) throws RippleException {
 //To change body of implemented methods use File | Settings | File Templates.
     }// FIXME: Statements should not be part of the ModelConnection API
 
@@ -212,23 +212,23 @@ public class Neo4jModelConnection implements ModelConnection {
 //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void multiplyAsynch(RippleValue subj, RippleValue pred, Sink<RippleValue> sink, boolean includeInferred) throws RippleException {
+    public void multiplyAsynch(RippleValue subj, RippleValue pred, Sink<RippleValue, RippleException> sink, boolean includeInferred) throws RippleException {
 //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void multiply(RippleValue subj, RippleValue pred, Sink<RippleValue> sink, boolean includeInferred) throws RippleException {
+    public void multiply(RippleValue subj, RippleValue pred, Sink<RippleValue, RippleException> sink, boolean includeInferred) throws RippleException {
 //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void divide(RippleValue obj, RippleValue pred, Sink<RippleValue> sink) throws RippleException {
+    public void divide(RippleValue obj, RippleValue pred, Sink<RippleValue, RippleException> sink) throws RippleException {
 //To change body of implemented methods use File | Settings | File Templates.
     }// FIXME: Namespaces should not be part of the ModelConnection API
 
-    public void getNamespaces(Sink<Namespace> sink) throws RippleException {
+    public void getNamespaces(Sink<Namespace, RippleException> sink) throws RippleException {
         //To change body of implemented methods use File | Settings | File Templates.
     }// FIXME: Statements should not be part of the ModelConnection API
 
-    public void getStatements(RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement> sink, boolean includeInferred) throws RippleException {
+    public void getStatements(RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement, RippleException> sink, boolean includeInferred) throws RippleException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -236,11 +236,11 @@ public class Neo4jModelConnection implements ModelConnection {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }// TODO: Namespaces should not be part of the ModelConnection API
 
-    public void putNamespaces(Sink<Namespace> sink) throws RippleException {
+    public void putNamespaces(Sink<Namespace, RippleException> sink) throws RippleException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void putContexts(Sink<RippleValue> sink) throws RippleException {
+    public void putContexts(Sink<RippleValue, RippleException> sink) throws RippleException {
 //To change body of implemented methods use File | Settings | File Templates.
     }
 

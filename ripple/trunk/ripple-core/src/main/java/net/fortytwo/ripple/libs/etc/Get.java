@@ -15,7 +15,7 @@ import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 
@@ -43,7 +43,7 @@ public class Get extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{

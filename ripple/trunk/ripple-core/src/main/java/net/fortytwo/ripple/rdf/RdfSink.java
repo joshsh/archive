@@ -9,16 +9,17 @@
 
 package net.fortytwo.ripple.rdf;
 
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 
 public interface RdfSink
 {
-	Sink<Statement> statementSink();
-	Sink<Namespace> namespaceSink();
-	Sink<String> commentSink();
+	Sink<Statement, RippleException> statementSink();
+	Sink<Namespace, RippleException> namespaceSink();
+	Sink<String, RippleException> commentSink();
 }
 
 // kate: tab-width 4

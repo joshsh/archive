@@ -2,7 +2,7 @@ package net.fortytwo.ripple.rdf;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -18,9 +18,9 @@ import org.openrdf.model.ValueFactory;
  */
 public class BNodeToUriFilter implements RdfSink
 {
-	private Sink<Statement> stSink;
-	private Sink<Namespace> nsSink;
-	private Sink<String> cmtSink;
+	private Sink<Statement, RippleException> stSink;
+	private Sink<Namespace, RippleException> nsSink;
+	private Sink<String, RippleException> cmtSink;
 
 	private ValueFactory valueFactory;
 
@@ -28,9 +28,9 @@ public class BNodeToUriFilter implements RdfSink
 	{
 		valueFactory = vf;
 
-		final Sink<Statement> destStSink = sink.statementSink();
+		final Sink<Statement, RippleException> destStSink = sink.statementSink();
 
-		stSink = new Sink<Statement>()
+		stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -68,17 +68,17 @@ public class BNodeToUriFilter implements RdfSink
 		return valueFactory.createURI( Ripple.URN_BNODE_PREFIX + bnode.getID() );
 	}
 	
-	public Sink<Statement> statementSink()
+	public Sink<Statement, RippleException> statementSink()
 	{
 		return stSink;
 	}
 
-	public Sink<Namespace> namespaceSink()
+	public Sink<Namespace, RippleException> namespaceSink()
 	{
 		return nsSink;
 	}
 
-	public Sink<String> commentSink()
+	public Sink<String, RippleException> commentSink()
 	{
 		return cmtSink;
 	}

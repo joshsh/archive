@@ -16,7 +16,7 @@ import net.fortytwo.ripple.rdf.diff.RdfDiffBuffer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
 import net.fortytwo.ripple.rdf.diff.SynchronizedRdfDiffSink;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.util.UriMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Namespace;
@@ -102,7 +102,7 @@ public class LinkedDataSailConnection implements SailConnection
 							final Resource... contexts )
 		throws SailException
 	{
-		Sink<Statement> sink = apiInputSink.adderSink().statementSink();
+		Sink<Statement, RippleException> sink = apiInputSink.adderSink().statementSink();
 
 		try
 		{
@@ -321,7 +321,7 @@ public class LinkedDataSailConnection implements SailConnection
 	public void removeNamespace( final String prefix )
 		throws SailException
 	{
-		Sink<Namespace> sink = apiInputSink.subtractorSink().namespaceSink();
+		Sink<Namespace, RippleException> sink = apiInputSink.subtractorSink().namespaceSink();
 
 		try
 		{
@@ -345,7 +345,7 @@ public class LinkedDataSailConnection implements SailConnection
 									final Resource... context )
 		throws SailException
 	{
-		Sink<Statement> sink = apiInputSink.subtractorSink().statementSink();
+		Sink<Statement, RippleException> sink = apiInputSink.subtractorSink().statementSink();
 
 		try
 		{
@@ -389,7 +389,7 @@ public class LinkedDataSailConnection implements SailConnection
 	public void setNamespace( final String prefix, final String name )
 		throws SailException
 	{
-		Sink<Namespace> sink = apiInputSink.adderSink().namespaceSink();
+		Sink<Namespace, RippleException> sink = apiInputSink.adderSink().namespaceSink();
 
 		try
 		{

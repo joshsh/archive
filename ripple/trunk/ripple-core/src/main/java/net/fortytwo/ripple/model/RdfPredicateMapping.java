@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.model;
 
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.Ripple;
 
@@ -34,14 +34,14 @@ public class RdfPredicateMapping implements StackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink ) throws RippleException
+						 final Sink<StackContext, RippleException> sink ) throws RippleException
 	{
 		final ModelConnection mc = arg.getModelConnection();
 		RippleList stack = arg.getStack();
 
 		RippleValue subject = stack.getFirst();
 		
-		Sink<RippleValue> resultSink = new ValueSink( arg, sink );
+		Sink<RippleValue, RippleException> resultSink = new ValueSink( arg, sink );
 
 		if ( Ripple.asynchronousQueries() )
 		{
@@ -59,12 +59,12 @@ public class RdfPredicateMapping implements StackMapping
 		return "Predicate(" + predicate + ")";
 	}
 
-	private class ValueSink implements Sink<RippleValue>
+	private class ValueSink implements Sink<RippleValue, RippleException>
 	{
-		private Sink<StackContext> sink;
+		private Sink<StackContext, RippleException> sink;
 		private StackContext arg;
 
-		public ValueSink( final StackContext arg, final Sink<StackContext> sink )
+		public ValueSink( final StackContext arg, final Sink<StackContext, RippleException> sink )
 		{
 			this.arg = arg;
 			this.sink = sink;

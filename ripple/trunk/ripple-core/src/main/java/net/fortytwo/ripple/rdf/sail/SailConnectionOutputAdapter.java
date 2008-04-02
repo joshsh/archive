@@ -10,10 +10,10 @@
 package net.fortytwo.ripple.rdf.sail;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.NullSink;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
-import net.fortytwo.ripple.util.NullSink;
-import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
@@ -31,7 +31,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 
 		addSink = new RdfSink()
 		{
-			private Sink<Statement> stSink = new Sink<Statement>()
+			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
 				public void put( final Statement st ) throws RippleException
 				{
@@ -40,7 +40,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 				}
 			};
 
-			private Sink<Namespace> nsSink = new Sink<Namespace>()
+			private Sink<Namespace, RippleException> nsSink = new Sink<Namespace, RippleException>()
 			{
 				public void put( final Namespace ns ) throws RippleException
 				{
@@ -49,19 +49,19 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 				}
 			};
 
-			private Sink<String> cmtSink = new NullSink<String>();
+			private Sink<String, RippleException> cmtSink = new NullSink<String, RippleException>();
 
-			public Sink<Statement> statementSink()
+			public Sink<Statement, RippleException> statementSink()
 			{
 				return stSink;
 			}
 		
-			public Sink<Namespace> namespaceSink()
+			public Sink<Namespace, RippleException> namespaceSink()
 			{
 				return nsSink;
 			}
 		
-			public Sink<String> commentSink()
+			public Sink<String, RippleException> commentSink()
 			{
 				return cmtSink;
 			}
@@ -69,7 +69,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 
 		subtractSink = new RdfSink()
 		{
-			private Sink<Statement> stSink = new Sink<Statement>()
+			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
 				public void put( final Statement st ) throws RippleException
 				{
@@ -77,7 +77,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 				}
 			};
 
-			private Sink<Namespace> nsSink = new Sink<Namespace>()
+			private Sink<Namespace, RippleException> nsSink = new Sink<Namespace, RippleException>()
 			{
 				public void put( final Namespace ns ) throws RippleException
 				{
@@ -85,19 +85,19 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 				}
 			};
 
-			private Sink<String> cmtSink = new NullSink<String>();
+			private Sink<String, RippleException> cmtSink = new NullSink<String, RippleException>();
 
-			public Sink<Statement> statementSink()
+			public Sink<Statement, RippleException> statementSink()
 			{
 				return stSink;
 			}
 		
-			public Sink<Namespace> namespaceSink()
+			public Sink<Namespace, RippleException> namespaceSink()
 			{
 				return nsSink;
 			}
 		
-			public Sink<String> commentSink()
+			public Sink<String, RippleException> commentSink()
 			{
 				return cmtSink;
 			}

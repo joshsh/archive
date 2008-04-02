@@ -16,7 +16,7 @@ import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 // kate: tab-width 4
 
@@ -40,7 +40,7 @@ public class OptApply extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -48,7 +48,7 @@ public class OptApply extends PrimitiveStackMapping
 		RippleValue first = stack.getFirst();
 		final RippleList rest = stack.getRest();
 
-		Sink<Operator> opSink = new Sink<Operator>()
+		Sink<Operator, RippleException> opSink = new Sink<Operator, RippleException>()
 		{
 			public void put( final Operator op ) throws RippleException
 			{

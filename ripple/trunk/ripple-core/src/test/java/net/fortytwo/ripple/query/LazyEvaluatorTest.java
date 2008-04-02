@@ -9,8 +9,8 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.RippleException;
 
 public class LazyEvaluatorTest extends RippleTestCase
@@ -22,11 +22,11 @@ public class LazyEvaluatorTest extends RippleTestCase
 		{
 			ModelConnection mc = getTestModel().getConnection( "foo" );
 			Evaluator eval = new LazyEvaluator();
-			Collector<RippleList> expected = new Collector<RippleList>();
-			final Collector<RippleList> actual = new Collector<RippleList>();
+			Collector<RippleList, RippleException> expected = new Collector<RippleList, RippleException>();
+			final Collector<RippleList, RippleException> actual = new Collector<RippleList, RippleException>();
 			RippleList input;
 
-			Sink<StackContext> actualSink = new Sink<StackContext>() {
+			Sink<StackContext, RippleException> actualSink = new Sink<StackContext, RippleException>() {
 
 				public void put( final StackContext arg ) throws RippleException
 				{

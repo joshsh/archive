@@ -9,29 +9,30 @@
 
 package net.fortytwo.ripple.rdf;
 
-import net.fortytwo.ripple.util.NullSink;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.NullSink;
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 
 public class RdfNullSink implements RdfSink
 {
-	private Sink<Statement> stSink = new NullSink<Statement>();
-	private Sink<Namespace> nsSink = new NullSink<Namespace>();
-	private Sink<String> cmtSink = new NullSink<String>();
+	private Sink<Statement, RippleException> stSink = new NullSink<Statement, RippleException>();
+	private Sink<Namespace, RippleException> nsSink = new NullSink<Namespace, RippleException>();
+	private Sink<String, RippleException> cmtSink = new NullSink<String, RippleException>();
 
-	public Sink<Statement> statementSink()
+	public Sink<Statement, RippleException> statementSink()
 	{
 		return stSink;
 	}
 
-	public Sink<Namespace> namespaceSink()
+	public Sink<Namespace, RippleException> namespaceSink()
 	{
 		return nsSink;
 	}
 
-	public Sink<String> commentSink()
+	public Sink<String, RippleException> commentSink()
 	{
 		return cmtSink;
 	}

@@ -9,37 +9,8 @@
 grammar Ripple;
 
 
-
-
-
 @lexer::header {
 package net.fortytwo.ripple.cli;
-
-import java.util.Properties;
-
-import net.fortytwo.ripple.cli.ast.Ast;
-import net.fortytwo.ripple.cli.ast.BooleanAst;
-import net.fortytwo.ripple.cli.ast.BlankNodeAst;
-import net.fortytwo.ripple.cli.ast.DoubleAst;
-import net.fortytwo.ripple.cli.ast.IntegerAst;
-import net.fortytwo.ripple.cli.ast.KeywordAst;
-import net.fortytwo.ripple.cli.ast.ListAst;
-import net.fortytwo.ripple.cli.ast.OperatorAst;
-import net.fortytwo.ripple.cli.ast.PropertyAnnotatedAst;
-import net.fortytwo.ripple.cli.ast.QNameAst;
-import net.fortytwo.ripple.cli.ast.StringAst;
-import net.fortytwo.ripple.cli.ast.TypedLiteralAst;
-import net.fortytwo.ripple.cli.ast.UriAst;
-import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.commands.CountStatementsCmd;
-import net.fortytwo.ripple.query.commands.DefinePrefixCmd;
-import net.fortytwo.ripple.query.commands.DefineTermCmd;
-import net.fortytwo.ripple.query.commands.ExportNsCmd;
-import net.fortytwo.ripple.query.commands.QuitCmd;
-import net.fortytwo.ripple.query.commands.RedefineTermCmd;
-import net.fortytwo.ripple.query.commands.ShowContextsCmd;
-import net.fortytwo.ripple.query.commands.ShowNamespacesCmd;
-import net.fortytwo.ripple.query.commands.UndefineTermCmd;
 }
 
 @lexer::members {
@@ -52,8 +23,11 @@ import net.fortytwo.ripple.query.commands.UndefineTermCmd;
 
 	public void matchEndOfLine()
 	{
-System.out.println("matching end of line.........");
-		adapter.putEvent( RecognizerEvent.NEWLINE );
+//System.out.println("matching end of line.........");
+        if ( null != adapter )
+        {
+		    adapter.putEvent( RecognizerEvent.NEWLINE );
+		}
 	}
 
 /*
@@ -63,37 +37,9 @@ System.out.println( "matchEscapeCharacter" );
 		adapter.putEvent( RecognizerEvent.ESCAPE );
 	}
 */
-
-	public void matchCommand( final Command cmd )
-	{
-		adapter.putCommand( cmd );
-	}
-
-	public void matchQuery( final ListAst ast )
-	{
-		adapter.putQuery( ast );
-	}
-
-	public void matchContinuingQuery( final ListAst ast )
-	{
-		adapter.putContinuingQuery( ast );
-	}
-
-	public void matchQuit()
-	{
-		adapter.putEvent( RecognizerEvent.QUIT );
-	}
 }
 
-
-
-
-
-
-
-
-
-@header {
+@parser::header {
 package net.fortytwo.ripple.cli;
 
 import java.util.Properties;
@@ -121,6 +67,11 @@ import net.fortytwo.ripple.query.commands.RedefineTermCmd;
 import net.fortytwo.ripple.query.commands.ShowContextsCmd;
 import net.fortytwo.ripple.query.commands.ShowNamespacesCmd;
 import net.fortytwo.ripple.query.commands.UndefineTermCmd;
+import net.fortytwo.ripple.query.PipedIOStream;
+
+import java.io.InputStream;
+import java.io.FileInputStream;
+import org.antlr.runtime.ModifiedANTLRInputStream;
 }
 
 /*options
@@ -132,7 +83,7 @@ import net.fortytwo.ripple.query.commands.UndefineTermCmd;
 	defaultErrorHandler = false;
 }*/
 
-@members {
+@parser::members {
 	private RecognizerAdapter adapter = null;
 
 	public void initialize( final RecognizerAdapter i )
@@ -142,36 +93,79 @@ import net.fortytwo.ripple.query.commands.UndefineTermCmd;
 
 	public void matchEndOfLine()
 	{
-		adapter.putEvent( RecognizerEvent.NEWLINE );
+//System.out.println("matching end of line.........");
+        if ( null != adapter )
+        {
+		    adapter.putEvent( RecognizerEvent.NEWLINE );
+		}
 	}
 
-/*
-	void matchEscapeCharacter()
+	public void matchEndOfInput()
 	{
-System.out.println( "matchEscapeCharacter" );
-		adapter.putEvent( RecognizerEvent.ESCAPE );
-	}
-*/
+System.out.println("matching end of input.........");
+        if ( null != adapter )
+        {
+	        adapter.putEvent( RecognizerEvent.END_OF_INPUT );
+	    }
+    }
 
 	public void matchCommand( final Command cmd )
 	{
-		adapter.putCommand( cmd );
+System.out.println("#### matching a command: " + cmd);
+        if ( null != adapter )
+        {
+		    adapter.putCommand( cmd );
+		}
 	}
 
 	public void matchQuery( final ListAst ast )
 	{
-		adapter.putQuery( ast );
+System.out.println("#### matching a query: " + ast);
+        if ( null != adapter )
+        {
+		    adapter.putQuery( ast );
+		}
 	}
 
 	public void matchContinuingQuery( final ListAst ast )
 	{
-		adapter.putContinuingQuery( ast );
+        if ( null != adapter )
+        {
+		    adapter.putContinuingQuery( ast );
+		}
 	}
 
 	public void matchQuit()
 	{
-		adapter.putEvent( RecognizerEvent.QUIT );
+        if ( null != adapter )
+        {
+		    adapter.putEvent( RecognizerEvent.QUIT );
+		}
 	}
+
+	public static void main(String[] args) throws Exception {
+	    InputStream is = new FileInputStream(args[0]);
+	    PipedIOStream pios = new PipedIOStream();
+	    while (is.available() > 0) {
+	        pios.write(is.read());
+        }
+        pios.write(10);
+        //pios.write(-1);
+        is.close();
+        CharStream cs = new ModifiedANTLRInputStream(pios);
+
+        //CharStream cs = new ANTLRFileStream(args[0]);
+        RippleLexer lex = new RippleLexer(cs);
+       	CommonTokenStream tokens = new CommonTokenStream(lex);
+
+        RippleParser parser = new RippleParser(tokens);
+
+        try {
+            parser.nt_Document();
+        } catch (RecognitionException e)  {
+            e.printStackTrace();
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -211,7 +205,7 @@ HEX
 fragment
 SCHARACTER
 	: ' ' | '!' | ('#'..'[')  // excludes: '\"', '\\'
-	| (']'..'\uFFFF')  // Note: '\u10FFFF' in Turtle
+	| (']'..'\uFFFE')  // Note: '\u10FFFF' in Turtle
 	| '\\u' HEX HEX HEX HEX
 	| '\\U' HEX HEX HEX HEX HEX HEX HEX HEX
 	| '\\' ('\\' | '\"' | 't' | 'n' | 'r' )
@@ -220,7 +214,7 @@ SCHARACTER
 fragment
 UCHARACTER
 	: (' '..'=') | ('?'..'[')  // excludes: '>', '\\'
-	| (']'..'\uFFFF')  // Note: '\u10FFFF' in Turtle
+	| (']'..'\uFFFE')  // Note: '\u10FFFF' in Turtle
 	| '\\u' HEX HEX HEX HEX
 	| '\\U' HEX HEX HEX HEX HEX HEX HEX HEX
 	| '\\' ('\\' | '>')
@@ -298,7 +292,7 @@ NODEID_PREFIX : '_:' ;
 NUMBER
 	: ('-' /*| '+'*/)? ( DIGIT )+
 		(('.' DIGIT ) => ( '.' ( DIGIT )+ )
-		| ())
+		| ()) {System.out.println("found a number");}
 	;
 
 // Ignore comments.
@@ -347,7 +341,7 @@ DRCTV_EXPORT    : DRCTV ( 'export'        | 'e' ) ;
 DRCTV_HELP      : DRCTV ( 'help'          | 'h' ) ;
 DRCTV_LIST      : DRCTV ( 'list'          | 'l' ) ;
 DRCTV_PREFIX    : DRCTV ( 'prefix'        | 'p' ) ;
-DRCTV_QUIT      : DRCTV ( 'quit'          | 'q' ) ;
+DRCTV_QUIT      : DRCTV ( 'quit'          | 'q' ) {System.out.println("TOKEN quit!");} ;
 DRCTV_REDEFINE  : DRCTV ( 'redefine'      | 'r' ) ;
 DRCTV_UNDEFINE  : DRCTV ( 'undefine'      | 'u' ) ;
 
@@ -357,15 +351,16 @@ nt_Document
 @init {
 	// Request a first line of input from the interface (the lexer will request
 	// additional input as it matches newlines).
-	adapter.putEvent( RecognizerEvent.NEWLINE );
+	matchEndOfLine();
 }
 	: ( (nt_Ws)? nt_Statement )*
+	EOF { matchEndOfInput(); } (nt_Ws)?
 	;
 
 nt_Ws
 	// Note: consecutive WS tokens occur when the lexer matches a COMMENT
 	//       between them.
-	: (WS)+
+	: (WS)+ {System.out.println("found some whitespace!");}
 	;
 
 nt_Statement
@@ -632,7 +627,7 @@ nt_Directive
 			matchCommand( new DefinePrefixCmd( nsPrefix, ns ) );
 		}
 
-	| DRCTV_QUIT (nt_Ws)? PERIOD
+	| DRCTV_QUIT {System.out.println("QUIT!");} (nt_Ws)? PERIOD
 		{
 			matchQuit();
 //			matchCommand( new QuitCmd() );

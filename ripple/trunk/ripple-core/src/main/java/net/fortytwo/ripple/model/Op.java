@@ -10,15 +10,15 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.util.Sink;
 
 public class Op implements StackMapping, RippleValue
 {
 	private final static int ARITY = 1;
 
 	public void applyTo( final StackContext arg,
-				final Sink<StackContext> sink )
+				final Sink<StackContext, RippleException> sink )
 		throws RippleException
 	{
 		RippleValue v;
@@ -27,7 +27,7 @@ public class Op implements StackMapping, RippleValue
 		v = stack.getFirst();
 		final RippleList rest = stack.getRest();
 	
-		Sink<Operator> opSink = new Sink<Operator>()
+		Sink<Operator, RippleException> opSink = new Sink<Operator, RippleException>()
 		{
 			public void put( final Operator oper )
 				throws RippleException

@@ -1,20 +1,19 @@
 package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Buffer;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.CollectorHistory;
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Source;
 import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.cli.ParserExceptionSink;
-import net.fortytwo.ripple.cli.ParserQuitException;
 import net.fortytwo.ripple.cli.RecognizerAdapter;
 import net.fortytwo.ripple.cli.RecognizerEvent;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
-import net.fortytwo.ripple.util.Buffer;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.CollectorHistory;
-import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.Source;
 
 import java.io.IOException;
 import java.io.ByteArrayInputStream;
@@ -24,34 +23,34 @@ import java.io.InputStream;
  * A simple query pipeline.  Each submitted String must be a complete, valid
  * expression.
  */
-public class QueryPipe implements Sink<String>
+public class QueryPipe implements Sink<String, RippleException>
 {
 	private RecognizerAdapter recognizerAdapter;
-    private Sink<Exception> parserExceptionSink;
+    private Sink<Exception, RippleException> parserExceptionSink;
 
-    private Buffer<RippleList> resultBuffer;
+    private Buffer<RippleList, RippleException> resultBuffer;
 	
-	private CollectorHistory<RippleList> queryResultHistory
-		= new CollectorHistory<RippleList>( 2 );
+	private CollectorHistory<RippleList, RippleException> queryResultHistory
+		= new CollectorHistory<RippleList, RippleException>( 2 );
 	private boolean lastQueryContinued = false;
 
-	public QueryPipe( final QueryEngine queryEngine, final Sink<RippleList> resultSink ) throws RippleException
+	public QueryPipe( final QueryEngine queryEngine, final Sink<RippleList, RippleException> resultSink ) throws RippleException
 	{
-		resultBuffer = new Buffer<RippleList>( resultSink );
+		resultBuffer = new Buffer<RippleList, RippleException>( resultSink );
 		final Object mutex = resultBuffer;
 
-		final Collector<RippleList> nilSource = new Collector<RippleList>();
+		final Collector<RippleList, RippleException> nilSource = new Collector<RippleList, RippleException>();
 		nilSource.put( RippleList.NIL );
 
 		// Handling of queries
-		Sink<ListAst> querySink = new Sink<ListAst>()
+		Sink<ListAst, RippleException> querySink = new Sink<ListAst, RippleException>()
 		{
 			public void put( final ListAst ast ) throws RippleException
 			{
 //System.out.println( "### received: " + ast );
 				synchronized ( mutex )
 				{
-					Source<RippleList> composedWith = lastQueryContinued
+					Source<RippleList, RippleException> composedWith = lastQueryContinued
 							? queryResultHistory.getSource( 1 ) : nilSource;
 
 					ModelConnection mc = queryEngine.getConnection();
@@ -68,13 +67,13 @@ public class QueryPipe implements Sink<String>
 		};
 
 		// Handling of "continuing" queries
-		Sink<ListAst> continuingQuerySink = new Sink<ListAst>()
+		Sink<ListAst, RippleException> continuingQuerySink = new Sink<ListAst, RippleException>()
 		{
 			public void put( final ListAst ast ) throws RippleException
 			{
 				synchronized ( mutex )
 				{
-					Source<RippleList> composedWith = lastQueryContinued
+					Source<RippleList, RippleException> composedWith = lastQueryContinued
 							? queryResultHistory.getSource( 1 ) : nilSource;
 
 					ModelConnection mc = queryEngine.getConnection();
@@ -91,7 +90,7 @@ public class QueryPipe implements Sink<String>
 		};
 
 		// Handling of commands
-		Sink<Command> commandSink = new Sink<Command>()
+		Sink<Command, RippleException> commandSink = new Sink<Command, RippleException>()
 		{
 			public void put( final Command cmd ) throws RippleException
 			{
@@ -105,7 +104,7 @@ public class QueryPipe implements Sink<String>
 		};
 
 		// Handling of parser events
-		Sink<RecognizerEvent> eventSink = new Sink<RecognizerEvent>()
+		Sink<RecognizerEvent, RippleException> eventSink = new Sink<RecognizerEvent, RippleException>()
 		{
 			public void put( final RecognizerEvent event )
 				throws RippleException

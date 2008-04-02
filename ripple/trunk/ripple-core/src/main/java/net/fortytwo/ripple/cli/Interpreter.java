@@ -13,14 +13,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
-import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RippleCharStream;
+import org.antlr.runtime.ModifiedANTLRInputStream;
 import org.apache.log4j.Logger;
-
-import antlr.TokenStreamIOException;
 
 public class Interpreter
 {
@@ -29,12 +28,12 @@ public class Interpreter
 
 	private RecognizerAdapter recognizerAdapter;
 	private InputStream input;
-	private Sink<Exception> exceptionSink;
+	private Sink<Exception, RippleException> exceptionSink;
 	private boolean active = false;
 
 	public Interpreter( final RecognizerAdapter rc,
 						final InputStream in,
-						final Sink<Exception> exceptions )
+						final Sink<Exception, RippleException> exceptions )
 	{
 		recognizerAdapter = rc;
 		input = in;
@@ -50,18 +49,20 @@ public class Interpreter
 	{
 		active = true;
 
-//System.out.println( "-- parse" );
+System.out.println( "-- parse" );
 		// Break out when a @quit directive is encountered
 		while ( active )
 		{
-//System.out.println( "-- construct" );
+System.out.println( "-- construct" );
 			// TODO: learn more about these ANTLR 3.0 classes
 			CharStream cs;
 			try {
-				cs = new ANTLRInputStream( input );
+                cs = new ModifiedANTLRInputStream( input, 1024, 1, null );
+                //cs = new RippleCharStream( input );
 			} catch ( IOException e ) {
 				throw new RippleException( e );
-			}			
+			}
+
 			RippleLexer lexer = new RippleLexer( cs );
 			lexer.initialize( recognizerAdapter );
 	       	CommonTokenStream tokens = new CommonTokenStream( lexer );
@@ -70,7 +71,7 @@ public class Interpreter
 
 			try
 			{
-//System.out.println( "-- antlr" );
+System.out.println( "-- antlr" );
 				parser.nt_Document();
 
                 // If the parser has exited normally, then we're done.

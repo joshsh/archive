@@ -9,12 +9,12 @@
 
 package net.fortytwo.ripple.query;
 
-import net.fortytwo.ripple.model.Mapping;
+import net.fortytwo.ripple.flow.Mapping;
 
 /**
 *  A function which reduces arbitrary expressions to a particular normal form.
 */
-public abstract class Evaluator<D, R> implements Mapping<D, R>
+public abstract class Evaluator<D, R, E extends Exception> implements Mapping<D, R, E>
 {
 	/*public int arity()
 	{

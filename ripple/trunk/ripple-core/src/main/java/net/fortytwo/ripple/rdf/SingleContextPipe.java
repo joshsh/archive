@@ -16,21 +16,21 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.Resource;
 import org.openrdf.model.ValueFactory;
 
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 public class SingleContextPipe implements RdfSink
 {
-	private Sink<Statement> stSink;
-	private Sink<Namespace> nsSink;
-	private Sink<String> cmtSink;
+	private Sink<Statement, RippleException> stSink;
+	private Sink<Namespace, RippleException> nsSink;
+	private Sink<String, RippleException> cmtSink;
 
 	public SingleContextPipe( final RdfSink sink,
 							final Resource context,
 							final ValueFactory valueFactory )
 	{
-		final Sink<Statement> otherStSink = sink.statementSink();
+		final Sink<Statement, RippleException> otherStSink = sink.statementSink();
 
-		stSink = new Sink<Statement>()
+		stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -55,17 +55,17 @@ public class SingleContextPipe implements RdfSink
 		cmtSink = sink.commentSink();
 	}
 
-	public Sink<Statement> statementSink()
+	public Sink<Statement, RippleException> statementSink()
 	{
 		return stSink;
 	}
 
-	public Sink<Namespace> namespaceSink()
+	public Sink<Namespace, RippleException> namespaceSink()
 	{
 		return nsSink;
 	}
 
-	public Sink<String> commentSink()
+	public Sink<String, RippleException> commentSink()
 	{
 		return cmtSink;
 	}

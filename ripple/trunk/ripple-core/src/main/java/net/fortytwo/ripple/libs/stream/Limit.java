@@ -10,13 +10,13 @@
 package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes a number n and produces a filter which transmits
@@ -38,7 +38,7 @@ public class Limit extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -74,7 +74,7 @@ public class Limit extends PrimitiveStackMapping
 		}
 	
 		public void applyTo( final StackContext arg,
-							 final Sink<StackContext> sink
+							 final Sink<StackContext, RippleException> sink
 		)
 			throws RippleException
 		{

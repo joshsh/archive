@@ -17,7 +17,7 @@ import net.fortytwo.ripple.model.RdfPredicateMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 /**
  * A primitive which follows inferred forward triples from a resource.
@@ -38,7 +38,7 @@ public class Infer extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{

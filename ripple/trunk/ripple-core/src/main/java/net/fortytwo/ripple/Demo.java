@@ -15,7 +15,6 @@ import net.fortytwo.ripple.cli.CommandLineInterface;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
-import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.StackEvaluator;
@@ -24,7 +23,7 @@ import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SailInserter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
-import net.fortytwo.ripple.util.Source;
+import net.fortytwo.ripple.flow.Source;
 import net.fortytwo.ripple.util.UriMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Namespace;
@@ -354,11 +353,11 @@ public final class Demo
 			CloseableIterationSource<? extends Namespace, SailException> nsSource
 					= new CloseableIterationSource(
 				 			sc.getNamespaces() );
-			( (Source <Namespace>) nsSource ).writeTo( adapter.namespaceSink() );
+			( (Source<Namespace, RippleException>) nsSource ).writeTo( adapter.namespaceSink() );
 			CloseableIterationSource<? extends Statement, SailException> stSource
 					= new CloseableIterationSource(
 							sc.getStatements( null, null, null, false )	);
-			( (Source <Statement>) stSource ).writeTo( adapter.statementSink() );
+			( (Source <Statement, RippleException>) stSource ).writeTo( adapter.statementSink() );
 			adapter.endRDF();
 			sc.close();
 		}

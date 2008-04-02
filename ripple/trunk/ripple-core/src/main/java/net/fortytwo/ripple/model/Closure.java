@@ -9,7 +9,7 @@
 
 package net.fortytwo.ripple.model;
 
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.RippleException;
 
 public class Closure implements StackMapping
@@ -31,7 +31,7 @@ public class Closure implements StackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						final Sink<StackContext> sink )
+						final Sink<StackContext, RippleException> sink )
 		throws RippleException
 	{
         innerRelation.applyTo( arg.with( arg.getStack().push( argument ) ), sink );

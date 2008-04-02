@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.flow;
 
 public class Pointer<T>
 {

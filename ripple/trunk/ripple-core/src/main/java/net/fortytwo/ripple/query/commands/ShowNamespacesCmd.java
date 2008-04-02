@@ -16,8 +16,8 @@ import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
 
 import org.openrdf.model.Namespace;
 
@@ -28,7 +28,7 @@ public class ShowNamespacesCmd extends Command
 	{
 		final RipplePrintStream ps = qe.getPrintStream();
 
-		final Collector<Namespace> coll = new Collector<Namespace>();
+		final Collector<Namespace, RippleException> coll = new Collector<Namespace, RippleException>();
 		mc.putNamespaces( coll );
 		int max = 0;
 		Iterator<Namespace> iter = coll.iterator();
@@ -44,7 +44,7 @@ public class ShowNamespacesCmd extends Command
 		}
 		final int maxlen = max + 4;
 
-		Sink<Namespace> printSink = new Sink<Namespace>()
+		Sink<Namespace, RippleException> printSink = new Sink<Namespace, RippleException>()
 		{
 			private int i = 0;
 

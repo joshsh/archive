@@ -10,6 +10,7 @@
 package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.StackContext;
@@ -17,7 +18,6 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.util.Sink;
 
 /**
  * A filter which discards the stack unless the topmost item is the boolean
@@ -39,7 +39,7 @@ public class Require extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink )
+						 final Sink<StackContext, RippleException> sink )
 		throws RippleException
 	{
         ModelConnection mc = arg.getModelConnection();
@@ -47,7 +47,7 @@ public class Require extends PrimitiveStackMapping
         RippleValue mapping = stack.getFirst();
         final RippleList rest = stack.getRest();
 
-        Sink<Operator> opSink = new Sink<Operator>()
+        Sink<Operator, RippleException> opSink = new Sink<Operator, RippleException>()
         {
             public void put( final Operator op ) throws RippleException
             {
@@ -75,7 +75,7 @@ public class Require extends PrimitiveStackMapping
         }
 
         public void applyTo( final StackContext arg,
-                             final Sink<StackContext> sink ) throws RippleException
+                             final Sink<StackContext, RippleException> sink ) throws RippleException
         {
             RippleList stack = arg.getStack();
             Decider decider = new Decider( stack );
@@ -100,7 +100,7 @@ public class Require extends PrimitiveStackMapping
         }
 
         public void applyTo( final StackContext arg,
-                             final Sink<StackContext> sink ) throws RippleException
+                             final Sink<StackContext, RippleException> sink ) throws RippleException
         {
             RippleValue b;
             RippleList stack = arg.getStack();

@@ -41,13 +41,14 @@ public class PipedIOStream extends InputStream //, OutputStream
 	@Override
 	public synchronized int available()
 	{
-		return length;	
+System.out.println("available = " + length);
+        return length;
 	}
 
 	@Override
 	public int read() throws IOException
 	{
-//System.out.println("    ---> length = " + length );
+System.out.println("    ---> length = " + length );
 		// FIXME: race condition
 		if ( 0 == length )
 		{
@@ -65,20 +66,20 @@ public class PipedIOStream extends InputStream //, OutputStream
 		{
 			if ( null == data )
 			{
-				throw new IOException( "can't read: pipe has been closed: " + this );
+				throw new IOException( "can't read: stream has been closed" );
 			}
 			
 			int c = data[pos];
 			pos = ( 1 + pos ) % size;
 			length--;
-//System.out.println("    [" + this + "] read(" + c + " -- '" + (char) c + "') -- length = " + length + " -- thread = " + Thread.currentThread());
+System.out.println("    [" + this + "] read(" + c + " -- '" + (char) c + "') -- length = " + length + " -- thread = " + Thread.currentThread());
 			return c;
 		}
 	}
 
 	public synchronized void write( int b ) throws IOException
 	{
-//System.out.println("[" + this + "] write(" + b + ")");
+System.out.println("[" + this + "] write(" + b + ")");
 		if ( null == data )
 		{
 			throw new IOException( "can't write: pipe has been closed" );
@@ -116,4 +117,33 @@ public class PipedIOStream extends InputStream //, OutputStream
 			write( b[i] );
 		}
 	}
+
+    public void write( final byte[] b, final int beginIndex, final int length ) throws IOException
+    {
+		for ( int i = beginIndex; i < length && i < b.length; i++ )
+		{
+			write( b[i] );
+		}
+    }
+
+    @Override
+    public long skip(final long n) throws IOException
+    {
+System.out.println("skip(" + n + ")");
+        long i;
+        for ( i = 0; i < n ; i++ ) {
+            int c = read();
+            if ( -1 == c )
+            {
+                break;
+            }
+        }
+
+        return i;
+    }
+
+    public void flush() throws IOException
+    {
+System.out.println("flush()");
+    }
 }

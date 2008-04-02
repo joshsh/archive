@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
-import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -43,7 +43,7 @@ public class LexiconUpdater implements RdfDiffSink
 
 		addSink = new RdfSink()
 		{
-			private Sink<Statement> stSink = new Sink<Statement>()
+			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
 				public void put( final Statement st ) throws RippleException
 				{
@@ -69,7 +69,7 @@ public class LexiconUpdater implements RdfDiffSink
 				}
 			};
 
-			private Sink<Namespace> nsSink = new Sink<Namespace>()
+			private Sink<Namespace, RippleException> nsSink = new Sink<Namespace, RippleException>()
 			{
 				public void put( final Namespace ns ) throws RippleException
 				{
@@ -91,24 +91,24 @@ public class LexiconUpdater implements RdfDiffSink
 				}
 			};
 
-			private Sink<String> cmtSink = new Sink<String>()
+			private Sink<String, RippleException> cmtSink = new Sink<String, RippleException>()
 			{
 				public void put( final String comment ) throws RippleException
 				{
 				}
 			};
 
-			public Sink<Statement> statementSink()
+			public Sink<Statement, RippleException> statementSink()
 			{
 				return stSink;
 			}
 		
-			public Sink<Namespace> namespaceSink()
+			public Sink<Namespace, RippleException> namespaceSink()
 			{
 				return nsSink;
 			}
 		
-			public Sink<String> commentSink()
+			public Sink<String, RippleException> commentSink()
 			{
 				return cmtSink;
 			}
@@ -117,38 +117,38 @@ public class LexiconUpdater implements RdfDiffSink
 // TODO
 		subSink = new RdfSink()
 		{
-			private Sink<Statement> stSink = new Sink<Statement>()
+			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
 				public void put( final Statement st ) throws RippleException
 				{
 				}
 			};
 
-			private Sink<Namespace> nsSink = new Sink<Namespace>()
+			private Sink<Namespace, RippleException> nsSink = new Sink<Namespace, RippleException>()
 			{
 				public void put( final Namespace ns ) throws RippleException
 				{
 				}
 			};
 
-			private Sink<String> cmtSink = new Sink<String>()
+			private Sink<String, RippleException> cmtSink = new Sink<String, RippleException>()
 			{
 				public void put( final String comment ) throws RippleException
 				{
 				}
 			};
 
-			public Sink<Statement> statementSink()
+			public Sink<Statement, RippleException> statementSink()
 			{
 				return stSink;
 			}
 		
-			public Sink<Namespace> namespaceSink()
+			public Sink<Namespace, RippleException> namespaceSink()
 			{
 				return nsSink;
 			}
 		
-			public Sink<String> commentSink()
+			public Sink<String, RippleException> commentSink()
 			{
 				return cmtSink;
 			}

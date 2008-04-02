@@ -4,7 +4,8 @@ import java.io.InputStream;
 
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
@@ -25,8 +26,8 @@ public class RdfUtilsTest extends RippleTestCase
 			RdfUtils.read( is, sc, "", RDFFormat.TURTLE );
 			is.close();
 
-			Collector<Statement> allStatements = new Collector<Statement>();
-			Collector<Namespace> allNamespaces = new Collector<Namespace>();
+			Collector<Statement, RippleException> allStatements = new Collector<Statement, RippleException>();
+			Collector<Namespace, RippleException> allNamespaces = new Collector<Namespace, RippleException>();
 			allRdf.statementSource().writeTo( allStatements );
 			allRdf.namespaceSource().writeTo( allNamespaces );
 			

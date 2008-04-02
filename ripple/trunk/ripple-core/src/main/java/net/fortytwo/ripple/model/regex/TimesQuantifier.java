@@ -1,6 +1,6 @@
 package net.fortytwo.ripple.model.regex;
 
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.StackContext;
@@ -36,7 +36,7 @@ public class TimesQuantifier implements StackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink ) throws RippleException
+						 final Sink<StackContext, RippleException> sink ) throws RippleException
 	{
 		RippleList stack = arg.getStack();
 

@@ -10,6 +10,8 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.NullSink;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
@@ -18,8 +20,6 @@ import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.NullSink;
-import net.fortytwo.ripple.util.Sink;
 
 import org.apache.commons.httpclient.HttpMethod;
 import org.openrdf.model.Namespace;
@@ -46,7 +46,7 @@ public class Comments extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -66,7 +66,7 @@ public class Comments extends PrimitiveStackMapping
 	}
 
 	static SesameInputAdapter createAdapter( final StackContext arg,
-										final Sink<StackContext> resultSink )
+										final Sink<StackContext, RippleException> resultSink )
 	{
 		final ModelConnection mc = arg.getModelConnection();
 		final RippleList stack = arg.getStack();
@@ -74,13 +74,13 @@ public class Comments extends PrimitiveStackMapping
 		RdfSink rdfSink = new RdfSink()
 		{
 			// Discard statements.
-			private Sink<Statement> stSink = new NullSink<Statement>();
+			private Sink<Statement, RippleException> stSink = new NullSink<Statement, RippleException>();
 
 			// Discard namespaces.
-			private Sink<Namespace> nsSink = new NullSink<Namespace>();
+			private Sink<Namespace, RippleException> nsSink = new NullSink<Namespace, RippleException>();
 
 			// Push comments.
-			private Sink<String> cmtSink = new Sink<String>()
+			private Sink<String, RippleException> cmtSink = new Sink<String, RippleException>()
 			{
 				public void put( final String comment )
 					throws RippleException
@@ -90,17 +90,17 @@ public class Comments extends PrimitiveStackMapping
 				}
 			};
 
-			public Sink<Statement> statementSink()
+			public Sink<Statement, RippleException> statementSink()
 			{
 				return stSink;
 			}
 		
-			public Sink<Namespace> namespaceSink()
+			public Sink<Namespace, RippleException> namespaceSink()
 			{
 				return nsSink;
 			}
 		
-			public Sink<String> commentSink()
+			public Sink<String, RippleException> commentSink()
 			{
 				return cmtSink;
 			}

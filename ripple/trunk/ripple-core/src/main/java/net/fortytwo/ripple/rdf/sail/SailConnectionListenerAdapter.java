@@ -1,8 +1,8 @@
 package net.fortytwo.ripple.rdf.sail;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
-import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 import org.openrdf.model.Statement;
@@ -13,7 +13,7 @@ public class SailConnectionListenerAdapter implements SailConnectionListener
 	private static final Logger LOGGER
 		= Logger.getLogger( SailConnectionListenerAdapter.class );
 	
-	private Sink<Statement> addSink, subSink;
+	private Sink<Statement, RippleException> addSink, subSink;
 	
 	public SailConnectionListenerAdapter( final RdfDiffSink diffSink )
 	{

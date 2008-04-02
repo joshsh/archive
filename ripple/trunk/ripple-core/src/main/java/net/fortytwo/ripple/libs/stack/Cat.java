@@ -15,8 +15,8 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
 
 /**
  * A primitive function which consumes two lists and produces the concatenation
@@ -38,7 +38,7 @@ public class Cat extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -52,13 +52,13 @@ public class Cat extends PrimitiveStackMapping
 		l2 = stack.getFirst();
 		final RippleList rest = stack.getRest();
 
-		final Collector<RippleList> firstLists = new Collector<RippleList>();
+		final Collector<RippleList, RippleException> firstLists = new Collector<RippleList, RippleException>();
 
-		Sink<RippleList> listSink = new Sink<RippleList>()
+		Sink<RippleList, RippleException> listSink = new Sink<RippleList, RippleException>()
 		{
 			public void put( final RippleList list2 ) throws RippleException
 			{
-				Sink<RippleList> catSink = new Sink<RippleList>()
+				Sink<RippleList, RippleException> catSink = new Sink<RippleList, RippleException>()
 				{
 					public void put( final RippleList list1 ) throws RippleException
 					{

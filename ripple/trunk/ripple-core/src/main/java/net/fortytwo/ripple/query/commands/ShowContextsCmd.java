@@ -10,12 +10,12 @@
 package net.fortytwo.ripple.query.commands;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.util.Sink;
 
 public class ShowContextsCmd extends Command
 {
@@ -24,7 +24,7 @@ public class ShowContextsCmd extends Command
 	{
 		final RipplePrintStream ps = qe.getPrintStream();
 
-		Sink<RippleValue> printSink = new Sink<RippleValue>()
+		Sink<RippleValue, RippleException> printSink = new Sink<RippleValue, RippleException>()
 		{
 			private int i = 0;
 

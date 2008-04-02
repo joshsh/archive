@@ -7,17 +7,19 @@
  */
 
 
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.flow;
 
 import java.util.LinkedList;
 
-import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Source;
 
-public class CollectorHistory<T> implements Sink<T>
+public class CollectorHistory<T, E extends Exception> implements Sink<T, E>
 {
 	private int len, maxlen;
-	private LinkedList<Collector<T>> history;
-	private Sink<T> currentSink;
+	private LinkedList<Collector<T, E>> history;
+	private Sink<T, E> currentSink;
 
 	public CollectorHistory( final int maxlen )
 	{
@@ -28,14 +30,14 @@ public class CollectorHistory<T> implements Sink<T>
 
 		len = 0;
 		this.maxlen = maxlen;
-		history = new LinkedList<Collector<T>>();
+		history = new LinkedList<Collector<T, E>>();
 
 		advance();
 	}
 
 	public void advance()
 	{
-		Collector<T> coll = new Collector<T>();
+		Collector<T, E> coll = new Collector<T, E>();
 		history.addFirst( coll );
 
 		len++;
@@ -47,13 +49,12 @@ public class CollectorHistory<T> implements Sink<T>
 		currentSink = coll;
 	}
 
-	public void put( final T t )
-		throws RippleException
+	public void put( final T t ) throws E
 	{
 		currentSink.put( t );
 	}
 
-	public Source<T> getSource( final int index ) throws RippleException
+	public Source<T, E> getSource( final int index ) throws E
 	{
 		try
 		{
@@ -62,9 +63,7 @@ public class CollectorHistory<T> implements Sink<T>
 
 		catch ( IndexOutOfBoundsException e )
 		{
-			throw new RippleException( e );
+			throw e;
 		}
 	}
 }
-
-// kate: tab-width 4

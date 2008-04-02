@@ -15,6 +15,7 @@ import org.openrdf.sail.Sail;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Collector;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -23,7 +24,6 @@ import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
 import net.fortytwo.ripple.util.UriMap;
-import net.fortytwo.ripple.util.Collector;
 
 import java.util.Iterator;
 import java.util.Arrays;
@@ -193,7 +193,7 @@ public abstract class RippleTestCase extends TestCase
 		return mc.invert( createStack( mc, values ) );
 	}
 
-	public static void assertCollectorsEqual( Collector<RippleList> expected, Collector<RippleList> actual ) throws Exception
+	public static void assertCollectorsEqual( Collector<RippleList, RippleException> expected, Collector<RippleList, RippleException> actual ) throws Exception
 	{
 //System.out.println("expected: " + expected + ", actual = " + actual);
         int size = expected.size();

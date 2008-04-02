@@ -17,8 +17,8 @@ import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
 
 import org.openrdf.rio.RDFFormat;
 
@@ -39,10 +39,10 @@ public class RippleListTest extends RippleTestCase
 			is.close();
 
 			RdfValue head;
-			Collector<RippleList> created = new Collector<RippleList>();
-			final Collector<RippleList> allowed = new Collector<RippleList>();
+			Collector<RippleList, RippleException> created = new Collector<RippleList, RippleException>();
+			final Collector<RippleList, RippleException> allowed = new Collector<RippleList, RippleException>();
 			
-			Sink<RippleList> verifySink = new Sink<RippleList>()
+			Sink<RippleList, RippleException> verifySink = new Sink<RippleList, RippleException>()
 			{
 				public void put( final RippleList list ) throws RippleException
 				{

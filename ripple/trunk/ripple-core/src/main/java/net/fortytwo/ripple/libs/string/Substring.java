@@ -10,11 +10,11 @@
 package net.fortytwo.ripple.libs.string;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which consumes a string and two integer indexes, then
@@ -37,7 +37,7 @@ public class Substring extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{

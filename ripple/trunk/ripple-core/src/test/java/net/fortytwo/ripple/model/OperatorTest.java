@@ -12,7 +12,8 @@ import net.fortytwo.ripple.query.ListDequotation;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.RippleException;
 
 public class OperatorTest extends RippleTestCase
 {
@@ -49,7 +50,7 @@ public class OperatorTest extends RippleTestCase
 			mc.commit();
 			is.close();
 			
-			Collector<Operator> ops = new Collector<Operator>();
+			Collector<Operator, RippleException> ops = new Collector<Operator, RippleException>();
 			RippleValue arg;
 			RippleValue a1 = mc.value( "1" );
 			RippleValue a2 = mc.value( "2" );

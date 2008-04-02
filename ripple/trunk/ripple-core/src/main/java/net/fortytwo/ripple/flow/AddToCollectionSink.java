@@ -1,6 +1,6 @@
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.flow;
 
-import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 
 import java.util.Collection;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
  * Date: Mar 11, 2008
  * Time: 8:45:29 AM
  */
-public class AddToCollectionSink<T> implements Sink<T>
+public class AddToCollectionSink<T, E extends Exception> implements Sink<T, E>
 {
     private Collection<T> collection;
 
@@ -18,7 +18,7 @@ public class AddToCollectionSink<T> implements Sink<T>
         this.collection = coll;
     }
 
-    public void put(final T t) throws RippleException
+    public void put(final T t) throws E
     {
         this.collection.add(t);
     }

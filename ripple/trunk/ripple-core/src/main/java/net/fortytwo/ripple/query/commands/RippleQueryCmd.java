@@ -13,26 +13,26 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.QueryEngine;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.Source;
+import net.fortytwo.ripple.query.StackEvaluator;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Source;
 
 public class RippleQueryCmd extends Command
 {
 	private ListAst listAst;
-	private Sink<RippleList> sink;
-	private Source<RippleList> composedWith;
-	private Evaluator evaluator;
-	private Collector<RippleList> expressions;
+	private Sink<RippleList, RippleException> sink;
+	private Source<RippleList, RippleException> composedWith;
+	private StackEvaluator evaluator;
+	private Collector<RippleList, RippleException> expressions;
 
 	public RippleQueryCmd( final ListAst listAst,
-							final Sink<RippleList> sink,
-							final Source<RippleList> composedWith )
+							final Sink<RippleList, RippleException> sink,
+							final Source<RippleList, RippleException> composedWith )
 	{
 		this.listAst = listAst;
 		this.sink = sink;
@@ -44,16 +44,16 @@ public class RippleQueryCmd extends Command
 	{
 		if ( null == expressions )
 		{
-			expressions = new Collector<RippleList>();
+			expressions = new Collector<RippleList, RippleException>();
 
-			final Sink<RippleList> exprSink = new Sink<RippleList>()
+			final Sink<RippleList, RippleException> exprSink = new Sink<RippleList, RippleException>()
 			{
 				public void put( final RippleList l ) throws RippleException
 				{
 					// Note: the first element of the list will also be a list
 					final RippleList stack = mc.invert( (RippleList) l.getFirst() );
 
-					Sink<RippleList> composedWithSink = new Sink<RippleList>()
+					Sink<RippleList, RippleException> composedWithSink = new Sink<RippleList, RippleException>()
 					{
 						public void put( final RippleList base )
 							throws RippleException
@@ -71,14 +71,14 @@ public class RippleQueryCmd extends Command
 
 		evaluator = qe.getEvaluator();
 
-		final Sink<StackContext> resultSink = new Sink<StackContext>() {
+		final Sink<StackContext, RippleException> resultSink = new Sink<StackContext, RippleException>() {
 
 			public void put( final StackContext arg ) throws RippleException
 			{
 				sink.put( arg.getStack() );
 			}
 		};
-		final Sink<RippleList> evaluatorSink = new Sink<RippleList>()
+		final Sink<RippleList, RippleException> evaluatorSink = new Sink<RippleList, RippleException>()
 		{
 			// Note: v will always be a list.
 			public void put( final RippleList l ) throws RippleException

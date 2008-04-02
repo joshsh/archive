@@ -25,6 +25,8 @@ import jline.ConsoleReader;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.CollectorHistory;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.jline.DirectiveCompletor;
 import net.fortytwo.ripple.control.Scheduler;
@@ -35,8 +37,7 @@ import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
-import net.fortytwo.ripple.util.CollectorHistory;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.query.PipedIOStream;
 
 import org.apache.log4j.Logger;
 
@@ -50,8 +51,9 @@ public class CommandLineInterface
 
 	private static final byte[] EOL = { '\n' };
 
-	private PipedInputStream  writeIn;
-	private PipedOutputStream readOut;
+    private PipedIOStream writeIn;
+    //private PipedInputStream  writeIn;
+	//private PipedOutputStream readOut;
 	private ThreadedInputStream consoleReaderInput;
 
 	private Interpreter interpreter;
@@ -61,8 +63,8 @@ public class CommandLineInterface
 
 	private QueryEngine queryEngine;
 
-	private CollectorHistory<RippleList> queryResultHistory
-		= new CollectorHistory<RippleList>( 2 );
+	private CollectorHistory<RippleList, RippleException> queryResultHistory
+		= new CollectorHistory<RippleList, RippleException>( 2 );
 private boolean lastQueryContinued = false;
 
 	private TaskQueue taskQueue = new TaskQueue();
@@ -85,7 +87,7 @@ private boolean lastQueryContinued = false;
 		queryEngine = qe;
 
 		// Handling of queries
-		Sink<ListAst> querySink = new Sink<ListAst>()
+		Sink<ListAst, RippleException> querySink = new Sink<ListAst, RippleException>()
 		{
 			public void put( final ListAst ast ) throws RippleException
 			{
@@ -97,7 +99,7 @@ private boolean lastQueryContinued = false;
 		};
 
 		// Handling of "continuing" queries
-		Sink<ListAst> continuingQuerySink = new Sink<ListAst>()
+		Sink<ListAst, RippleException> continuingQuerySink = new Sink<ListAst, RippleException>()
 		{
 			public void put( final ListAst ast ) throws RippleException
 			{
@@ -109,7 +111,7 @@ private boolean lastQueryContinued = false;
 		};
 
 		// Handling of commands
-		Sink<Command> commandSink = new Sink<Command>()
+		Sink<Command, RippleException> commandSink = new Sink<Command, RippleException>()
 		{
 			public void put( final Command cmd ) throws RippleException
 			{
@@ -120,7 +122,7 @@ private boolean lastQueryContinued = false;
 		};
 
 		// Handling of parser events
-		Sink<RecognizerEvent> eventSink = new Sink<RecognizerEvent>()
+		Sink<RecognizerEvent, RippleException> eventSink = new Sink<RecognizerEvent, RippleException>()
 		{
 			public void put( final RecognizerEvent event )
 				throws RippleException
@@ -149,7 +151,7 @@ private boolean lastQueryContinued = false;
 		RecognizerAdapter ra = new RecognizerAdapter(
 			querySink, continuingQuerySink, commandSink, eventSink, qe.getErrorPrintStream() );
 
-		Sink<Exception> parserExceptionSink = new ParserExceptionSink(
+		Sink<Exception, RippleException> parserExceptionSink = new ParserExceptionSink(
 				qe.getErrorPrintStream() );
 
 		// Pass input through a filter to watch for special byte sequences, and
@@ -182,16 +184,10 @@ private boolean lastQueryContinued = false;
 jline.Terminal term = reader.getTerminal();
 System.out.println( "reader.getTerminal() = " + term );
 
-		try
-		{
-			writeIn = new PipedInputStream();
-			readOut = new PipedOutputStream( writeIn );
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
+            writeIn = new PipedIOStream();
+            //writeIn.write(32);
+            //writeIn = new PipedInputStream();
+			//readOut = new PipedOutputStream( writeIn );
 
 		// Initialize completors.
 		updateCompletors();
@@ -215,22 +211,25 @@ System.out.println( "reader.getTerminal() = " + term );
 		{
 			++lineNumber;
 			String prefix = "" + lineNumber + " >>  ";
-//System.out.println( "reading a line" );
-//System.out.println( "    consoleReaderInput.available() = " + consoleReaderInput.available() );
+System.out.println( "reading a line" );
+System.out.println( "    consoleReaderInput.available() = " + consoleReaderInput.available() );
 			String line = reader.readLine( prefix );
-//System.out.println( "done reading the line: " + line );
+System.out.println( "done reading the line: " + line );
 	
 			if ( null != line )
 			{
 				// Feed the line to the lexer.
 				byte[] bytes = line.getBytes();
-				readOut.write( bytes, 0, bytes.length );
-	
+                //readOut.write( bytes, 0, bytes.length );
+                writeIn.write( bytes, 0, bytes.length );
+
 				// Add a newline character so the lexer will call readLine()
 				// again when it gets there.
-				readOut.write( EOL );
-	
-				readOut.flush();
+//                readOut.write( EOL );
+                writeIn.write( EOL );
+
+                writeIn.flush();
+//                readOut.flush();
 			}
 		}
 

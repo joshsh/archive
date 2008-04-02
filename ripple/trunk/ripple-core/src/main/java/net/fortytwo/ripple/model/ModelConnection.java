@@ -12,10 +12,9 @@ package net.fortytwo.ripple.model;
 import java.io.OutputStream;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.rdf.RdfSource;
-import net.fortytwo.ripple.util.Sink;
 
-import org.openrdf.model.Literal;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -50,7 +49,7 @@ public interface ModelConnection
 	String toString( RippleValue v ) throws RippleException;
 
 	URI toUri( RippleValue v ) throws RippleException;
-	void toList( RippleValue v, Sink<RippleList> sink ) throws RippleException;
+	void toList( RippleValue v, Sink<RippleList, RippleException> sink ) throws RippleException;
 
 	RdfValue findSingleObject( RippleValue subj, RippleValue pred )	throws RippleException;
 	RdfValue findAtLeastOneObject( RippleValue subj, RippleValue pred )	throws RippleException;
@@ -59,11 +58,11 @@ public interface ModelConnection
 
 	void copyStatements( RippleValue src, RippleValue dest ) throws RippleException;
 	void removeStatementsAbout( URI subj ) throws RippleException;
-	void putContainerMembers( RippleValue head, Sink<RippleValue> sink ) throws RippleException;
+	void putContainerMembers( RippleValue head, Sink<RippleValue, RippleException> sink ) throws RippleException;
 
 	void forget( RippleValue v ) throws RippleException;
 
-	void findPredicates( RippleValue subject, Sink<RippleValue> sink ) throws RippleException;
+	void findPredicates( RippleValue subject, Sink<RippleValue, RippleException> sink ) throws RippleException;
 
 // FIXME: Statements should not be part of the ModelConnection API
 	void add( Statement st, Resource... contexts ) throws RippleException;
@@ -106,21 +105,21 @@ public interface ModelConnection
 	
 	void setNamespace( String prefix, String ns, boolean override ) throws RippleException;
 
-	void multiplyAsynch( RippleValue subj, RippleValue pred, Sink<RippleValue> sink, boolean includeInferred ) throws RippleException;
-	void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue> sink, boolean includeInferred ) throws RippleException;
-	void divide( RippleValue obj, RippleValue pred, Sink<RippleValue> sink ) throws RippleException;
+	void multiplyAsynch( RippleValue subj, RippleValue pred, Sink<RippleValue, RippleException> sink, boolean includeInferred ) throws RippleException;
+	void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue, RippleException> sink, boolean includeInferred ) throws RippleException;
+	void divide( RippleValue obj, RippleValue pred, Sink<RippleValue, RippleException> sink ) throws RippleException;
 
 // FIXME: Namespaces should not be part of the ModelConnection API
-	void getNamespaces( Sink<Namespace> sink ) throws RippleException;
+	void getNamespaces( Sink<Namespace, RippleException> sink ) throws RippleException;
 // FIXME: Statements should not be part of the ModelConnection API
-	void getStatements( RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement> sink, boolean includeInferred ) throws RippleException;
+	void getStatements( RdfValue subj, RdfValue pred, RdfValue obj, Sink<Statement, RippleException> sink, boolean includeInferred ) throws RippleException;
 
 	RdfSource getSource();
 
 // TODO: Namespaces should not be part of the ModelConnection API
-	void putNamespaces( Sink<Namespace> sink ) throws RippleException;
+	void putNamespaces( Sink<Namespace, RippleException> sink ) throws RippleException;
 
-	void putContexts( Sink<RippleValue> sink ) throws RippleException;
+	void putContexts( Sink<RippleValue, RippleException> sink ) throws RippleException;
 	
 	void exportNamespace( String ns, OutputStream os ) throws RippleException;
 }

@@ -7,17 +7,18 @@
  */
 
 
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.flow;
+
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Source;
 
 import java.util.Iterator;
-
-import net.fortytwo.ripple.RippleException;
 
 /**
  * Note: while this class is not actually thread-safe, put() may safely be
  * called while writeTo() is in progress.
  */
-public class Collector<T> implements Sink<T>, Source<T>
+public class Collector<T, E extends Exception> implements Sink<T, E>, Source<T, E>
 {
 	private Node first, last;
 	private int count;
@@ -27,7 +28,7 @@ public class Collector<T> implements Sink<T>, Source<T>
 		clear();
 	}
 
-	public void put( final T t ) throws RippleException
+	public void put( final T t ) throws E
 	{
 		Node n = new Node( t, null );
 
@@ -45,21 +46,26 @@ public class Collector<T> implements Sink<T>, Source<T>
 		count++;
 	}
 
-	public void writeTo( final Sink<T> sink ) throws RippleException
+	public void writeTo( final Sink<T, E> sink ) throws E
 	{
 		Node cur = first;
 		while ( null != cur )
 		{
-			// Any new items which are put() as a result of this call will
-			// eventually be passed into the sink as well (even if clear()
-			// is called).
-			sink.put( cur.value );
+            try {
+                // Any new items which are put() as a result of this call will
+                // eventually be passed into the sink as well (even if clear()
+                // is called).
+                sink.put( cur.value );
+            } catch ( Exception e ) {
+                System.err.println( "FIXME: exception in Collector.java should not need to be caught" );
+                e.printStackTrace( System.err );
+            }
 
-			cur = cur.next;
+            cur = cur.next;
 		}
 	}
 
-	public int size()
+    public int size()
 	{
 		return count;
 	}

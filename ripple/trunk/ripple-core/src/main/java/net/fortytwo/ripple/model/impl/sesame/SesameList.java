@@ -13,10 +13,10 @@ import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Source;
 import net.fortytwo.ripple.util.ListNode;
-import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.Source;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -29,7 +29,7 @@ public class SesameList extends RippleList
 	private static final RdfValue RDF_REST = new RdfValue( RDF.REST );
 	private static final RdfValue RDF_NIL = new RdfValue( RDF.NIL );
 
-	private static Map<Value, Source<RippleList>> nativeLists = new HashMap<Value, Source<RippleList>>();
+	private static Map<Value, Source<RippleList, RippleException>> nativeLists = new HashMap<Value, Source<RippleList, RippleException>>();
 
     private static ExpressionOrder expressionOrder;
     private static boolean printPadded;
@@ -110,7 +110,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 		return new RdfValue( rdfEquivalent );
 	}
 
-	private void putRdfStatements( final Sink<Statement> sink, final ModelConnection mc )
+	private void putRdfStatements( final Sink<Statement, RippleException> sink, final ModelConnection mc )
 		throws RippleException
 	{
 		SesameList cur = this;
@@ -175,7 +175,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 	}
 
 	public static void from( final RippleValue v,
-							final Sink<RippleList> sink,
+							final Sink<RippleList, RippleException> sink,
 							final ModelConnection mc )
 		throws RippleException
 	{
@@ -194,10 +194,10 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			{
 //System.out.println("looking for source for list: " + v);
 				Value rdfVal = ( (RdfValue) v ).toRdf( mc ).getRdfValue();
-				Source<RippleList> source = nativeLists.get( rdfVal );
+				Source<RippleList, RippleException> source = nativeLists.get( rdfVal );
 				if ( null == source )
 				{
-					Collector<RippleList> coll = new Collector<RippleList>();
+					Collector<RippleList, RippleException> coll = new Collector<RippleList, RippleException>();
 					
 					createList( (RdfValue) v, coll, mc );
 					
@@ -231,7 +231,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 
 // TODO: find a better name
 	private static void createConceptualList( final RippleValue head,
-											final Sink<RippleList> sink,
+											final Sink<RippleList, RippleException> sink,
 											final ModelConnection mc )
 		throws RippleException
 	{
@@ -253,7 +253,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 	
 // TODO: extend circular lists and other convergent structures
 	private static void createList( final RippleValue head,
-									final Sink<RippleList> sink,
+									final Sink<RippleList, RippleException> sink,
 									final ModelConnection mc )
 		throws RippleException
 	{	
@@ -264,13 +264,13 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 
 		else
 		{
-			final Collector<RippleValue> firstValues = new Collector<RippleValue>();
+			final Collector<RippleValue, RippleException> firstValues = new Collector<RippleValue, RippleException>();
 
-			final Sink<RippleList> restSink = new Sink<RippleList>()
+			final Sink<RippleList, RippleException> restSink = new Sink<RippleList, RippleException>()
 			{
 				public void put( final RippleList rest ) throws RippleException
 				{
-					Sink<RippleValue> firstSink = new Sink<RippleValue>()
+					Sink<RippleValue, RippleException> firstSink = new Sink<RippleValue, RippleException>()
 					{
 						public void put( final RippleValue first ) throws RippleException
 						{
@@ -284,7 +284,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 				}
 			};
 			
-			Sink<RippleValue> rdfRestSink = new Sink<RippleValue>()
+			Sink<RippleValue, RippleException> rdfRestSink = new Sink<RippleValue, RippleException>()
 			{
 				public void put( final RippleValue rest ) throws RippleException
 				{
@@ -501,7 +501,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 	}
 */
 
-	public void writeStatementsTo( final Sink<Statement> sink,
+	public void writeStatementsTo( final Sink<Statement, RippleException> sink,
 									final ModelConnection mc )
 		throws RippleException
 	{
@@ -509,7 +509,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 	}
 
 	public static void writeStatementsTo( final RippleValue head,
-											final Sink<Statement> sink,
+											final Sink<Statement, RippleException> sink,
 											final ModelConnection mc )
 		throws RippleException
 	{
@@ -525,7 +525,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 
 		final Resource headVal = (Resource) head.toRdf( mc ).getRdfValue();
 
-		Sink<RippleValue> firstSink = new Sink<RippleValue>()
+		Sink<RippleValue, RippleException> firstSink = new Sink<RippleValue, RippleException>()
 		{
 			public void put( final RippleValue v ) throws RippleException
 			{
@@ -534,7 +534,7 @@ net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImpo
 			}
 		};
 
-		Sink<RippleValue> restSink = new Sink<RippleValue>()
+		Sink<RippleValue, RippleException> restSink = new Sink<RippleValue, RippleException>()
 		{
 			public void put( final RippleValue v ) throws RippleException
 			{

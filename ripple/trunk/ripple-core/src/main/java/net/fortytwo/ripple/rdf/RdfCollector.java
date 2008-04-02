@@ -10,52 +10,52 @@
 package net.fortytwo.ripple.rdf;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.Source;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Source;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 
 public class RdfCollector extends RdfSource implements RdfSink
 {
-	private Collector<Statement> statements;
-	private Collector<Namespace> namespaces;
-	private Collector<String> comments;
+	private Collector<Statement, RippleException> statements;
+	private Collector<Namespace, RippleException> namespaces;
+	private Collector<String, RippleException> comments;
 
 	public RdfCollector()
 	{
-		statements = new Collector<Statement>();
-		namespaces = new Collector<Namespace>();
-		comments = new Collector<String>();
+		statements = new Collector<Statement, RippleException>();
+		namespaces = new Collector<Namespace, RippleException>();
+		comments = new Collector<String, RippleException>();
 	}
 
-	public Sink<Statement> statementSink()
+	public Sink<Statement, RippleException> statementSink()
 	{
 		return statements;
 	}
 
-	public Sink<Namespace> namespaceSink()
+	public Sink<Namespace, RippleException> namespaceSink()
 	{
 		return namespaces;
 	}
 
-	public Sink<String> commentSink()
+	public Sink<String, RippleException> commentSink()
 	{
 		return comments;
 	}
 
-	public Source<Statement> statementSource()
+	public Source<Statement, RippleException> statementSource()
 	{
 		return statements;
 	}
 
-	public Source<Namespace> namespaceSource()
+	public Source<Namespace, RippleException> namespaceSource()
 	{
 		return namespaces;
 	}
 
-	public Source<String> commentSource()
+	public Source<String, RippleException> commentSource()
 	{
 		return comments;
 	}

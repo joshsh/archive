@@ -10,13 +10,12 @@
 package net.fortytwo.ripple.cli.ast;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.util.ListNode;
-import net.fortytwo.ripple.util.Sink;
 
 // TODO: this class has more plumbing than it needs
 public class ListAst extends ListNode<Ast> implements Ast<RippleList>
@@ -59,12 +58,12 @@ public class ListAst extends ListNode<Ast> implements Ast<RippleList>
 		return ( null == listNode.getFirst() );
 	}
 
-	public void evaluate( final Sink<RippleList> sink,
+	public void evaluate( final Sink<RippleList, RippleException> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
 	{
-		Sink<RippleList> listSink = new Sink<RippleList>()
+		Sink<RippleList, RippleException> listSink = new Sink<RippleList, RippleException>()
 		{
 			public void put(final RippleList l) throws RippleException
 			{
@@ -103,7 +102,7 @@ public class ListAst extends ListNode<Ast> implements Ast<RippleList>
 	}
 
 	private void createLists( final ListNode<Ast> astList,
-							final Sink<RippleList> sink,
+							final Sink<RippleList, RippleException> sink,
 							final QueryEngine qe,
 							final ModelConnection mc )
 		throws RippleException
@@ -115,14 +114,14 @@ public class ListAst extends ListNode<Ast> implements Ast<RippleList>
 
 		else
 		{
-			final Collector<RippleList> firstValues = new Collector<RippleList>();
+			final Collector<RippleList, RippleException> firstValues = new Collector<RippleList, RippleException>();
 			astList.getFirst().evaluate( firstValues, qe, mc );
 	
-			Sink<RippleList> restSink = new Sink<RippleList>()
+			Sink<RippleList, RippleException> restSink = new Sink<RippleList, RippleException>()
 			{
 				public void put( final RippleList rest ) throws RippleException
 				{
-					Sink<RippleList> firstSink = new Sink<RippleList>()
+					Sink<RippleList, RippleException> firstSink = new Sink<RippleList, RippleException>()
 					{
 						public void put( final RippleList f ) throws RippleException
 						{

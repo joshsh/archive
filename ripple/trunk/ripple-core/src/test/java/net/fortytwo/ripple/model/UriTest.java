@@ -16,10 +16,10 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Collector;
 import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.Collector;
 import net.fortytwo.ripple.rdf.RdfUtils;
 
 import org.openrdf.model.URI;
@@ -204,7 +204,7 @@ System.out.println( "unhandled test case!" );
 			RdfUtils.read( is, sc, "", RDFFormat.N3 );
 			mc.commit();
 			
-			Collector<RippleValue> cases = new Collector<RippleValue>();
+			Collector<RippleValue, RippleException> cases = new Collector<RippleValue, RippleException>();
 			mc.divide( URITEST, TYPE, cases );
 
 			Iterator<RippleValue> iter = cases.iterator();

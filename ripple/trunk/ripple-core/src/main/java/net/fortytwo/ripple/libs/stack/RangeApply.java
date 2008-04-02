@@ -10,9 +10,9 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.*;
 import net.fortytwo.ripple.model.regex.TimesQuantifier;
-import net.fortytwo.ripple.util.Sink;
 
 // kate: tab-width 4
 
@@ -36,7 +36,7 @@ public class RangeApply extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -52,7 +52,7 @@ public class RangeApply extends PrimitiveStackMapping
 		RippleValue p = stack.getFirst();
 		final RippleList rest = stack.getRest();
 
-		Sink<Operator> opSink = new Sink<Operator>()
+		Sink<Operator, RippleException> opSink = new Sink<Operator, RippleException>()
 		{
 			public void put( final Operator op ) throws RippleException
 			{

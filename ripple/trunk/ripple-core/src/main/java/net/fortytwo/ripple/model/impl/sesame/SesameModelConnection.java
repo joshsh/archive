@@ -9,6 +9,8 @@ import java.util.Random;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Buffer;
+import net.fortytwo.ripple.flow.NullSink;
 import net.fortytwo.ripple.control.Task;
 import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.model.Model;
@@ -23,12 +25,10 @@ import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.sail.SailConnectionListenerAdapter;
-import net.fortytwo.ripple.util.Buffer;
-import net.fortytwo.ripple.util.NullSink;
-import net.fortytwo.ripple.util.NullSource;
-import net.fortytwo.ripple.util.Sink;
-import net.fortytwo.ripple.util.Source;
-import net.fortytwo.ripple.util.UniqueFilter;
+import net.fortytwo.ripple.flow.NullSource;
+import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Source;
+import net.fortytwo.ripple.flow.UniqueFilter;
 
 import org.apache.log4j.Logger;
 import org.openrdf.model.Literal;
@@ -108,7 +108,7 @@ public class SesameModelConnection implements ModelConnection
 		return valueFactory;
 	}
 	
-	public void toList( RippleValue v, Sink<RippleList> sink ) throws RippleException
+	public void toList( RippleValue v, Sink<RippleList, RippleException> sink ) throws RippleException
 	{
 		SesameList.from( v, sink, this );
 	}
@@ -337,7 +337,7 @@ public class SesameModelConnection implements ModelConnection
 	*  A <code>Sink</code> which remembers how many times it has received a
 	*  value, as well as the last value received.
 	*/
-	private class SingleValueSink implements Sink<RdfValue>
+	private class SingleValueSink implements Sink<RdfValue, RippleException>
 	{
 		private RdfValue value = null;
 		private int valuesReceived = 0;
@@ -441,7 +441,7 @@ public class SesameModelConnection implements ModelConnection
 	{
 		final Resource destResource = castToResource( dest.toRdf( this ).getRdfValue() );
 	
-		Sink<Statement> stSink = new Sink<Statement>()
+		Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -488,10 +488,10 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public void putContainerMembers( final RippleValue head, final Sink<RippleValue> sink )
+	public void putContainerMembers( final RippleValue head, final Sink<RippleValue, RippleException> sink )
 		throws RippleException
 	{
-		Sink<Statement> stSink = new Sink<Statement>()
+		Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -523,10 +523,10 @@ public class SesameModelConnection implements ModelConnection
 	}
 	
 	public void findPredicates( final RippleValue subject,
-								final Sink<RippleValue> sink )
+								final Sink<RippleValue, RippleException> sink )
 		throws RippleException
 	{
-		final Sink<Value> valueSink = new Sink<Value>()
+		final Sink<Value, RippleException> valueSink = new Sink<Value, RippleException>()
 		{
 			public void put( final Value v ) throws RippleException
 			{
@@ -534,9 +534,9 @@ public class SesameModelConnection implements ModelConnection
 			}
 		};
 		
-		Sink<Statement> predSelector = new Sink<Statement>()
+		Sink<Statement, RippleException> predSelector = new Sink<Statement, RippleException>()
 		{
-			Sink<Value> predSink = new UniqueFilter<Value>( valueSink );
+			Sink<Value, RippleException> predSink = new UniqueFilter<Value, RippleException>( valueSink );
 	
 			public void put( final Statement st ) throws RippleException
 			{
@@ -708,12 +708,12 @@ public class SesameModelConnection implements ModelConnection
 		SesameOutputAdapter adapter = RdfUtils.createOutputAdapter(
                 os, Ripple.getProperties().getRdfFormat( Ripple.EXPORT_FORMAT ) );
 	
-		final Sink<Resource> bnodeClosure = new BNodeClosureFilter(
+		final Sink<Resource, RippleException> bnodeClosure = new BNodeClosureFilter(
 			adapter.statementSink(), getSailConnection() );
 	
 		// Hackishly find all terms in the given namespace which are the subject
 		// of statements.
-		Sink<Statement> sink = new Sink<Statement>()
+		Sink<Statement, RippleException> sink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -726,7 +726,7 @@ public class SesameModelConnection implements ModelConnection
 			}
 		};
 	
-		Buffer<Statement> buffer = new Buffer<Statement>( sink );
+		Buffer<Statement, RippleException> buffer = new Buffer<Statement, RippleException>( sink );
 		getStatements( null, null, null, buffer, false );
 	
 		adapter.startRDF();
@@ -1073,12 +1073,12 @@ public class SesameModelConnection implements ModelConnection
 	private class MultiplyTask extends Task
 	{
 		private RippleValue subj, pred;
-		private Sink<RippleValue> sink;
+		private Sink<RippleValue, RippleException> sink;
 		private boolean includeInferred;
 	
 		public MultiplyTask( final RippleValue subj,
 							final RippleValue pred,
-							final Sink<RippleValue> sink,
+							final Sink<RippleValue, RippleException> sink,
 							final boolean includeInferred )
 		{
 			this.subj = subj;
@@ -1096,14 +1096,14 @@ public class SesameModelConnection implements ModelConnection
 		{
 			synchronized ( sink )
 			{
-				sink = new NullSink<RippleValue>();
+				sink = new NullSink<RippleValue, RippleException>();
 			}
 		}
 	}
 	
 	public void multiplyAsynch( final RippleValue subj,
 								final RippleValue pred,
-								final Sink<RippleValue> sink,
+								final Sink<RippleValue, RippleException> sink,
 								final boolean includeInferred )
 		throws RippleException
 	{
@@ -1111,12 +1111,12 @@ public class SesameModelConnection implements ModelConnection
 		taskSet.add( task );
 	}
 	
-	public void getNamespaces( final Sink<Namespace> sink )
+	public void getNamespaces( final Sink<Namespace, RippleException> sink )
 		throws RippleException
 	{
 		CloseableIteration<? extends Namespace, SailException> nsIter = null;
 	
-		Buffer<Namespace> buffer = new Buffer<Namespace>( sink );
+		Buffer<Namespace, RippleException> buffer = new Buffer<Namespace, RippleException>( sink );
 	
 		try
 		{
@@ -1156,7 +1156,7 @@ public class SesameModelConnection implements ModelConnection
 	public void getStatements( final RdfValue subj,
 								final RdfValue pred,
 								final RdfValue obj,
-								final Sink<Statement> sink,
+								final Sink<Statement, RippleException> sink,
 								final boolean includeInferred)
 		throws RippleException
 	{
@@ -1174,7 +1174,7 @@ public class SesameModelConnection implements ModelConnection
 			//       the one below closes, which currently causes Sesame to
 			//       deadlock.  Even using a separate RepositoryConnection for
 			//       each RepositoryResult doesn't seem to help.
-			Buffer<Statement> buffer = new Buffer<Statement>( sink );
+			Buffer<Statement, RippleException> buffer = new Buffer<Statement, RippleException>( sink );
 			CloseableIteration<? extends Statement, SailException> stmtIter = null;
 	
 	//TODO: use CloseableIterationSource
@@ -1227,47 +1227,47 @@ public class SesameModelConnection implements ModelConnection
 	{
 		return new RdfSource()
 		{
-			private Source<Statement> stSource = new Source<Statement>()
+			private Source<Statement, RippleException> stSource = new Source<Statement, RippleException>()
 			{
-				public void writeTo( final Sink<Statement> sink )
+				public void writeTo( final Sink<Statement, RippleException> sink )
 					throws RippleException
 				{
 					getStatements( null, null, null, sink, false );
 				}
 			};
 	
-			private Source<Namespace> nsSource = new Source<Namespace>()
+			private Source<Namespace, RippleException> nsSource = new Source<Namespace, RippleException>()
 			{
-				public void writeTo( final Sink<Namespace> sink )
+				public void writeTo( final Sink<Namespace, RippleException> sink )
 					throws RippleException
 				{
 					getNamespaces( sink );
 				}
 			};
 	
-			private Source<String> comSource = new NullSource<String>();
+			private Source<String, RippleException> comSource = new NullSource<String, RippleException>();
 	
-			public Source<Statement> statementSource()
+			public Source<Statement, RippleException> statementSource()
 			{
 				return stSource;
 			}
 	
-			public Source<Namespace> namespaceSource()
+			public Source<Namespace, RippleException> namespaceSource()
 			{
 				return nsSource;
 			}
 	
-			public Source<String> commentSource()
+			public Source<String, RippleException> commentSource()
 			{
 				return comSource;
 			}
 		};
 	}
 	
-	public void multiply( final RippleValue subj, final RippleValue pred, final Sink<RippleValue> sink, final boolean includeInferred )
+	public void multiply( final RippleValue subj, final RippleValue pred, final Sink<RippleValue, RippleException> sink, final boolean includeInferred )
 		throws RippleException
 	{
-		Sink<Statement> stSink = new Sink<Statement>()
+		Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -1278,10 +1278,10 @@ public class SesameModelConnection implements ModelConnection
 		getStatements( subj.toRdf( this ), pred.toRdf( this ), null, stSink, includeInferred );
 	}
 	
-	public void divide( final RippleValue obj, final RippleValue pred, final Sink<RippleValue> sink )
+	public void divide( final RippleValue obj, final RippleValue pred, final Sink<RippleValue, RippleException> sink )
 		throws RippleException
 	{
-		Sink<Statement> stSink = new Sink<Statement>()
+		Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -1292,10 +1292,10 @@ public class SesameModelConnection implements ModelConnection
 		getStatements( null, pred.toRdf( this ), obj.toRdf( this ), stSink, false );
 	}
 	
-	private void multiplyRdfValues( final RdfValue subj, final RdfValue pred, final Sink<RdfValue> sink )
+	private void multiplyRdfValues( final RdfValue subj, final RdfValue pred, final Sink<RdfValue, RippleException> sink )
 		throws RippleException
 	{
-		Sink<Statement> stSink = new Sink<Statement>()
+		Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -1309,7 +1309,7 @@ public class SesameModelConnection implements ModelConnection
 	////////////////////////////////////////////////////////////////////////////
 	
 	//TODO: Namespaces should not be part of the ModelConnection API
-	public void putNamespaces( final Sink<Namespace> sink )
+	public void putNamespaces( final Sink<Namespace, RippleException> sink )
 		throws RippleException
 	{
 		try
@@ -1329,7 +1329,7 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public void putContexts( final Sink<RippleValue> sink )
+	public void putContexts( final Sink<RippleValue, RippleException> sink )
 		throws RippleException
 	{
 		try

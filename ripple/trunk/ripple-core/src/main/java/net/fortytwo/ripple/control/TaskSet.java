@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.control;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 /**
  * A set of tasks which are executed concurrently.  Tasks are scheduled for
@@ -20,7 +20,7 @@ public class TaskSet
 {
 	private int count = 0;
 
-	private Sink<Task> completedTaskSink = new Sink<Task>()
+	private Sink<Task, RippleException> completedTaskSink = new Sink<Task, RippleException>()
 	{
 		public synchronized void put( final Task task ) throws RippleException
 		{

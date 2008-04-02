@@ -9,13 +9,12 @@
 
 package net.fortytwo.ripple.cli;
 
-import net.fortytwo.ripple.cli.ast.Ast;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.PipedIOStream;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.NullSink;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.NullSink;
 import net.fortytwo.ripple.RippleException;
 
 import java.io.BufferedReader;
@@ -40,12 +39,12 @@ public class InterpreterTest extends RippleTestCase
 
 		final PipedIOStream pio = new PipedIOStream();
 
-		Collector<Exception> exceptions = new Collector<Exception>();
+		Collector<Exception, RippleException> exceptions = new Collector<Exception, RippleException>();
 		RecognizerAdapter ra = new RecognizerAdapter(
-				new NullSink<ListAst>(),
-				new NullSink<ListAst>(),
-				new NullSink<Command>(),
-				new NullSink<RecognizerEvent>(),
+				new NullSink<ListAst, RippleException>(),
+				new NullSink<ListAst, RippleException>(),
+				new NullSink<Command, RippleException>(),
+				new NullSink<RecognizerEvent, RippleException>(),
 				System.err );
 		final Interpreter interpreter = new Interpreter( ra, pio, exceptions );
 

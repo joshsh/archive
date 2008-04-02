@@ -5,8 +5,9 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.Collector;
+import net.fortytwo.ripple.flow.Collector;
 import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.RippleException;
 
 import org.openrdf.model.vocabulary.RDF;
 
@@ -32,7 +33,7 @@ public class LinkedDataSailTest extends RippleTestCase
 					mc.createUri( "http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging" ) );
 			RippleValue rdfType = new RdfValue( RDF.TYPE );
 			
-			Collector<RippleValue> results = new Collector<RippleValue>();
+			Collector<RippleValue, RippleException> results = new Collector<RippleValue, RippleException>();
 			
 			mc.multiply( tagTagging, rdfType, results, false );
 			assertEquals( 1, results.size() );

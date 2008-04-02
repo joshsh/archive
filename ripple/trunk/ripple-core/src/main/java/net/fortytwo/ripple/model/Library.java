@@ -10,11 +10,11 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.util.Sink;
 import net.fortytwo.ripple.util.UriMap;
 
 import org.openrdf.model.vocabulary.OWL;
@@ -55,7 +55,7 @@ public abstract class Library
 		final ModelBridge bridge = mc.getModel().getBridge();
 		final PrimitiveStackMapping primFinal = prim;
 
-		Sink<RippleValue> aliasSink = new Sink<RippleValue>()
+		Sink<RippleValue, RippleException> aliasSink = new Sink<RippleValue, RippleException>()
 		{
 			public void put( final RippleValue v )
 				throws RippleException

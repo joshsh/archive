@@ -11,9 +11,9 @@ package net.fortytwo.ripple.io;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.rdf.RdfSink;
-import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -22,16 +22,16 @@ import org.openrdf.model.Statement;
 // TODO: change this class to use a SailConnection instead of a ModelConnection
 public class RdfImporter implements RdfSink
 {
-	private Sink<Statement> stSink;
-	private Sink<Namespace> nsSink;
-	private Sink<String> cmtSink;
+	private Sink<Statement, RippleException> stSink;
+	private Sink<Namespace, RippleException> nsSink;
+	private Sink<String, RippleException> cmtSink;
 
 	public RdfImporter( final ModelConnection mc,
 						final Resource... contexts ) throws RippleException
 	{
 		final boolean override = Ripple.getProperties().getBoolean(Ripple.PREFER_NEWEST_NAMESPACE_DEFINITIONS);
 
-		stSink = new Sink<Statement>()
+		stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -40,7 +40,7 @@ public class RdfImporter implements RdfSink
 			}
 		};
 
-		nsSink = new Sink<Namespace>()
+		nsSink = new Sink<Namespace, RippleException>()
 		{
 			public void put( final Namespace ns ) throws RippleException
 			{
@@ -48,7 +48,7 @@ public class RdfImporter implements RdfSink
 			}
 		};
 
-		cmtSink = new Sink<String>()
+		cmtSink = new Sink<String, RippleException>()
 		{
 			public void put( final String comment ) throws RippleException
 			{
@@ -56,17 +56,17 @@ public class RdfImporter implements RdfSink
 		};
 	}
 
-	public Sink<Statement> statementSink()
+	public Sink<Statement, RippleException> statementSink()
 	{
 		return stSink;
 	}
 
-	public Sink<Namespace> namespaceSink()
+	public Sink<Namespace, RippleException> namespaceSink()
 	{
 		return nsSink;
 	}
 
-	public Sink<String> commentSink()
+	public Sink<String, RippleException> commentSink()
 	{
 		return cmtSink;
 	}

@@ -11,7 +11,7 @@ package net.fortytwo.ripple.cli;
 
 public enum RecognizerEvent
 {
-	EOI,
+    END_OF_INPUT,
 	ESCAPE,
 	NEWLINE,
 	QUIT

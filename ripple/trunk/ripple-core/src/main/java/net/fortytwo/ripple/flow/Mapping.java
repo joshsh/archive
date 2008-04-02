@@ -7,14 +7,14 @@
  */
 
 
-package net.fortytwo.ripple.model;
+package net.fortytwo.ripple.flow;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 // kate: tab-width 4
 
-public interface Mapping<D, R>
+public interface Mapping<D, R, E extends Exception>
 {
 	/**
 	 * @return whether this function is referentially transparent w.r.t. all of its
@@ -22,5 +22,5 @@ public interface Mapping<D, R>
 	 */
 	boolean isTransparent();
 
-	void applyTo( D arg, Sink<R> sink ) throws RippleException;
+	void applyTo( D arg, Sink<R, E> sink ) throws E;
 }

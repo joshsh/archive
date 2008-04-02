@@ -13,7 +13,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 /**
  * A primitive which removes the topmost item from the stack.
@@ -34,7 +34,7 @@ public class Pop extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{

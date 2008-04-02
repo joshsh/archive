@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.rdf;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
@@ -23,15 +23,15 @@ public class SesameOutputAdapter implements RdfSink
 {
 	private RDFHandler handler;
 
-	private Sink<Statement> stSink;
-	private Sink<Namespace> nsSink;
-	private Sink<String> cmtSink;
+	private Sink<Statement, RippleException> stSink;
+	private Sink<Namespace, RippleException> nsSink;
+	private Sink<String, RippleException> cmtSink;
 
 	public SesameOutputAdapter( final RDFHandler handler )
 	{
 		this.handler = handler;
 
-		stSink = new Sink<Statement>()
+		stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -47,7 +47,7 @@ public class SesameOutputAdapter implements RdfSink
 			}
 		};
 
-		nsSink = new Sink<Namespace>()
+		nsSink = new Sink<Namespace, RippleException>()
 		{
 			public void put( final Namespace ns ) throws RippleException
 			{
@@ -63,7 +63,7 @@ public class SesameOutputAdapter implements RdfSink
 			}
 		};
 
-		cmtSink = new Sink<String>()
+		cmtSink = new Sink<String, RippleException>()
 		{
 			public void put( final String comment ) throws RippleException
 			{
@@ -106,17 +106,17 @@ public class SesameOutputAdapter implements RdfSink
 		}
 	}
 
-	public Sink<Statement> statementSink()
+	public Sink<Statement, RippleException> statementSink()
 	{
 		return stSink;
 	}
 
-	public Sink<Namespace> namespaceSink()
+	public Sink<Namespace, RippleException> namespaceSink()
 	{
 		return nsSink;
 	}
 
-	public Sink<String> commentSink()
+	public Sink<String, RippleException> commentSink()
 	{
 		return cmtSink;
 	}

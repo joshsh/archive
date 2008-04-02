@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.rdf.RdfSink;
-import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -27,7 +27,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 
 	private RdfSink addSink = new RdfSink()
 	{
-		private Sink<Statement> stSink = new Sink<Statement>()
+		private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -44,7 +44,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 			}
 		};
 
-		private Sink<Namespace> nsSink = new Sink<Namespace>()
+		private Sink<Namespace, RippleException> nsSink = new Sink<Namespace, RippleException>()
 		{
 			public void put( final Namespace ns ) throws RippleException
 			{
@@ -52,7 +52,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 			}
 		};
 
-		private Sink<String> comSink = new Sink<String>()
+		private Sink<String, RippleException> comSink = new Sink<String, RippleException>()
 		{
 			public void put( final String comment ) throws RippleException
 			{
@@ -60,17 +60,17 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 			}
 		};
 
-		public Sink<Statement> statementSink()
+		public Sink<Statement, RippleException> statementSink()
 		{
 			return stSink;
 		}
 
-		public Sink<Namespace> namespaceSink()
+		public Sink<Namespace, RippleException> namespaceSink()
 		{
 			return nsSink;
 		}
 
-		public Sink<String> commentSink()
+		public Sink<String, RippleException> commentSink()
 		{
 			return comSink;
 		}
@@ -78,7 +78,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 
 	private RdfSink subSink = new RdfSink()
 	{
-		private Sink<Statement> stSink = new Sink<Statement>()
+		private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{
@@ -95,7 +95,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 			}
 		};
 
-		private Sink<Namespace> nsSink = new Sink<Namespace>()
+		private Sink<Namespace, RippleException> nsSink = new Sink<Namespace, RippleException>()
 		{
 			public void put( final Namespace ns ) throws RippleException
 			{
@@ -103,7 +103,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 			}
 		};
 
-		private Sink<String> comSink = new Sink<String>()
+		private Sink<String, RippleException> comSink = new Sink<String, RippleException>()
 		{
 			public void put( final String comment ) throws RippleException
 			{
@@ -111,17 +111,17 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 			}
 		};
 
-		public Sink<Statement> statementSink()
+		public Sink<Statement, RippleException> statementSink()
 		{
 			return stSink;
 		}
 
-		public Sink<Namespace> namespaceSink()
+		public Sink<Namespace, RippleException> namespaceSink()
 		{
 			return nsSink;
 		}
 
-		public Sink<String> commentSink()
+		public Sink<String, RippleException> commentSink()
 		{
 			return comSink;
 		}

@@ -9,18 +9,12 @@
 
 package net.fortytwo.ripple.cli.ast;
 
-import java.util.Iterator;
-
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
-
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 
 public class TypedLiteralAst implements Ast<RippleList>
 {
@@ -33,12 +27,12 @@ public class TypedLiteralAst implements Ast<RippleList>
 		this.type = type;
 	}
 
-	public void evaluate( final Sink<RippleList> sink,
+	public void evaluate( final Sink<RippleList, RippleException> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
 	{
-		Sink<RippleValue> typeSink = new Sink<RippleValue>()
+		Sink<RippleValue, RippleException> typeSink = new Sink<RippleValue, RippleException>()
 		{
 			public void put( final RippleValue type ) throws RippleException
 			{

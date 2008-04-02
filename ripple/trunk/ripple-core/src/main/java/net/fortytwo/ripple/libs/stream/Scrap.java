@@ -10,9 +10,9 @@
 package net.fortytwo.ripple.libs.stream;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
 
 /**
  * A filter which discards the stack.
@@ -33,7 +33,7 @@ public class Scrap extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{

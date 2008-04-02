@@ -10,13 +10,13 @@
 package net.fortytwo.ripple.libs.stack;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.regex.PlusQuantifier;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
 
 // kate: tab-width 4
 
@@ -39,7 +39,7 @@ public class PlusApply extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -47,7 +47,7 @@ public class PlusApply extends PrimitiveStackMapping
 		RippleValue first = stack.getFirst();
 		final RippleList rest = stack.getRest();
 
-		Sink<Operator> opSink = new Sink<Operator>()
+		Sink<Operator, RippleException> opSink = new Sink<Operator, RippleException>()
 		{
 			public void put( final Operator op ) throws RippleException
 			{

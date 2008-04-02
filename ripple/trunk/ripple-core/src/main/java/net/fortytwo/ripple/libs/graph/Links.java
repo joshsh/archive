@@ -11,13 +11,13 @@ package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.Statement;
 
@@ -41,7 +41,7 @@ public class Links extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -55,7 +55,7 @@ public class Links extends PrimitiveStackMapping
 
 		final ModelBridge bridge = mc.getModel().getBridge();
 
-		Sink<Statement> stSink = new Sink<Statement>()
+		Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
 			public void put( final Statement st ) throws RippleException
 			{

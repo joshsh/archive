@@ -9,7 +9,10 @@
 
 package net.fortytwo.ripple.model;
 
-public interface StackMapping extends Mapping<StackContext, StackContext>
+import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Mapping;
+
+public interface StackMapping extends Mapping<StackContext, StackContext, RippleException>
 {
 	/**
 	*  The fixed number of arguments which this function consumes before

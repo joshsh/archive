@@ -15,13 +15,13 @@ import java.util.Iterator;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.LexiconUpdater;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.Sink;
 
 import org.apache.log4j.Logger;
 import org.openrdf.model.URI;
@@ -131,7 +131,7 @@ public class QueryEngine
 		return defaultNs;
 	}
 
-	public void uriForKeyword( final String localName, final Sink<RippleValue> sink, final ModelConnection mc )
+	public void uriForKeyword( final String localName, final Sink<RippleValue, RippleException> sink, final ModelConnection mc )
 		throws RippleException
 	{
 		Collection<URI> options = lexicon.uriForKeyword( localName );
@@ -154,7 +154,7 @@ public class QueryEngine
 
 	public void uriForQName( final String nsPrefix,
 								final String localName,
-								final Sink<RippleValue> sink,
+								final Sink<RippleValue, RippleException> sink,
 								final ModelConnection mc )
 		throws RippleException
 	{

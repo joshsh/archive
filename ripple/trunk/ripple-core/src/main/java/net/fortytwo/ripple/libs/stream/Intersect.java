@@ -18,7 +18,7 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.ListMemoizer;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 // kate: tab-width 4
 
@@ -43,7 +43,7 @@ public class Intersect extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -76,7 +76,7 @@ public class Intersect extends PrimitiveStackMapping
 		}
 
 		public void applyTo( final StackContext arg,
-							 final Sink<StackContext> sink
+							 final Sink<StackContext, RippleException> sink
 		)
 			throws RippleException
 		{
@@ -95,7 +95,7 @@ public class Intersect extends PrimitiveStackMapping
 		}
 
 		private void applyTrue( final StackContext arg,
-								final Sink<StackContext> sink ) throws RippleException
+								final Sink<StackContext, RippleException> sink ) throws RippleException
 		{
 			RippleList stack = arg.getStack().getRest();
 
@@ -116,7 +116,7 @@ public class Intersect extends PrimitiveStackMapping
 		}
 
 		private void applyFalse( final StackContext arg,
-								final Sink<StackContext> sink ) throws RippleException
+								final Sink<StackContext, RippleException> sink ) throws RippleException
 		{
 			RippleList stack = arg.getStack().getRest();
 

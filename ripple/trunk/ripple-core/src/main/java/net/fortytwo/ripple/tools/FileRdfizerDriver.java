@@ -24,7 +24,7 @@ import java.io.OutputStream;
 
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.CloseableIterationSource;
-import net.fortytwo.ripple.util.Source;
+import net.fortytwo.ripple.flow.Source;
 import net.fortytwo.ripple.RippleException;
 
 public final class FileRdfizerDriver
@@ -95,11 +95,11 @@ public final class FileRdfizerDriver
 		CloseableIterationSource<? extends Namespace, SailException> nsSource
 				= new CloseableIterationSource(
 			 			sc.getNamespaces() );
-		( (Source<Namespace>) nsSource ).writeTo( adapter.namespaceSink() );
+		( (Source<Namespace, RippleException>) nsSource ).writeTo( adapter.namespaceSink() );
 		CloseableIterationSource<? extends Statement, SailException> stSource
 				= new CloseableIterationSource(
 						sc.getStatements( null, null, null, false )	);
-		( (Source <Statement>) stSource ).writeTo( adapter.statementSink() );
+		( (Source<Statement, RippleException>) stSource ).writeTo( adapter.statementSink() );
 		adapter.endRDF();
 	}
 }

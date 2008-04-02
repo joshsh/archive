@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 /**
  *  A filter which yields no results, regardless of its inputs.
@@ -23,7 +23,7 @@ public class NullFilter implements StackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						final Sink<StackContext> sink )
+						final Sink<StackContext, RippleException> sink )
 		throws RippleException
 	{
 	}

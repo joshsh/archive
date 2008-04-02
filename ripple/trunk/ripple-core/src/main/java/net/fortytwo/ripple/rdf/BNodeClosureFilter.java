@@ -16,8 +16,8 @@ import java.util.Set;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Buffer;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Buffer;
+import net.fortytwo.ripple.flow.Sink;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -26,18 +26,18 @@ import org.openrdf.model.Value;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
-public class BNodeClosureFilter implements Sink<Resource>
+public class BNodeClosureFilter implements Sink<Resource, RippleException>
 {
 	private Set<Resource> visited;
-	private Sink<Statement> sink;
+	private Sink<Statement, RippleException> sink;
 	private SailConnection sailConnection;
-	private Buffer<Resource> buffer;
+	private Buffer<Resource, RippleException> buffer;
 
-	public BNodeClosureFilter( final Sink<Statement> sink, final SailConnection sc )
+	public BNodeClosureFilter( final Sink<Statement, RippleException> sink, final SailConnection sc )
 	{
 		this.sink = sink;
 		sailConnection = sc;
-		buffer = new Buffer<Resource>( this );
+		buffer = new Buffer<Resource, RippleException>( this );
 		visited = new HashSet<Resource>();
 	}
 

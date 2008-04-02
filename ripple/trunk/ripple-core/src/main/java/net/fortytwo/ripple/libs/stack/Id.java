@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.stack;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 /**
  * A primitive function which has no effect on the stack.
@@ -33,7 +33,7 @@ public class Id extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{

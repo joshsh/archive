@@ -14,14 +14,14 @@ import java.util.Iterator;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.RippleProperties;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.io.RipplePrintStream;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
 
-public class TurtleView implements Sink<RippleList>
+public class TurtleView implements Sink<RippleList, RippleException>
 {
 	// A three-space-INDENTed tree seems to be the most readable.
 	private static final String INDENT = "   ";
@@ -75,7 +75,7 @@ public class TurtleView implements Sink<RippleList>
 
 		if ( showEdges )
 		{
-			Collector<RippleValue> predicates = new Collector<RippleValue>();
+			Collector<RippleValue, RippleException> predicates = new Collector<RippleValue, RippleException>();
 			mc.findPredicates( first, predicates );
 	
 			int predCount = 0;
@@ -98,7 +98,7 @@ public class TurtleView implements Sink<RippleList>
 				ps.print( predicate );
 				ps.print( "\n" );
 	
-				Collector<RippleValue> objects = new Collector<RippleValue>();
+				Collector<RippleValue, RippleException> objects = new Collector<RippleValue, RippleException>();
 				mc.multiply( first, predicate, objects, Ripple.useInference() );
 				
 				int objCount = 0;

@@ -10,12 +10,12 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.Sink;
 
 /**
  * A primitive which follows consumes an object and predicate, producing
@@ -40,7 +40,7 @@ public class Back extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext> sink
+						 final Sink<StackContext, RippleException> sink
 	)
 		throws RippleException
 	{
@@ -54,7 +54,7 @@ public class Back extends PrimitiveStackMapping
 		o = stack.getFirst();
 		final RippleList rest = stack.getRest();
 
-		Sink<RippleValue> divSink = new Sink<RippleValue>()
+		Sink<RippleValue, RippleException> divSink = new Sink<RippleValue, RippleException>()
 		{
 			public void put( final RippleValue v )
 				throws RippleException
