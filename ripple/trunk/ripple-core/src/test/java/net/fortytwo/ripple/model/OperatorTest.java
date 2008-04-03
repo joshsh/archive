@@ -8,7 +8,6 @@ import org.openrdf.rio.RDFFormat;
 
 import net.fortytwo.ripple.io.RdfImporter;
 import net.fortytwo.ripple.libs.stack.Dup;
-import net.fortytwo.ripple.query.ListDequotation;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
@@ -116,7 +115,7 @@ public class OperatorTest extends RippleTestCase
 			ops.clear();
 			Operator.createOperator( arg, ops, mc );
 			assertEquals( 1, ops.size() );
-			assertTrue( ops.iterator().next().getMapping() instanceof NullFilter );
+			assertTrue( ops.iterator().next().getMapping() instanceof NullStackMapping);
 			
 			mc.close();
 		}

@@ -16,6 +16,7 @@ import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.StackMapping;
 
 /**
  * A primitive which consumes a number representing an angle in radians and
@@ -55,7 +56,14 @@ public class Tan extends PrimitiveStackMapping
 		result = mc.value( d );
 
 		sink.put( arg.with(
-				stack.push( result ) ) );	}
+				stack.push( result ) ) );
+    }
+
+    @Override
+    public StackMapping inverse() throws RippleException
+    {
+        return MathLibrary.getAtanValue();
+    }
 }
 
 // kate: tab-width 4

@@ -84,6 +84,12 @@ public class Op implements StackMapping, RippleValue
 	{
 		return true;
 	}
+
+    // Op has no inverse
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
 }
 
 // kate: tab-width 4

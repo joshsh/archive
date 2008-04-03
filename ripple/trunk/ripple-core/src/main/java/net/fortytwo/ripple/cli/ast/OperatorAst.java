@@ -12,6 +12,7 @@ package net.fortytwo.ripple.cli.ast;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.libs.stack.StackLibrary;
+import net.fortytwo.ripple.libs.etc.EtcLibrary;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RippleList;
@@ -19,14 +20,20 @@ import net.fortytwo.ripple.query.QueryEngine;
 
 public class OperatorAst implements Ast<RippleList>
 {
-	public enum Type { Apply, Option, Star, Plus, Times, Range };
+	public enum Type {
+        Apply, InverseApply,
+        Option, InverseOption,
+        Star, InverseStar,
+        Plus, InversePlus,
+        Times, InverseTimes,
+        Range, InverseRange };
 
 	private Type type;
 	private int min, max;
 
 	public OperatorAst()
 	{
-		this( Type.Apply );
+		this( Type.Apply);
 	}
 
 	public OperatorAst( final Type type )
@@ -34,15 +41,15 @@ public class OperatorAst implements Ast<RippleList>
 		this.type = type;
 	}
 
-	public OperatorAst( final int times )
+	public OperatorAst( final int times, boolean inverse )
 	{
-		type = Type.Times;
+		type = inverse ? Type.InverseTimes : Type.Times;
 		min = times;
 	}
 
-	public OperatorAst( final int min, final int max )
+	public OperatorAst( final int min, final int max, boolean inverse )
 	{
-		type = Type.Range;
+		type = inverse ? Type.InverseRange : Type.Range;
 		this.min = min;
 		this.max = max;
 	}
@@ -59,26 +66,50 @@ public class OperatorAst implements Ast<RippleList>
 			case Apply:
 				l = mc.list( Operator.OP );
 				break;
-			case Option:
-				l = mc.list( Operator.OP ).push( StackLibrary.getOptApplyValue() );
-				break;
-			case Star:
-				l = mc.list( Operator.OP ).push( StackLibrary.getStarApplyValue() );
-				break;
-			case Plus:
-				l = mc.list( Operator.OP ).push( StackLibrary.getPlusApplyValue() );
-				break;
-			case Times:
-				l = mc.list( Operator.OP )
-						.push( StackLibrary.getTimesApplyValue() )
-						.push( mc.value( min ) );
-				break;
-			case Range:
+            case InverseApply:
+                l = mc.list( Operator.OP ).push( Operator.OP ).push( EtcLibrary.getInvertValue() );
+                break;
+            case InverseOption:
+                l = mc.list( Operator.OP ).push( StackLibrary.getOptApplyValue() ).push( Operator.OP ).push( EtcLibrary.getInvertValue() );
+                break;
+            case InversePlus:
+                l = mc.list( Operator.OP ).push( StackLibrary.getPlusApplyValue() ).push( Operator.OP ).push( EtcLibrary.getInvertValue() );
+                break;
+            case InverseRange:
+                l = mc.list( Operator.OP )
+						.push( StackLibrary.getRangeApplyValue() )
+						.push( mc.value( max ) )
+						.push( mc.value( min ) ).push( EtcLibrary.getInvertValue() );
+                break;
+            case InverseStar:
+                l = mc.list( Operator.OP ).push( StackLibrary.getStarApplyValue() ).push( Operator.OP ).push( EtcLibrary.getInvertValue() );
+                break;
+            case InverseTimes:
 				l = mc.list( Operator.OP )
 						.push( StackLibrary.getRangeApplyValue() )
 						.push( mc.value( max ) )
-						.push( mc.value( min ) );
+						.push( mc.value( min ) ).push( EtcLibrary.getInvertValue() );
+                break;
+            case Option:
+				l = mc.list( Operator.OP ).push( StackLibrary.getOptApplyValue() );
 				break;
+            case Plus:
+                l = mc.list( Operator.OP ).push( StackLibrary.getPlusApplyValue() );
+                break;
+            case Range:
+                l = mc.list( Operator.OP )
+                        .push( StackLibrary.getRangeApplyValue() )
+                        .push( mc.value( max ) )
+                        .push( mc.value( min ) );
+                break;
+			case Star:
+				l = mc.list( Operator.OP ).push( StackLibrary.getStarApplyValue() );
+				break;
+            case Times:
+                l = mc.list( Operator.OP )
+                        .push( StackLibrary.getTimesApplyValue() )
+                        .push( mc.value( min ) );
+                break;
 			default:
 				throw new RippleException( "unhandled operator type: " + type );	
 		}
@@ -91,17 +122,29 @@ public class OperatorAst implements Ast<RippleList>
 		switch ( type )
 		{
 			case Apply:
-				return "!";
-			case Option:
-				return "?";
-			case Star:
-				return "*";
-			case Plus:
-				return "+";
-			case Times:
-				return "{" + min + "}";
-			case Range:
-				return "{" + min + "," + max + "}";
+				return ">>";
+            case InverseApply:
+                return "<<";
+            case InverseOption:
+                return "<<?";
+            case InverseStar:
+                return "<<*";
+            case InversePlus:
+                return "<<+";
+            case InverseRange:
+                return "<<{" + min + "," + max + "}";
+            case InverseTimes:
+                return "<<{" + min + "}";
+            case Option:
+				return ">>?";
+            case Plus:
+                return ">>+";
+            case Range:
+                return ">>{" + min + "," + max + "}";
+            case Star:
+				return ">>*";
+            case Times:
+                return ">>{" + min + "}";
 			default:
 				return "error";
 		}

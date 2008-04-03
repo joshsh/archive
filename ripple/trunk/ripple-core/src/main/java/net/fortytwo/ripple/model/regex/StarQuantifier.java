@@ -5,6 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.NullStackMapping;
 
 /**
  * Author: josh
@@ -40,4 +41,9 @@ public class StarQuantifier implements StackMapping
 				.push( innerOperator )
 				.push( new Operator( this ) ) ) );
 	}
+
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
 }

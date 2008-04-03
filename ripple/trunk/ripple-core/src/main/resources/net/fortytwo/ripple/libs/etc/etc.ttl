@@ -18,6 +18,18 @@ etc:get
 	rdfs:comment "issues a GET request and produces the received data as a string" ;
 	.
 
+etc:invert
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "mapping" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "invert" ;
+	rdfs:comment "mapping -> inverse_mapping" ;
+	.
+
 etc:time
 	a rpl:Function ;
 	rpl:arity 0 ;

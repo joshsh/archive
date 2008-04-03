@@ -46,6 +46,12 @@ public class Closure implements StackMapping
 	{
 		return "Closure(" + innerRelation + ", " + argument + ")";
 	}
+
+    // TODO: calculate the actual inverse mapping
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
 }
 
 // kate: tab-width 4

@@ -19,4 +19,6 @@ public interface StackMapping extends Mapping<StackContext, StackContext, Ripple
 	*  yielding a result.
 	*/
 	int arity();
+
+    StackMapping inverse() throws RippleException;
 }

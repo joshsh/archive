@@ -17,6 +17,7 @@ import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.NullStackMapping;
 import net.fortytwo.ripple.util.ListMemoizer;
 
 /**
@@ -86,7 +87,12 @@ public class Unique extends PrimitiveStackMapping
 		{
 			return true;
 		}
-	}
+        
+        public StackMapping inverse() throws RippleException
+        {
+            return new NullStackMapping();
+        }
+    }
 }
 
 // kate: tab-width 4

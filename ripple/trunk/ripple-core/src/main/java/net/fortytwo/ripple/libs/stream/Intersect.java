@@ -17,6 +17,7 @@ import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.NullStackMapping;
 import net.fortytwo.ripple.util.ListMemoizer;
 import net.fortytwo.ripple.flow.Sink;
 
@@ -140,5 +141,11 @@ public class Intersect extends PrimitiveStackMapping
 		{
 			return true;
 		}
-	}
+
+        // TODO
+        public StackMapping inverse() throws RippleException
+        {
+            return new NullStackMapping();
+        }
+    }
 }

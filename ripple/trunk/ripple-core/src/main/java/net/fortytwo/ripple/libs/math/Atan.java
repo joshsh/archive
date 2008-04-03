@@ -16,6 +16,7 @@ import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.StackMapping;
 
 /**
  * A primitive which consumes a number and produces its arc tangent, in the
@@ -54,6 +55,12 @@ public class Atan extends PrimitiveStackMapping
 		sink.put( arg.with(
 				stack.push( result ) ) );
 	}
+
+    @Override
+    public StackMapping inverse() throws RippleException
+    {
+        return MathLibrary.getTanValue();
+    }
 }
 
 // kate: tab-width 4

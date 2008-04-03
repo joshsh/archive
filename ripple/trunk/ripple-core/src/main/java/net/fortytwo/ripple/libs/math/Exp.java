@@ -16,6 +16,7 @@ import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.StackMapping;
 
 /**
  * A primitive which consumes a number and produces Euler's number e raised to
@@ -54,6 +55,12 @@ public class Exp extends PrimitiveStackMapping
 		sink.put( arg.with(
 				stack.push( result ) ) );
 	}
+
+    @Override
+    public StackMapping inverse() throws RippleException
+    {
+        return MathLibrary.getLogValue();
+    }
 }
 
 // kate: tab-width 4

@@ -101,11 +101,11 @@ SCHARACTER
 
 protected
 UCHARACTER
-	: (' '..'=') | ('?'..'[')  // excludes: '>', '\\'
+	: (' '..';') | '=' | ('?'..'[')  // excludes: '>', '\\' and '<' (the last of which is not excluded by Turtle)
 	| (']'..'\uFFFF')  // Note: '\u10FFFF' in Turtle
 	| "\\u" HEX HEX HEX HEX
 	| "\\U" HEX HEX HEX HEX HEX HEX HEX HEX
-	| '\\' ('\\' | '>')
+	| '\\' ('\\' | '>' | '<')
 	;
 
 protected
@@ -215,10 +215,11 @@ COLON : ':' ;
 EQUAL : '=';
 
 OP_APPLY_PRE : '/' ;
-OP_APPLY_POST : '!' ;
-OP_OPTIONAL : '?' ;
-OP_STAR : '*';
-OP_PLUS : '+';
+OP_APPLY_POST : ">>" | "!";
+OP_INVERSE_APPLY : "<<";
+OP_SUFFIX_OPTIONAL : "?" ;
+OP_SUFFIX_STAR : "*";
+OP_SUFFIX_PLUS : "+";
 
 protected
 DRCTV : '@' ;
@@ -523,8 +524,36 @@ nt_Name returns [ String name ]
 nt_Operator returns [ OperatorAst ast ]
 {
 	ast = null;
+	boolean inverse = false;
 }
-	: OP_APPLY_POST { ast = new OperatorAst(); }
+	: (OP_APPLY_POST { ast = new OperatorAst(); }
+	    | OP_INVERSE_APPLY {inverse = true; ast = new OperatorAst( OperatorAst.Type.InverseApply ); }
+	    )
+	  (OP_SUFFIX_OPTIONAL { ast = new OperatorAst( inverse ? OperatorAst.Type.InverseOption : OperatorAst.Type.Option ); }
+	    | OP_SUFFIX_STAR { ast = new OperatorAst( inverse ? OperatorAst.Type.InverseStar : OperatorAst.Type.Star ); }
+	    | OP_SUFFIX_PLUS { ast = new OperatorAst( inverse ? OperatorAst.Type.InversePlus : OperatorAst.Type.Plus ); }
+	    | L_CURLY (nt_Ws)? min:NUMBER (nt_Ws)? ( COMMA (nt_Ws)? max:NUMBER (nt_Ws)? )? R_CURLY
+		  {
+			// Note: floating-point values are syntactically valid, but will be
+			// truncated to integer values.
+			int minVal = new Double( min.getText() ).intValue();
+
+			if ( null == max )
+			{
+				ast = new OperatorAst( minVal, inverse );
+			}
+
+			else
+			{
+				int maxVal = new Double( max.getText() ).intValue();
+				ast = new OperatorAst( minVal, maxVal, inverse );
+			}
+	      }
+	    )?
+
+	/*
+	 OP_APPLY_POST { ast = new OperatorAst(); }
+	| OP_INVERSE_APPLY { ast = new OperatorAst( OperatorAst.Type.InverseApply ); }
 	| OP_OPTIONAL { ast = new OperatorAst( OperatorAst.Type.Option ); }
 	| OP_STAR { ast = new OperatorAst( OperatorAst.Type.Star ); }
 	| OP_PLUS { ast = new OperatorAst( OperatorAst.Type.Plus ); }
@@ -544,7 +573,7 @@ nt_Operator returns [ OperatorAst ast ]
 				int maxVal = new Double( max.getText() ).intValue();
 				ast = new OperatorAst( minVal, maxVal );
 			}
-		}
+		}*/
 	;
 
 nt_Directive

@@ -10,6 +10,8 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Mapping;
+import net.fortytwo.ripple.flow.NullMapping;
 import net.fortytwo.ripple.io.RipplePrintStream;
 
 public abstract class PrimitiveStackMapping implements StackMapping, RippleValue
@@ -101,6 +103,12 @@ public abstract class PrimitiveStackMapping implements StackMapping, RippleValue
 	{
 		return transparent;
 	}
+
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
+
 }
 
 // kate: tab-width 4

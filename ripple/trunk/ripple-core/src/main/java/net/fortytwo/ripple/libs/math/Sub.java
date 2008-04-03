@@ -16,6 +16,7 @@ import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.StackMapping;
 
 /**
  * A primitive which consumes two numbers and produces their difference.
@@ -54,6 +55,12 @@ public class Sub extends PrimitiveStackMapping
 
 		sink.put( arg.with(
 				stack.push( result ) ) );	}
+
+    @Override
+    public StackMapping inverse() throws RippleException
+    {
+        return MathLibrary.getAddValue();
+    }
 }
 
 // kate: tab-width 4

@@ -16,6 +16,7 @@ import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.StackMapping;
 
 /**
  * A primitive which consumes a number and produces its arc sine (if defined),
@@ -59,6 +60,12 @@ public class Asin extends PrimitiveStackMapping
 					stack.push( result ) ) );
 		}
 	}
+
+    @Override
+    public StackMapping inverse() throws RippleException
+    {
+        return MathLibrary.getSinValue();
+    }
 }
 
 // kate: tab-width 4

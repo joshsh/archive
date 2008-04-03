@@ -12,7 +12,6 @@ package net.fortytwo.ripple.model;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.query.ListDequotation;
 import net.fortytwo.ripple.flow.Sink;
 
 import org.openrdf.model.vocabulary.RDF;
@@ -143,7 +142,7 @@ return rdfEquivalent;
 		// Anything else becomes an active nullary filter with no output.
 		else
 		{
-			opSink.put( new Operator( new NullFilter() ) );
+			opSink.put( new Operator( new NullStackMapping() ) );
 			return;
 		}
 	}

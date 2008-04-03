@@ -6,6 +6,7 @@ import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.Operator;
+import net.fortytwo.ripple.model.NullStackMapping;
 
 /**
  * Author: josh
@@ -62,4 +63,9 @@ public class TimesQuantifier implements StackMapping
 			}
 		}
 	}
+
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
 }

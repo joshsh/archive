@@ -1,6 +1,8 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Mapping;
+import net.fortytwo.ripple.flow.NullMapping;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.Ripple;
 
@@ -59,7 +61,13 @@ public class RdfPredicateMapping implements StackMapping
 		return "Predicate(" + predicate + ")";
 	}
 
-	private class ValueSink implements Sink<RippleValue, RippleException>
+    // TODO: an RDF predicate mapping has a well-defined inverse mapping
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
+
+    private class ValueSink implements Sink<RippleValue, RippleException>
 	{
 		private Sink<StackContext, RippleException> sink;
 		private StackContext arg;

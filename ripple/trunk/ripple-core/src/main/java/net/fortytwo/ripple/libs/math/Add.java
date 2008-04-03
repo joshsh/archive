@@ -15,6 +15,7 @@ import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.flow.Sink;
 
 /**
@@ -55,6 +56,12 @@ public class Add extends PrimitiveStackMapping
 		sink.put( arg.with(
 				stack.push( result ) ) );
 	}
+
+    @Override
+    public StackMapping inverse() throws RippleException
+    {
+        return MathLibrary.getSubValue();
+    }
 }
 
 // kate: tab-width 4

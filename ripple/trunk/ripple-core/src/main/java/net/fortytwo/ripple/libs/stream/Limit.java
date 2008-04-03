@@ -17,6 +17,7 @@ import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.NullStackMapping;
 
 /**
  * A primitive which consumes a number n and produces a filter which transmits
@@ -89,7 +90,13 @@ public class Limit extends PrimitiveStackMapping
 		{
 			return true;
 		}
-	}
+
+        // TODO
+        public StackMapping inverse() throws RippleException
+        {
+            return new NullStackMapping();
+        }
+    }
 }
 
 // kate: tab-width 4

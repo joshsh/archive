@@ -16,6 +16,7 @@ import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.StackMapping;
 
 /**
  * A primitive which consumes a numerator and divisor and produces their
@@ -60,6 +61,12 @@ public class Div extends PrimitiveStackMapping
 					stack.push( result ) ) );
 		}
 	}
+
+    @Override
+    public StackMapping inverse() throws RippleException
+    {
+        return MathLibrary.getMulValue();
+    }
 }
 
 // kate: tab-width 4

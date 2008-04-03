@@ -7,13 +7,15 @@
  */
 
 
-package net.fortytwo.ripple.query;
+package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.flow.Sink;
+
+// kate: tab-width 4
 
 public class ListDequotation implements StackMapping
 {
@@ -50,11 +52,15 @@ public class ListDequotation implements StackMapping
 			sink.put( arg.with( out ) );
 		}
 	}
-	
+
 	public boolean isTransparent()
 	{
 		return true;
 	}
-}
 
-// kate: tab-width 4
+    // TODO: list dequotation mapping has a calculable inverse mapping
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
+}

@@ -5,6 +5,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.StackMapping;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.NullStackMapping;
 
 /**
  * Author: josh
@@ -39,4 +40,9 @@ public class OptionalQuantifier implements StackMapping
 		sink.put( arg.with( arg.getStack()
 				.push( innerOperator ) ) );
 	}
+
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
 }

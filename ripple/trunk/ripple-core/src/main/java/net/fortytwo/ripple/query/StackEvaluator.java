@@ -2,6 +2,7 @@ package net.fortytwo.ripple.query;
 
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.StackMapping;
+import net.fortytwo.ripple.model.NullStackMapping;
 import net.fortytwo.ripple.RippleException;
 
 /**
@@ -15,4 +16,10 @@ public abstract class StackEvaluator extends Evaluator<StackContext, StackContex
 	{
 		return 1;
 	}
+
+    // TODO
+    public StackMapping inverse() throws RippleException
+    {
+        return new NullStackMapping();
+    }
 }

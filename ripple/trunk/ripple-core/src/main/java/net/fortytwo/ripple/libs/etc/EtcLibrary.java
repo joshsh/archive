@@ -12,6 +12,7 @@ package net.fortytwo.ripple.libs.etc;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.util.UriMap;
 
 /**
@@ -21,15 +22,23 @@ public class EtcLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/etc#";
 
-	public void load( final UriMap uf, final ModelConnection mc )
+    private static PrimitiveStackMapping invertVal;
+
+    public void load( final UriMap uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.put(
 			NS, getClass().getResource( "etc.ttl" ) + "#" );
 
-		registerPrimitive( Get.class, NS + "get", mc );
+        registerPrimitive( Get.class, NS + "get", mc );
+        invertVal = registerPrimitive( Invert.class, NS + "invert", mc );
 		registerPrimitive( Time.class, NS + "time", mc );
 	}
+
+    public static PrimitiveStackMapping getInvertValue()
+    {
+        return invertVal;
+    }
 }
 
 // kate: tab-width 4

@@ -11,11 +11,13 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Sink;
+import net.fortytwo.ripple.flow.Mapping;
+import net.fortytwo.ripple.flow.NullMapping;
 
 /**
  *  A filter which yields no results, regardless of its inputs.
  */
-public class NullFilter implements StackMapping
+public class NullStackMapping implements StackMapping
 {
 	public int arity()
 	{
@@ -32,6 +34,13 @@ public class NullFilter implements StackMapping
 	{
 		return true;
 	}
+
+    // The null filter is considered to be its own inverse
+    public StackMapping inverse() throws RippleException
+    {
+        return this;
+    }
+
 }
 
 // kate: tab-width 4
