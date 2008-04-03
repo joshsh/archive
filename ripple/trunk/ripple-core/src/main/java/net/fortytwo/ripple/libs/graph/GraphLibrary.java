@@ -44,13 +44,15 @@ public class GraphLibrary extends Library
 
 		// Resource-centric primitives.
 		registerPrimitive( Back.class, NS + "back", mc );
-		registerPrimitive( Infer.class, NS + "infer", mc );
+        registerPrimitive( InContext.class, NS + "inContext", mc );
+        registerPrimitive( Infer.class, NS + "infer", mc );
 		registerPrimitive( Links.class, NS + "links", mc );
 
 		// Document-centric primitives.
 		registerPrimitive( Comments.class, NS + "comments", mc );
 		registerPrimitive( Namespaces.class, NS + "namespaces", mc );
-		registerPrimitive( Triples.class, NS + "triples", mc );
+        registerPrimitive( Triples.class, NS + "triples", mc );
+        registerPrimitive( Quads.class, NS + "quads", mc );
 
 		// Note: the xml: namespace is actually said to be
 		//       http://www.w3.org/XML/1998/namespace

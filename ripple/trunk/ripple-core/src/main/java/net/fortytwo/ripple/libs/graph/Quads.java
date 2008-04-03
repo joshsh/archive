@@ -26,17 +26,20 @@ import net.fortytwo.ripple.util.HttpUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
+import org.openrdf.model.Resource;
+
+// kate: tab-width 4
 
 /**
  * A primitive which consumes an information resource and produces a list
  * (subject, predicate, object) for each RDF triple in the corresponding
  * Semantic Web document.
  */
-public class Triples extends PrimitiveStackMapping
+public class Quads extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 
-	public Triples()
+	public Quads()
 		throws RippleException
 	{
 		super();
@@ -78,10 +81,12 @@ public class Triples extends PrimitiveStackMapping
             {
                 public void put( final Statement st ) throws RippleException
                 {
+                    Resource context = st.getContext();
                     resultSink.put( arg.with(
                             rest.push( bridge.get( new RdfValue( st.getSubject() ) ) )
                                     .push( bridge.get( new RdfValue( st.getPredicate() ) ) )
-                                    .push( bridge.get( new RdfValue( st.getObject() ) ) ) ) );
+                                    .push( bridge.get( new RdfValue( st.getObject() ) ) )
+                                    .push( ( null == context ) ? RippleList.NIL : bridge.get( new RdfValue( context ) ) ) ) );
                 }
             };
 
@@ -112,5 +117,3 @@ public class Triples extends PrimitiveStackMapping
 		return sc;
 	}
 }
-
-// kate: tab-width 4

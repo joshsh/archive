@@ -6,6 +6,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RdfValue;
+import net.fortytwo.ripple.model.GetStatementsQuery;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.RdfSource;
 import net.fortytwo.ripple.flow.Sink;
@@ -210,6 +211,16 @@ public class Neo4jModelConnection implements ModelConnection {
 
     public void setNamespace(String prefix, String ns, boolean override) throws RippleException {
 //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void query( final GetStatementsQuery query, final Sink<RippleValue, RippleException> sink) throws RippleException
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void queryAsynch( final GetStatementsQuery query, final Sink<RippleValue, RippleException> sink ) throws RippleException
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void multiplyAsynch(RippleValue subj, RippleValue pred, Sink<RippleValue, RippleException> sink, boolean includeInferred) throws RippleException {

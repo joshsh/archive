@@ -18,8 +18,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
+import net.fortytwo.ripple.model.RdfValue;
 
 import org.openrdf.model.Statement;
+import org.openrdf.model.Resource;
 
 /**
  * A primitive which consumes a resource and produces a three-element list
@@ -59,15 +61,17 @@ public class Links extends PrimitiveStackMapping
 		{
 			public void put( final Statement st ) throws RippleException
 			{
+                Resource context = st.getContext();
+
 				//RippleValue subj = bridge.get( st.getSubject() );
 				RippleValue pred = bridge.get( st.getPredicate() );
 				RippleValue obj = bridge.get( st.getObject() );
-
+                RippleValue ctx = ( null == context ) ? RippleList.NIL : bridge.get( new RdfValue( context ) );
 				//RippleList triple = mc.list( obj ).push( pred ).push( subj );
 
 				//sink.put( arg.with(
 				//	rest.push( triple ) ) );
-                sink.put( arg.with( stack.push( pred ).push( obj ) ) );
+                sink.put( arg.with( stack.push( pred ).push( obj ).push( ctx ) ) );
             }
 		};
 

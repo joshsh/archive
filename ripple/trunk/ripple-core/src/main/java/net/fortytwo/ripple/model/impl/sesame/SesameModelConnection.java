@@ -19,6 +19,7 @@ import net.fortytwo.ripple.model.NumericValue;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.GetStatementsQuery;
 import net.fortytwo.ripple.rdf.BNodeClosureFilter;
 import net.fortytwo.ripple.rdf.RdfSource;
 import net.fortytwo.ripple.rdf.RdfUtils;
@@ -1069,8 +1070,58 @@ public class SesameModelConnection implements ModelConnection
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
+
+    private class QueryTask extends Task
+	{
+		private GetStatementsQuery query;
+        private Sink<RippleValue, RippleException> sink;
+
+        public QueryTask( final GetStatementsQuery query, final Sink<RippleValue, RippleException> sink )
+		{
+			this.query = query;
+            this.sink = sink;
+        }
+
+		public void executeProtected() throws RippleException
+		{
+			query( query, sink );
+		}
+
+		protected void stopProtected()
+		{
+			synchronized ( sink )
+			{
+				sink = new NullSink<RippleValue, RippleException>();
+			}
+		}
+	}
+
+    public void query( final GetStatementsQuery query, final Sink<RippleValue, RippleException> sink) throws RippleException
+    {
+		Sink<Value, RippleException> valueSink = new Sink<Value, RippleException>()
+		{
+			public void put( final Value val ) throws RippleException
+			{
+				sink.put( valueToRippleValue( val ) );
+			}
+		};
 	
-	private class MultiplyTask extends Task
+        try {
+            query.getValues( sailConnection, valueSink );
+        } catch ( RippleException e ) {
+            reset( true );
+            throw e;
+        }
+        //getStatements( query.subject, query.predicate, query.object, stSink, query.includeInferred );
+    }
+
+    public void queryAsynch( final GetStatementsQuery query, final Sink<RippleValue, RippleException> sink ) throws RippleException
+    {
+		QueryTask task = new QueryTask( query, sink );
+		taskSet.add( task );
+    }
+
+    private class MultiplyTask extends Task
 	{
 		private RippleValue subj, pred;
 		private Sink<RippleValue, RippleException> sink;

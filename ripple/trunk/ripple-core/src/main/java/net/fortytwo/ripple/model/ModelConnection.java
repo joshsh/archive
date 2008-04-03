@@ -105,6 +105,8 @@ public interface ModelConnection
 	
 	void setNamespace( String prefix, String ns, boolean override ) throws RippleException;
 
+    void query( GetStatementsQuery query, Sink<RippleValue, RippleException> sink ) throws RippleException;
+    void queryAsynch( GetStatementsQuery query, Sink<RippleValue, RippleException> sink ) throws RippleException;
 	void multiplyAsynch( RippleValue subj, RippleValue pred, Sink<RippleValue, RippleException> sink, boolean includeInferred ) throws RippleException;
 	void multiply( RippleValue subj, RippleValue pred, Sink<RippleValue, RippleException> sink, boolean includeInferred ) throws RippleException;
 	void divide( RippleValue obj, RippleValue pred, Sink<RippleValue, RippleException> sink ) throws RippleException;

@@ -56,7 +56,6 @@ public class Namespaces extends PrimitiveStackMapping
 		String uri;
 
 		uri = mc.toUri( stack.getFirst() ).toString();
-		stack = stack.getRest();
 
 		SesameInputAdapter sc = createAdapter( arg, sink );
 
@@ -73,26 +72,26 @@ public class Namespaces extends PrimitiveStackMapping
 										final Sink<StackContext, RippleException> resultSink )
 	{
 		final ModelConnection mc = arg.getModelConnection();
-		final RippleList stack = arg.getStack();
+		final RippleList rest = arg.getStack().getRest();
 
 		RdfSink rdfSink = new RdfSink()
 		{
 			// Discard statements.
 			private Sink<Statement, RippleException> stSink = new NullSink<Statement, RippleException>();
 
-			// Discard namespaces.
-			private Sink<Namespace, RippleException> nsSink = new NullSink<Namespace, RippleException>();
+			// Push namespaces.
+			private Sink<Namespace, RippleException> nsSink = new Sink<Namespace, RippleException>()
+            {
+                public void put( final Namespace ns ) throws RippleException
+                {
+                    resultSink.put( arg.with(
+                            rest.push( mc.value( ns.getPrefix() ) )
+                                    .push( mc.value( ns.getName() ) ) ) );
+                }
+            };
 
-			// Push comments.
-			private Sink<String, RippleException> cmtSink = new Sink<String, RippleException>()
-			{
-				public void put( final String comment )
-					throws RippleException
-				{
-					resultSink.put( arg.with(
-						stack.push( mc.value( comment ) ) ) );
-				}
-			};
+            // Discard comments.
+			private Sink<String, RippleException> cmtSink = new NullSink<String, RippleException>();
 
 			public Sink<Statement, RippleException> statementSink()
 			{

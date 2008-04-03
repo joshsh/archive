@@ -56,7 +56,6 @@ public class Comments extends PrimitiveStackMapping
 		String uri;
 
 		uri = mc.toUri( stack.getFirst() ).toString();
-		stack = stack.getRest();
 
 		SesameInputAdapter sc = createAdapter( arg, sink );
 
@@ -69,7 +68,7 @@ public class Comments extends PrimitiveStackMapping
 										final Sink<StackContext, RippleException> resultSink )
 	{
 		final ModelConnection mc = arg.getModelConnection();
-		final RippleList stack = arg.getStack();
+		final RippleList rest = arg.getStack().getRest();
 
 		RdfSink rdfSink = new RdfSink()
 		{
@@ -86,7 +85,7 @@ public class Comments extends PrimitiveStackMapping
 					throws RippleException
 				{
 					resultSink.put( arg.with(
-						stack.push( mc.value( comment ) ) ) );
+						rest.push( mc.value( comment ) ) ) );
 				}
 			};
 

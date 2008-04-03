@@ -1,10 +1,11 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.flow.Mapping;
-import net.fortytwo.ripple.flow.NullMapping;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.Ripple;
+import org.openrdf.model.Resource;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 
 /**
  * Author: josh
@@ -14,18 +15,25 @@ import net.fortytwo.ripple.Ripple;
 public class RdfPredicateMapping implements StackMapping
 {
 	private RippleValue predicate;
+    private RdfValue context;
 	private boolean includeInferred;
-	private RippleValue inContext;
 
-	public RdfPredicateMapping( final RippleValue pred, final boolean includeInferred )
+    // Note: only the types SP_O and OP_S are supported for now
+    private GetStatementsQuery.Type type = GetStatementsQuery.Type.SP_O;
+
+    public RdfPredicateMapping( final RippleValue pred, final boolean includeInferred )
 	{
-		predicate = pred;
-		// FIXME
+		this.predicate = pred;
 		this.includeInferred = includeInferred;
-		inContext = null;
+		this.context = null;
 	}
 
-	public int arity()
+    public void setContext( final RdfValue context )
+    {
+        this.context = context;
+    }
+
+    public int arity()
 	{
 		return 1;
 	}
@@ -35,24 +43,61 @@ public class RdfPredicateMapping implements StackMapping
 		return true;
 	}
 
-	public void applyTo( final StackContext arg,
+    public void applyTo( final StackContext arg,
 						 final Sink<StackContext, RippleException> sink ) throws RippleException
 	{
-		final ModelConnection mc = arg.getModelConnection();
+        final ModelConnection mc = arg.getModelConnection();
 		RippleList stack = arg.getStack();
+		RippleValue sourceVal = stack.getFirst();
 
-		RippleValue subject = stack.getFirst();
-		
-		Sink<RippleValue, RippleException> resultSink = new ValueSink( arg, sink );
+        Resource subj;
+        URI pred;
+        Value obj;
+        Resource ctx;
+        try {
+            Value src = sourceVal.toRdf( mc ).getRdfValue();
+            pred = (URI) predicate.toRdf( mc ).getRdfValue();
+            ctx = ( null == context ) ? null : (Resource) context.toRdf( mc ).getRdfValue();
+            switch ( type )
+            {
+                case SP_O:
+                    subj = (Resource) src;
+                    obj = null;
+                    break;
+                case PO_S:
+                    subj = null;
+                    obj = src;
+                    break;
+                default:
+                    throw new RippleException( "unsupported query type: " + type );
+            }
+        } catch ( ClassCastException e ) {
+            throw new RippleException( e );
+        }
+
+        GetStatementsQuery query = new GetStatementsQuery();
+        query.type = type;
+        query.subject = subj;
+        query.predicate = pred;
+        query.object = obj;
+        if ( null != ctx )
+        {
+            query.contexts = new Resource[1];
+            query.contexts[0] = ctx;
+        }
+
+        Sink<RippleValue, RippleException> resultSink = new ValueSink( arg, sink );
 
 		if ( Ripple.asynchronousQueries() )
 		{
-			mc.multiplyAsynch( subject, predicate, resultSink, includeInferred );
+            mc.queryAsynch( query, resultSink );
+            //mc.multiplyAsynch( sourceVal, predicate, resultSink, includeInferred );
 		}
 
 		else
 		{
-			mc.multiply( subject, predicate, resultSink, includeInferred );
+            mc.query( query, resultSink );
+            //mc.multiply( sourceVal, predicate, resultSink, includeInferred );
 		}
 	}
 
@@ -61,10 +106,23 @@ public class RdfPredicateMapping implements StackMapping
 		return "Predicate(" + predicate + ")";
 	}
 
-    // TODO: an RDF predicate mapping has a well-defined inverse mapping
     public StackMapping inverse() throws RippleException
     {
-        return new NullStackMapping();
+        RdfPredicateMapping inv = new RdfPredicateMapping( this.predicate, this.includeInferred );
+        inv.context = this.context;
+        switch ( this.type )
+        {
+            case SP_O:
+                inv.type = GetStatementsQuery.Type.PO_S;
+                break;
+            case PO_S:
+                inv.type = GetStatementsQuery.Type.SP_O;
+                break;
+            default:
+                throw new RippleException( "unsupported query type: " + type );
+        }
+
+        return inv;
     }
 
     private class ValueSink implements Sink<RippleValue, RippleException>

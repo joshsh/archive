@@ -143,6 +143,21 @@ graph:forget
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#forget> ;
 	.
 
+graph:inContext
+	a rpl:Function ;
+	rpl:arity 2 ;
+	rpl:parameters (
+		[
+			rdfs:label "pred" ;
+			rpl:isTransparent true ]
+		[
+			rdfs:label "ctx" ;
+			rpl:isTransparent true ]
+		) ;
+	rdfs:label "inContext" ;
+	rdfs:comment "pred ctx  =>  pred' (where pred' is the RDF predicate mapping for predicate pred, but constrained to named graph ctx)" ;
+	.
+	
 graph:infer
 	a rpl:Function ;
 	rpl:arity 1 ;
@@ -164,7 +179,7 @@ graph:links
 			rpl:isTransparent true ]
 		) ;
 	rdfs:label "links" ;
-	rdfs:comment "subj  =>  subj pred obj" ;
+	rdfs:comment "subj  =>  subj pred obj ctx" ;
 	.
 
 graph:namespaces
@@ -188,6 +203,20 @@ graph:new
 	rdfs:label "new" ;
 	rdfs:comment "=>  n  -- where n is a new blank node" ;
 	owl:sameAs <http://fortytwo.net/2007/05/ripple/graph#new> ;
+	.
+
+graph:quads
+	a rpl:Function ;
+	rpl:arity 1 ;
+	rpl:parameters (
+		[
+			rdfs:label "doc" ;
+			rdfs:comment "a Semantic Web document" ;
+			rpl:isTransparent true ]
+		) ;
+	rpl:returnType rdf:List ;
+	rdfs:label "quads" ;
+	rdfs:comment "doc  =>  subj pred obj ctx  -- for each statement (subj pred obj ctx) in document doc" ;
 	.
 
 graph:toDouble
@@ -256,7 +285,7 @@ graph:triples
 		) ;
 	rpl:returnType rdf:List ;
 	rdfs:label "triples" ;
-	rdfs:comment "doc  =>  (s p o)  -- for each triple (s p o) in document doc" ;
+	rdfs:comment "doc  =>  subj pred obj  -- for each triple (subj pred obj) in document doc" ;
 	.
 
 xml:lang
