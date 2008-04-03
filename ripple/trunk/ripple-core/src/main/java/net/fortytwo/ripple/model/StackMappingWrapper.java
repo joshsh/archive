@@ -19,6 +19,7 @@ public class StackMappingWrapper extends PrimitiveStackMapping
         
         // Uses a random identifier... not for actual use
         setRdfEquivalent( new RdfValue( mc.createBNode() ), mc );
+//System.out.println("created a StackMappingWrapper: " + this + " for mapping " + innerMapping);
     }
 
     public int arity()
@@ -29,5 +30,10 @@ public class StackMappingWrapper extends PrimitiveStackMapping
     public void applyTo( final StackContext arg, final Sink<StackContext, RippleException> sink ) throws RippleException
     {
         innerMapping.applyTo( arg, sink );
+    }
+
+    public StackMapping inverse() throws RippleException
+    {
+        return innerMapping.inverse();
     }
 }

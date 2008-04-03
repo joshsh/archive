@@ -14,7 +14,9 @@ import org.openrdf.model.Value;
  */
 public class RdfPredicateMapping implements StackMapping
 {
-	private RippleValue predicate;
+    private static final int ARITY = 1;
+
+    private RippleValue predicate;
     private RdfValue context;
 	private boolean includeInferred;
 
@@ -35,7 +37,7 @@ public class RdfPredicateMapping implements StackMapping
 
     public int arity()
 	{
-		return 1;
+		return ARITY;
 	}
 
 	public boolean isTransparent()
@@ -108,6 +110,7 @@ public class RdfPredicateMapping implements StackMapping
 
     public StackMapping inverse() throws RippleException
     {
+//System.out.println("inverting RDF predicate mapping with predicate " + predicate + " and context " + context);
         RdfPredicateMapping inv = new RdfPredicateMapping( this.predicate, this.includeInferred );
         inv.context = this.context;
         switch ( this.type )
@@ -138,7 +141,8 @@ public class RdfPredicateMapping implements StackMapping
 
 		public void put( final RippleValue v ) throws RippleException
 		{
-			sink.put( arg.with( arg.getStack().getRest().push( v ) ) );
+            // Note: relies on this mapping's arity being equal to 1
+            sink.put( arg.with( arg.getStack().getRest().push( v ) ) );
 		}
 	}
 }

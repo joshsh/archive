@@ -32,11 +32,12 @@ public class TypedLiteralAst implements Ast<RippleList>
 						final ModelConnection mc )
 		throws RippleException
 	{
-		Sink<RippleValue, RippleException> typeSink = new Sink<RippleValue, RippleException>()
+		Sink<RippleList, RippleException> typeSink = new Sink<RippleList, RippleException>()
 		{
-			public void put( final RippleValue type ) throws RippleException
+			public void put( final RippleList l ) throws RippleException
 			{
-				sink.put( mc.list( mc.createTypedLiteral( value, type ) ) );
+                RippleValue type = l.getFirst();
+                sink.put( mc.list( mc.createTypedLiteral( value, type ) ) );
 			}
 		};
 		

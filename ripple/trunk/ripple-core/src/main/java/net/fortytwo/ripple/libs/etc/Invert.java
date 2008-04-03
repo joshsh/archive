@@ -30,11 +30,13 @@ public class Invert extends PrimitiveStackMapping
         final RippleList rest = stack.getRest();
 
         RippleValue f = stack.getFirst();
-
+//System.out.println("value to invert: " + f);
+        
         Sink<Operator, RippleException> opSink = new Sink<Operator, RippleException>()
         {
             public void put( final Operator op ) throws RippleException
             {
+//System.out.println("mapping to invert: " + op.getMapping());
                 // Note: this operation both inverts and applies the mapping
                 RippleValue inverse = new StackMappingWrapper( op.getMapping().inverse(), mc );
                 sink.put( arg.with( rest.push( inverse ) ) );

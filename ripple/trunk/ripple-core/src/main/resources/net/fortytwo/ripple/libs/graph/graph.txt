@@ -10,7 +10,7 @@ graph:assert
 graph:back
 ========================================
 
-rdf: rdfs:isDefinedBy /back.  # lots of terms in the rdf: namespace
+rdf: rdfs:isDefinedBy back >> .  # lots of terms in the rdf: namespace
 
 
 ========================================
@@ -26,13 +26,13 @@ graph:comments
 graph:compare
 ========================================
 
-2 2 /compare.  # 0
-1 2 /compare.  # -1
-2 1 /compare.  # 1
+2 2 compare >> .  # 0
+1 2 compare >> .  # -1
+2 1 compare >> .  # 1
 
-(1 2 3) (1 2 3) /compare.  # 0
-(1 2 3) (1 2 4) /compare.  # -1
-(1 2 3) (1 1 3) /compare.  # 1
+(1 2 3) (1 2 3) compare >> .  # 0
+(1 2 3) (1 2 4) compare >> .  # -1
+(1 2 3) (1 1 3) compare >> .  # 1
 
 
 ========================================
@@ -72,11 +72,11 @@ dup joy:dup /equal.
 graph:forget
 ========================================
 
-/new rdfs:label "foo" /assert/forget.
+new >> rdfs:label "foo" assert >> forget >> .
 
 rpl:arity.
 @count statements.
-rpl:arity/forget "don't resolve rpl:arity again" /swap/swap.
+rpl:arity forget >> "don't resolve rpl:arity again" swap >> swap >> .
 @count statements.
 
 

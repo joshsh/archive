@@ -18,4 +18,9 @@ etc:time
 ========================================
 
 # years since the Unix epoch.
-/time 60 60 24 365 /mul/mul/mul /div.  # 37...
+time >>
+    1000 div >>
+    60 div >>
+    60 div >>
+    24 div >>
+    365 div >> .  # 38...

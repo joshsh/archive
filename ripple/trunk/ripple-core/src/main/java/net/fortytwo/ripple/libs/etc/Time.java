@@ -25,10 +25,8 @@ import net.fortytwo.ripple.model.RippleList;
 public class Time extends PrimitiveStackMapping
 {
 	private static final int ARITY = 0;
-	private static final int ONE_THOUSAND = 1000;
 
-	public Time()
-		throws RippleException
+	public Time() throws RippleException
 	{
 		super();
 	}
@@ -39,16 +37,13 @@ public class Time extends PrimitiveStackMapping
 	}
 
 	public void applyTo( final StackContext arg,
-						 final Sink<StackContext, RippleException> sink
-	)
-		throws RippleException
+						 final Sink<StackContext, RippleException> sink	)
+		    throws RippleException
 	{
 		final ModelConnection mc = arg.getModelConnection();
 		RippleList stack = arg.getStack();
 
 		sink.put( arg.with( stack.push(
-			mc.value( (int) ( ( new Date() ).getTime() / ONE_THOUSAND ) ) ) ) );
+			mc.value( System.currentTimeMillis() ) ) ) );
 	}
 }
-
-// kate: tab-width 4

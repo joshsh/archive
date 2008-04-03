@@ -58,6 +58,7 @@ public class InContext extends PrimitiveStackMapping
         boolean includeInferred = false;
         RdfPredicateMapping map = new RdfPredicateMapping( pred, includeInferred );
         map.setContext( context );
+//System.out.println("created RDF predicate mapping with predicate " + pred + " and context " + context);
 
         RippleValue result = new StackMappingWrapper( map, mc );
         

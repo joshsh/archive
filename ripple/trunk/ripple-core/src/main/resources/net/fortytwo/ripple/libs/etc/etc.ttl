@@ -34,8 +34,7 @@ etc:time
 	a rpl:Function ;
 	rpl:arity 0 ;
 	rpl:parameters rdf:nil ;
-	rpl:returnType xsd:int ;
+	rpl:returnType xsd:long ;
 	rdfs:label "time" ;
-	rdfs:comment "=>  t  -- pushes the current time, in seconds since the Unix epoch" ;
-	owl:sameAs <http://fortytwo.net/2007/05/ripple/etc#time> ;
+	rdfs:comment "=>  t  -- pushes the current time, in milliseconds since the Unix epoch" ;
 	.
