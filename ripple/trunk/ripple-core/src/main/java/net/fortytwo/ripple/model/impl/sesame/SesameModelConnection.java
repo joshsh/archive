@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
+import java.util.Date;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
@@ -43,6 +44,8 @@ import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 public class SesameModelConnection implements ModelConnection
 {
@@ -294,7 +297,15 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 
-	// TODO: this method is incomplete
+    public Date toDateValue( RippleValue v ) throws RippleException
+    {
+        Literal l = castToLiteral( v.toRdf( this ).getRdfValue() );
+        
+        XMLGregorianCalendar c = l.calendarValue();
+        return c.toGregorianCalendar().getTime();
+    }
+
+    // TODO: this method is incomplete
 	public String toString( final RippleValue v ) throws RippleException
 	{
 		if ( v instanceof RdfValue )

@@ -10,6 +10,7 @@
 package net.fortytwo.ripple.model;
 
 import java.io.OutputStream;
+import java.util.Date;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Sink;
@@ -38,8 +39,9 @@ public interface ModelConnection
 
 	boolean toBoolean( RippleValue v ) throws RippleException;
 	NumericValue toNumericValue( RippleValue v )	throws RippleException;
+    Date toDateValue( RippleValue v ) throws RippleException;
 
-	/**
+    /**
 	 *
 	 * @param v
 	 * @return the string representation of a value.  This is not identical to

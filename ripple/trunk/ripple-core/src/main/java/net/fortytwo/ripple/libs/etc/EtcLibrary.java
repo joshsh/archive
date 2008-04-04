@@ -30,6 +30,7 @@ public class EtcLibrary extends Library
 		uf.put(
 			NS, getClass().getResource( "etc.ttl" ) + "#" );
 
+        registerPrimitive( DateTimeToMillis.class, NS + "dateTimeToMillis", mc );
         registerPrimitive( Get.class, NS + "get", mc );
         invertVal = registerPrimitive( Invert.class, NS + "invert", mc );
 		registerPrimitive( Time.class, NS + "time", mc );
