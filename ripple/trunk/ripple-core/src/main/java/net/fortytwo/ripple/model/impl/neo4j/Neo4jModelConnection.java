@@ -17,6 +17,7 @@ import org.openrdf.model.Value;
 import org.openrdf.model.Namespace;
 
 import java.io.OutputStream;
+import java.util.Date;
 
 /**
  * Author: josh
@@ -57,6 +58,10 @@ public class Neo4jModelConnection implements ModelConnection {
     }
 
     public NumericValue toNumericValue(RippleValue v) throws RippleException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Date toDateValue(RippleValue v) throws RippleException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
