@@ -13,6 +13,8 @@ import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.flow.Source;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Note: while this class is not actually thread-safe, put() may safely be
@@ -75,7 +77,20 @@ public class Collector<T, E extends Exception> implements Sink<T, E>, Source<T, 
 		return new NodeIterator( first );
 	}
 
-	public void clear()
+    public List<T> asList()
+    {
+        List<T> list = new LinkedList<T>();
+        Node cur = first;
+        while ( null != cur )
+        {
+            list.add( cur.value );
+            cur = cur.next;
+        }
+
+        return list;
+    }
+
+    public void clear()
 	{
 		first = null;
 		count = 0;

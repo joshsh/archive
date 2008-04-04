@@ -58,12 +58,13 @@ public abstract class PrimitiveStackMapping implements StackMapping, RippleValue
 
 	public String toString()
 	{
-		return rdfEquivalent.toString();
+        // TODO: this guards against a null rdfEquivalent value, but this should't be allowed to happen
+        return "" + rdfEquivalent;
 	}
 	
 	public boolean equals( final Object o )
 	{
-		return ( o instanceof PrimitiveStackMapping)
+        return ( o instanceof PrimitiveStackMapping)
 			? ( o == this ) : false;
 	}
 
