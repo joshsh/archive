@@ -9,9 +9,6 @@
 
 package net.fortytwo.ripple.util;
 
-import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.impl.sesame.SesameList;
-
 /**
  * Head of a linked list.
  */

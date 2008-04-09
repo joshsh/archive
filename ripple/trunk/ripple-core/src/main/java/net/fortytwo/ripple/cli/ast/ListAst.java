@@ -15,13 +15,15 @@ import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.RippleValue;
+import net.fortytwo.ripple.model.impl.sesame.SesameList;
 import net.fortytwo.ripple.util.ListNode;
 
 // TODO: this class has more plumbing than it needs
 public class ListAst extends ListNode<Ast> implements Ast<RippleList>
 {
-	private Ast first;
-	private ListNode<Ast> rest;
+	protected Ast first;
+	protected ListAst rest;
 
 	/**
 	 * Constructs a nil list AST.
@@ -36,7 +38,7 @@ public class ListAst extends ListNode<Ast> implements Ast<RippleList>
 	/**
 	 * Constructs a list AST with the given first element and rest.
 	 */
-	public ListAst( final Ast first, final ListNode<Ast> rest )
+	public ListAst( final Ast first, final ListAst rest )
 	{
 //System.out.println( "first = " + first + ", rest = " + rest );
 		this.first = first;
@@ -48,12 +50,40 @@ public class ListAst extends ListNode<Ast> implements Ast<RippleList>
 		return first;
 	}
 
-	public ListNode<Ast> getRest()
+	public ListAst getRest()
 	{
 		return rest;
 	}
 
-	private static boolean isNil( final ListNode<Ast> listNode )
+    public ListAst push( final Ast a )
+    {
+        return new ListAst( a, this  );
+    }
+
+
+    public ListAst invert()
+	{
+        if ( isNil( this ) )
+        {
+            return this;
+        }
+
+        else
+        {
+            ListAst in = this;
+            ListAst out = new ListAst();
+
+            while ( !isNil( in ) )
+            {
+                out = new ListAst( in.getFirst(), out );
+                in = in.getRest();
+            }
+
+            return out;
+        }
+    }
+    
+    public static boolean isNil( final ListNode<Ast> listNode )
 	{
 		return ( null == listNode.getFirst() );
 	}

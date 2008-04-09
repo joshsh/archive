@@ -18,19 +18,24 @@ import net.fortytwo.ripple.model.RippleList;
 
 public class KeywordAst implements Ast<RippleList>
 {
-	private String keyword;
+	private String name;
 
-	public KeywordAst( final String keyword )
+	public KeywordAst( final String name )
 	{
-		this.keyword = keyword;
+		this.name = name;
 	}
 
-	public String toString()
+    public String getName()
+    {
+        return name;
+    }
+    
+    public String toString()
 	{
-		return keyword;
+		return name;
 	}
 
-	public void evaluate( final Sink<RippleList, RippleException> sink,
+    public void evaluate( final Sink<RippleList, RippleException> sink,
 						final QueryEngine qe,
 						final ModelConnection mc )
 		throws RippleException
@@ -43,7 +48,7 @@ public class KeywordAst implements Ast<RippleList>
 			}
 		};
 
-		qe.uriForKeyword( keyword, uriSink, mc );
+		qe.uriForKeyword( name, uriSink, mc );
 	}
 }
 

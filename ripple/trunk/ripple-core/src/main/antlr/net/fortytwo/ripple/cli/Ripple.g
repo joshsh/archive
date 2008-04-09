@@ -3,6 +3,8 @@ header
 package net.fortytwo.ripple.cli;
 
 import java.util.Properties;
+import java.util.List;
+import java.util.LinkedList;
 
 import net.fortytwo.ripple.cli.ast.Ast;
 import net.fortytwo.ripple.cli.ast.BooleanAst;
@@ -10,6 +12,7 @@ import net.fortytwo.ripple.cli.ast.BlankNodeAst;
 import net.fortytwo.ripple.cli.ast.DoubleAst;
 import net.fortytwo.ripple.cli.ast.IntegerAst;
 import net.fortytwo.ripple.cli.ast.KeywordAst;
+import net.fortytwo.ripple.cli.ast.LambdaAst;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.cli.ast.OperatorAst;
 import net.fortytwo.ripple.cli.ast.PropertyAnnotatedAst;
@@ -583,7 +586,8 @@ nt_Directive
 	// Default to the empty (but not null) prefix.
 	String nsPrefix = "";
 
-	String localName = null;
+    String keyword = null;
+	List<String> names = new LinkedList<String>();
 	
 	// Note: it is not possible to define a term with a nil AST.  If this were
 	//       allowed, this would be equivalent to redefining rdf:nil in a new
@@ -596,9 +600,16 @@ nt_Directive
 			matchCommand( new CountStatementsCmd() );
 		}
 
-	| DRCTV_DEFINE nt_Ws localName=nt_Name (nt_Ws)? COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
+	| DRCTV_DEFINE nt_Ws ( keyword=nt_Name { names.add( keyword ); } (nt_Ws)? )+ COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
 		{
-			matchCommand( new DefineTermCmd( localName, rhs ) );
+		    String termName = names.get( names.size() - 1 );
+		    names.remove( names.size() - 1 );
+		    if ( names.size() > 0 )
+		    {
+		        rhs = new LambdaAst( names, rhs );
+		    }
+
+			matchCommand( new DefineTermCmd( termName, rhs ) );
 		}
 
 	| DRCTV_EXPORT ( nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? )? COLON (nt_Ws)? exFile:STRING (nt_Ws)? PERIOD
@@ -633,14 +644,21 @@ nt_Directive
 //			matchCommand( new QuitCmd() );
 		}
 		
-	| DRCTV_REDEFINE nt_Ws localName=nt_Name (nt_Ws)? COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
+	| DRCTV_REDEFINE nt_Ws ( keyword=nt_Name { names.add( keyword ); } (nt_Ws)? )+ COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
 		{
-			matchCommand( new RedefineTermCmd( localName, rhs ) );
+		    String termName = names.get( names.size() - 1 );
+		    names.remove( names.size() - 1 );
+		    if ( names.size() > 0 )
+		    {
+		        rhs = new LambdaAst( names, rhs );
+		    }
+
+			matchCommand( new RedefineTermCmd( termName, rhs ) );
 		}
 		
-	| DRCTV_UNDEFINE nt_Ws localName=nt_Name (nt_Ws)? PERIOD
+	| DRCTV_UNDEFINE nt_Ws keyword=nt_Name (nt_Ws)? PERIOD
 		{
-			matchCommand( new UndefineTermCmd( localName ) );
+			matchCommand( new UndefineTermCmd( keyword ) );
 		}
 	;
 
