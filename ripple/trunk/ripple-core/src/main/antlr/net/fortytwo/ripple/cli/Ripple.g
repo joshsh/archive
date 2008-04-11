@@ -18,6 +18,7 @@ import net.fortytwo.ripple.cli.ast.OperatorAst;
 import net.fortytwo.ripple.cli.ast.PropertyAnnotatedAst;
 import net.fortytwo.ripple.cli.ast.QNameAst;
 import net.fortytwo.ripple.cli.ast.StringAst;
+import net.fortytwo.ripple.cli.ast.TemplateAst;
 import net.fortytwo.ripple.cli.ast.TypedLiteralAst;
 import net.fortytwo.ripple.cli.ast.UriAst;
 import net.fortytwo.ripple.query.Command;
@@ -357,6 +358,53 @@ nt_List returns [ ListAst list ]
 	;
 
 
+nt_TemplateList returns [ ListAst list ]
+{
+	Ast first;
+	ListAst rest = null;
+	list = null;
+}
+	:   // Head of the list.
+		first = nt_TemplateNode
+
+		(	(WS) => ( nt_Ws
+				( (~(R_PAREN)) => rest = nt_TemplateList
+				| {}
+				) )
+
+			// Tail of the list.
+		|	(~(WS | R_PAREN)) => rest = nt_TemplateList
+
+			// End of the list.
+		|	()
+		)
+			{
+				if ( null == rest )
+				{
+					rest = new ListAst();
+				}
+
+				list = new ListAst( first, rest );
+			}
+	;
+nt_ParenthesizedTemplateList returns [ ListAst r ]
+{
+	r = null;
+}
+	: L_PAREN (nt_Ws)? (
+		( r = nt_TemplateList /*(nt_Ws)?*/ R_PAREN )
+		| R_PAREN { r = new ListAst(); } )
+	;
+nt_TemplateNode returns [ Ast r ]
+{
+	r = null;
+}
+	: ( r=nt_Keyword
+		| r=nt_ParenthesizedTemplateList
+		)
+	;
+		
+
 nt_Node returns [ Ast r ]
 {
 	r = null;
@@ -366,10 +414,6 @@ nt_Node returns [ Ast r ]
 		| r=nt_Literal
 		| r=nt_ParenthesizedList
 		| r=nt_Operator
-/*		| OP_APPLY_POST { r = new OperatorAst(); }
-		| OP_OPTIONAL { r = new OperatorAst( OperatorAst.Type.Option ); }
-		| OP_STAR { r = new OperatorAst( OperatorAst.Type.Star ); }
-		| OP_PLUS { r = new OperatorAst( OperatorAst.Type.Plus ); }*/
 		)
 	  (( (WS)? L_BRACKET ) => ( (WS)? props=nt_Properties { r = new PropertyAnnotatedAst( r, props ); } )
 	  | ())
@@ -553,37 +597,13 @@ nt_Operator returns [ OperatorAst ast ]
 			}
 	      }
 	    )?
-
-	/*
-	 OP_APPLY_POST { ast = new OperatorAst(); }
-	| OP_INVERSE_APPLY { ast = new OperatorAst( OperatorAst.Type.InverseApply ); }
-	| OP_OPTIONAL { ast = new OperatorAst( OperatorAst.Type.Option ); }
-	| OP_STAR { ast = new OperatorAst( OperatorAst.Type.Star ); }
-	| OP_PLUS { ast = new OperatorAst( OperatorAst.Type.Plus ); }
-	| L_CURLY (nt_Ws)? min:NUMBER (nt_Ws)? ( COMMA (nt_Ws)? max:NUMBER (nt_Ws)? )? R_CURLY
-		{
-			// Note: floating-point values are syntactically valid, but will be
-			// truncated to integer values.
-			int minVal = new Double( min.getText() ).intValue();
-			
-			if ( null == max )
-			{
-				ast = new OperatorAst( minVal );
-			}
-
-			else
-			{
-				int maxVal = new Double( max.getText() ).intValue();
-				ast = new OperatorAst( minVal, maxVal );
-			}
-		}*/
 	;
 
 nt_Directive
 {
 	UriAst ns;
 
-	// Default to the empty (but not null) prefix.
+	// Default to the empty (but non-null) prefix.
 	String nsPrefix = "";
 
     String keyword = null;
@@ -593,23 +613,30 @@ nt_Directive
 	//       allowed, this would be equivalent to redefining rdf:nil in a new
 	//       namespace, which is strange and probably not what the programmer
 	//       intended.
+	// TODO: however, in combination with template parameters, an empty expression may have a meaning other than rdf:nil
 	ListAst rhs;
+
+	ListAst lhs = new ListAst();
+	boolean redefine = false;
 }
 	: DRCTV_COUNT nt_Ws "statements" (nt_Ws)? PERIOD
 		{
 			matchCommand( new CountStatementsCmd() );
 		}
 
-	| DRCTV_DEFINE nt_Ws ( keyword=nt_Name { names.add( keyword ); } (nt_Ws)? )+ COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
+    // FIXME: this syntax allows a parenthesized expression in place of the definition name
+	| ( DRCTV_DEFINE || DRCTV_REDEFINE { redefine = true; } )
+	        nt_Ws lhs=nt_TemplateList /*(nt_Ws)?*/ COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
 		{
-		    String termName = names.get( names.size() - 1 );
-		    names.remove( names.size() - 1 );
-		    if ( names.size() > 0 )
-		    {
-		        rhs = new LambdaAst( names, rhs );
-		    }
+            lhs = lhs.invert();
+            keyword = ( (KeywordAst) lhs.getFirst() ).getName();
+            lhs = lhs.getRest().invert();
 
-			matchCommand( new DefineTermCmd( termName, rhs ) );
+		    rhs = new TemplateAst( lhs, rhs );
+
+			matchCommand( redefine
+			        ? new RedefineTermCmd( keyword, rhs )
+			        : new DefineTermCmd( keyword, rhs ) );
 		}
 
 	| DRCTV_EXPORT ( nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? )? COLON (nt_Ws)? exFile:STRING (nt_Ws)? PERIOD
@@ -643,19 +670,7 @@ nt_Directive
 			matchQuit();
 //			matchCommand( new QuitCmd() );
 		}
-		
-	| DRCTV_REDEFINE nt_Ws ( keyword=nt_Name { names.add( keyword ); } (nt_Ws)? )+ COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
-		{
-		    String termName = names.get( names.size() - 1 );
-		    names.remove( names.size() - 1 );
-		    if ( names.size() > 0 )
-		    {
-		        rhs = new LambdaAst( names, rhs );
-		    }
 
-			matchCommand( new RedefineTermCmd( termName, rhs ) );
-		}
-		
 	| DRCTV_UNDEFINE nt_Ws keyword=nt_Name (nt_Ws)? PERIOD
 		{
 			matchCommand( new UndefineTermCmd( keyword ) );

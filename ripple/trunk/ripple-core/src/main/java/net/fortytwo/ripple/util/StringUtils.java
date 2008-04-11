@@ -109,7 +109,11 @@ public final class StringUtils
 					case '\\':
 						sb.append( '\\' );
 						break;
-					case '\"':
+                    // Note: this sequence is not created by escapeString()
+                    case '\'':
+                        sb.append( '\'' );
+                        break;
+                    case '\"':
 						sb.append( '\"' );
 						break;
 					case 't':
@@ -132,7 +136,7 @@ public final class StringUtils
 						i += EIGHT;
 						break;
 					default:
-						throw new RippleException( "bad escape sequence: \\" + s.charAt( i + 1 ) );
+						throw new RippleException( "bad escape sequence: \\" + s.charAt( i ) + " at character " +  ( i - 1 ) );
 				}
 			}
 
