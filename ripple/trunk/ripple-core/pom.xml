@@ -148,11 +148,6 @@
   <dependencies>
     <dependency>
         <groupId>net.fortytwo.ripple</groupId>
-        <artifactId>ripple-base</artifactId>
-        <version>0.5</version>
-    </dependency>
-    <dependency>
-        <groupId>net.fortytwo.ripple</groupId>
         <artifactId>linkeddata</artifactId>
         <version>0.1</version>
     </dependency>
@@ -187,11 +182,6 @@
       <version>1.0.9</version>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
-    </dependency>
-    <dependency>
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
       <version>3.1</version>
@@ -200,51 +190,6 @@
       <groupId>org.deri.sw</groupId>
       <artifactId>semanticsitemap</artifactId>
       <version>0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openrdf</groupId>
-      <artifactId>openrdf-model</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openrdf</groupId>
-      <artifactId>openrdf-sail-memory</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openrdf</groupId>
-      <artifactId>openrdf-rio-n3</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openrdf</groupId>
-      <artifactId>openrdf-rio-ntriples</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openrdf</groupId>
-      <artifactId>openrdf-rio-rdfxml</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openrdf</groupId>
-      <artifactId>openrdf-rio-trig</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openrdf</groupId>
-      <artifactId>openrdf-rio-trix</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openrdf</groupId>
-      <artifactId>openrdf-rio-turtle</artifactId>
-      <version>2.0</version>
     </dependency>
     <!--<dependency>
       <groupId>antlr</groupId>

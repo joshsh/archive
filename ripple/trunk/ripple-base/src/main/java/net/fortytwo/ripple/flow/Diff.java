@@ -3,6 +3,7 @@ package net.fortytwo.ripple.flow;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
+import net.fortytwo.ripple.RippleException;
 
 /**
  * Author: josh
@@ -69,8 +70,8 @@ public class Diff<T, E extends Exception> implements DiffSink<T, E>
     {
         changes.clear();
     }
-
-    public void writeTo(final DiffSink<T, E> sink) throws E
+                                                   // throws E
+    public void writeTo(final DiffSink<T, E> sink) throws Exception
     {
         Sink<T, E> otherPlusSink = sink.getPlus();
         Sink<T, E> otherMinusSink = sink.getMinus();
@@ -84,6 +85,7 @@ public class Diff<T, E extends Exception> implements DiffSink<T, E>
                     otherMinusSink.put(ch.value);
                     break;
                 default:
+                    //new RippleException("e").logError();
                     LOGGER.error("unsupported Action: " + ch.action);
             }
         }

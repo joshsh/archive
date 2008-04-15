@@ -3,12 +3,12 @@ package net.fortytwo.ripple;
 import java.util.Properties;
 import java.io.File;
 
-import net.fortytwo.ripple.rdf.RdfUtils;
+//import net.fortytwo.ripple.rdf.RdfUtils;
 /*import net.fortytwo.ripple.model.enums.ExpressionOrder;
 import net.fortytwo.ripple.model.enums.EvaluationStyle;
 import net.fortytwo.ripple.model.enums.EvaluationOrder;*/
 
-import org.openrdf.rio.RDFFormat;
+//import org.openrdf.rio.RDFFormat;
 
 public class RippleProperties
 {
@@ -62,7 +62,7 @@ public class RippleProperties
 		}
 	}
 	
-	public RDFFormat getRdfFormat( final String name ) throws RippleException
+	/*public RDFFormat getRdfFormat( final String name ) throws RippleException
 	{
 		String value = getProperty( name );
 		
@@ -74,7 +74,7 @@ public class RippleProperties
 		}
 		
 		return format;
-	}
+	}*/
 
     /*public ExpressionOrder getExpressionOrder( final String name ) throws RippleException
     {

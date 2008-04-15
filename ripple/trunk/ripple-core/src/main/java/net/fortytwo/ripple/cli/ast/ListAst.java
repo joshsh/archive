@@ -15,8 +15,6 @@ import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.model.impl.sesame.SesameList;
 import net.fortytwo.ripple.util.ListNode;
 
 // TODO: this class has more plumbing than it needs

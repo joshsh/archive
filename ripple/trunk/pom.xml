@@ -6,6 +6,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>ripple-base</module>
+    <module>ripple-rdf</module>
     <module>linkeddata</module>
     <module>ripple-core</module>
     <module>restpipe</module>

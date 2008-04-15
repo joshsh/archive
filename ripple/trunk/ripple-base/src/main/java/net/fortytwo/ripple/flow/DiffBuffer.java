@@ -13,8 +13,9 @@ public class DiffBuffer<T, E extends Exception> extends Diff<T, E>
     {
         this.sink = sink;
     }
-    
-    public void flush() throws E
+
+                        // throws E
+    public void flush() throws Exception
     {
         writeTo(sink);
 
