@@ -41,8 +41,7 @@ public class BNodeClosureFilter implements Sink<Resource, RippleException>
 		visited = new HashSet<Resource>();
 	}
 
-	public void put( final Resource r )
-		throws RippleException
+	public void put( final Resource r ) throws RippleException
 	{
 		if ( visited.contains( r ) )
 		{

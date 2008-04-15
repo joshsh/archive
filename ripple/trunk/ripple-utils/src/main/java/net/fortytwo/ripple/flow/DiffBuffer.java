@@ -1,8 +1,5 @@
 package net.fortytwo.ripple.flow;
 
-import net.fortytwo.ripple.flow.Diff;
-import net.fortytwo.ripple.flow.DiffSink;
-
 /**
  * Author: josh
  * Date: Mar 7, 2008

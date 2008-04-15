@@ -12,8 +12,6 @@ package net.fortytwo.ripple.flow;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.fortytwo.ripple.flow.Sink;
-
 public class UniqueFilter<T, E extends Exception> implements Sink<T, E>
 {
 	private Set<T> set = new HashSet<T>();

@@ -9,9 +9,6 @@
 
 package net.fortytwo.ripple.flow;
 
-import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.flow.Source;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
@@ -136,5 +133,3 @@ public class Collector<T, E extends Exception> implements Sink<T, E>, Source<T, 
 		}
 	}
 }
-
-// kate: tab-width 4

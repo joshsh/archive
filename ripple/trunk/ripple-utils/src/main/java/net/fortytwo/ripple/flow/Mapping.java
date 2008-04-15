@@ -9,11 +9,6 @@
 
 package net.fortytwo.ripple.flow;
 
-import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.flow.Sink;
-
-// kate: tab-width 4
-
 public interface Mapping<D, R, E extends Exception>
 {
 	/**

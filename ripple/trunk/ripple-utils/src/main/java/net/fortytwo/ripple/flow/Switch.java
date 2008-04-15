@@ -9,8 +9,6 @@
 
 package net.fortytwo.ripple.flow;
 
-import net.fortytwo.ripple.flow.Sink;
-
 public class Switch<T, E extends Exception> implements Sink<T, E>
 {
 	private Sink<T, E> left, right;

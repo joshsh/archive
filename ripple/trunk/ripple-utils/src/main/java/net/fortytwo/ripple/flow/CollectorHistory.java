@@ -11,10 +11,6 @@ package net.fortytwo.ripple.flow;
 
 import java.util.LinkedList;
 
-import net.fortytwo.ripple.flow.Collector;
-import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.flow.Source;
-
 public class CollectorHistory<T, E extends Exception> implements Sink<T, E>
 {
 	private int len, maxlen;

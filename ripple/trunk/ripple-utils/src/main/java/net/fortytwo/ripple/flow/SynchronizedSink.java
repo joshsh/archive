@@ -9,8 +9,6 @@
 
 package net.fortytwo.ripple.flow;
 
-import net.fortytwo.ripple.flow.Sink;
-
 public class SynchronizedSink<T, E extends Exception> implements Sink<T, E>
 {
 	private Object synch;
@@ -35,5 +33,3 @@ public class SynchronizedSink<T, E extends Exception> implements Sink<T, E>
 		}
 	}
 }
-
-// kate: tab-width 4

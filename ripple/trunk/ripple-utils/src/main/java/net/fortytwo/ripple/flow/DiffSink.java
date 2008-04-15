@@ -1,7 +1,5 @@
 package net.fortytwo.ripple.flow;
 
-import net.fortytwo.ripple.flow.Sink;
-
 /**
  * Author: josh
  * Date: Mar 7, 2008

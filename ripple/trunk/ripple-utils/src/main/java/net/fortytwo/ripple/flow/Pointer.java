@@ -33,5 +33,3 @@ public class Pointer<T>
 		this.ref = ref;
 	}
 }
-
-// kate: tab-width 4

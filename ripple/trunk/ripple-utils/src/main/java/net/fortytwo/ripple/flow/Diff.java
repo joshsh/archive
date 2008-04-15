@@ -1,10 +1,8 @@
 package net.fortytwo.ripple.flow;
 
-import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.flow.DiffSink;
-import net.fortytwo.ripple.flow.Sink;
-
 import java.util.LinkedList;
+
+import org.apache.log4j.Logger;
 
 /**
  * Author: josh
@@ -14,6 +12,8 @@ import java.util.LinkedList;
 // TODO: add a concept of Source
 public class Diff<T, E extends Exception> implements DiffSink<T, E>
 {
+    private static final Logger LOGGER = Logger.getLogger(Diff.class);
+
     private enum Action { Add, Remove };
     private class Change
     {
@@ -84,7 +84,7 @@ public class Diff<T, E extends Exception> implements DiffSink<T, E>
                     otherMinusSink.put(ch.value);
                     break;
                 default:
-                    new RippleException("unsupported Action: " + ch.action).logError();
+                    LOGGER.error("unsupported Action: " + ch.action);
             }
         }
     }
