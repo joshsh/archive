@@ -7,7 +7,7 @@ import net.fortytwo.ripple.model.LexiconUpdater;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.LibraryLoader;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.UriMap;
 
 import java.util.Collection;
 

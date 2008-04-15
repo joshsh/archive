@@ -15,7 +15,7 @@ import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.util.ListNode;
+import net.fortytwo.ripple.ListNode;
 
 // TODO: this class has more plumbing than it needs
 public class ListAst extends ListNode<Ast> implements Ast<RippleList>

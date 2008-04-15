@@ -15,7 +15,7 @@ import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.util.StringUtils;
+import net.fortytwo.ripple.StringUtils;
 
 // kate: tab-width 4
 

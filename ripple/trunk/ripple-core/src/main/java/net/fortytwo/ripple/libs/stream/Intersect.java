@@ -18,7 +18,7 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.NullStackMapping;
-import net.fortytwo.ripple.util.ListMemoizer;
+import net.fortytwo.ripple.ListMemoizer;
 import net.fortytwo.ripple.flow.Sink;
 
 // kate: tab-width 4

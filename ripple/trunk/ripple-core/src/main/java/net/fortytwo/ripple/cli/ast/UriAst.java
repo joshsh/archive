@@ -14,7 +14,7 @@ import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
-import net.fortytwo.ripple.util.StringUtils;
+import net.fortytwo.ripple.StringUtils;
 
 public class UriAst implements Ast<RippleList>
 {

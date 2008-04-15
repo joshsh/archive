@@ -23,7 +23,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.linkeddata.sail.LinkedDataSail;
-import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.UriMap;
 
 import java.util.Iterator;
 import java.util.Arrays;

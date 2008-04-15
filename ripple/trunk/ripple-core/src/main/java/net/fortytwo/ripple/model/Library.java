@@ -10,12 +10,12 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.UriMap;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.util.UriMap;
 
 import org.openrdf.model.vocabulary.OWL;
 

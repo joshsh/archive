@@ -21,7 +21,7 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.rdf.RdfUtils;
-import net.fortytwo.ripple.util.StringUtils;
+import net.fortytwo.ripple.StringUtils;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Namespace;

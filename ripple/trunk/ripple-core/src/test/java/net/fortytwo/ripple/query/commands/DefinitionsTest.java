@@ -21,7 +21,7 @@ import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.UriMap;
 
 public class DefinitionsTest extends RippleTestCase
 {

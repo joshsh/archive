@@ -10,12 +10,9 @@
 package net.fortytwo.ripple.libs.neo4j;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.libs.services.PingTheSemanticWeb;
-import net.fortytwo.ripple.libs.services.SwoogleIt;
-import net.fortytwo.ripple.libs.services.Uriqr;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
-import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.UriMap;
 
 // kate: tab-width 4
 /**

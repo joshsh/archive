@@ -10,9 +10,9 @@
 package net.fortytwo.ripple.libs.services;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.UriMap;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
-import net.fortytwo.ripple.util.UriMap;
 
 /**
  * A collection of hooks into selected web services.

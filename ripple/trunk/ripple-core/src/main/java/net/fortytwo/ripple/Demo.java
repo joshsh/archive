@@ -24,7 +24,7 @@ import net.fortytwo.ripple.rdf.SailInserter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.linkeddata.sail.LinkedDataSail;
 import net.fortytwo.ripple.flow.Source;
-import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.UriMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
@@ -59,17 +59,43 @@ public final class Demo
 	{
 	}
 	
-	public static void demo( final File store,
-							final InputStream in,
-							final PrintStream out,
+    private static Sail createMemoryStoreSail() throws RippleException
+    {
+        Sail sail = new MemoryStore();
+
+        try {
+            sail.initialize();
+        } catch ( SailException e ) {
+            throw new RippleException( e );
+        }
+
+        return sail;
+    }
+
+    public static RDFFormat getRdfFormat( final String name ) throws RippleException
+	{
+		String value = Ripple.getProperties().getString( name );
+
+		RDFFormat format = RdfUtils.findFormat( value );
+
+		if ( null == format )
+		{
+			throw new RippleException( "unknown RDF format: " + value );
+		}
+
+		return format;
+	}
+
+    public static void demo( final File store,
+						 	final InputStream in,
+					 		final PrintStream out,
 							final PrintStream err )
 		throws RippleException
 	{
 //net.fortytwo.ripple.tools.SitemapsUtils.test();
 		// Create a Sesame repository.
-		Sail baseSail = RdfUtils.createMemoryStoreSail();
-        RDFFormat cacheFormat = Ripple.getProperties().getRdfFormat(
-                Ripple.CACHE_FORMAT );
+		Sail baseSail = createMemoryStoreSail();
+        RDFFormat cacheFormat = getRdfFormat( Ripple.CACHE_FORMAT );
 
         if ( null != store )
 		{

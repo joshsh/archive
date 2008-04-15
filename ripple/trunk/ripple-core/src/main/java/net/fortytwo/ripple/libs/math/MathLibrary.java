@@ -10,10 +10,10 @@
 package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.UriMap;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
-import net.fortytwo.ripple.util.UriMap;
 
 /**
  * A collection of mathematical primitives.

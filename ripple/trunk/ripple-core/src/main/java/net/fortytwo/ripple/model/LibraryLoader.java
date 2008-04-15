@@ -15,9 +15,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.UriMap;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.util.FileUtils;
-import net.fortytwo.ripple.util.UriMap;
 
 public class LibraryLoader extends ClassLoader
 {

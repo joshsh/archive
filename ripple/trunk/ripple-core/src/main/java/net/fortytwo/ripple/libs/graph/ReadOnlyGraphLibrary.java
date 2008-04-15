@@ -10,9 +10,9 @@
 package net.fortytwo.ripple.libs.graph;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.UriMap;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
-import net.fortytwo.ripple.util.UriMap;
 
 // kate: tab-width 4
 

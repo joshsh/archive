@@ -16,7 +16,7 @@ import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.flow.Collector;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.flow.Source;
-import net.fortytwo.ripple.util.ListNode;
+import net.fortytwo.ripple.ListNode;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;

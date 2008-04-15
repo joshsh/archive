@@ -11,7 +11,7 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.impl.sesame.SesameList;
-import net.fortytwo.ripple.util.ListNode;
+import net.fortytwo.ripple.ListNode;
 
 public abstract class RippleList extends ListNode<RippleValue> implements RippleValue
 {

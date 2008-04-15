@@ -17,7 +17,7 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.HttpUtils;
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.util.StringUtils;
+import net.fortytwo.ripple.StringUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.jdom.Document;

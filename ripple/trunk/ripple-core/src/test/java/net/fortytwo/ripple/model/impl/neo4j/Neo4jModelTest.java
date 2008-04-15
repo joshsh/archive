@@ -7,13 +7,8 @@ import org.neo4j.api.core.EmbeddedNeo;
 import org.neo4j.api.core.Node;
 import org.neo4j.api.core.Relationship;
 import org.neo4j.api.core.Transaction;
-import net.fortytwo.ripple.model.Model;
-import net.fortytwo.ripple.query.QueryEngine;
-import net.fortytwo.ripple.query.StackEvaluator;
-import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.UriMap;
 
 /**
  * Author: josh

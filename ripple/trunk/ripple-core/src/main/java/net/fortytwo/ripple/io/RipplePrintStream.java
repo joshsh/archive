@@ -12,7 +12,7 @@ package net.fortytwo.ripple.io;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.util.StringUtils;
+import net.fortytwo.ripple.StringUtils;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;

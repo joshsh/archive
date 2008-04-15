@@ -13,7 +13,7 @@ import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.UriMap;
 
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
