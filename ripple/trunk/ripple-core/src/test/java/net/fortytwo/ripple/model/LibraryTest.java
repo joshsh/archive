@@ -7,7 +7,7 @@
  */
 
 
-package net.fortytwo.ripple.util;
+package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
