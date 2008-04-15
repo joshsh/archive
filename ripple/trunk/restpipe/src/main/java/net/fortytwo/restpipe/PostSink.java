@@ -1,7 +1,7 @@
 package net.fortytwo.restpipe;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
 import org.apache.log4j.Logger;
 
@@ -11,7 +11,7 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.restlet.resource.StringRepresentation;
 
-public class PostSink implements Sink<String>
+public class PostSink implements Sink<String, RippleException>
 {
 	private static final Logger LOGGER = Logger.getLogger( PostSink.class );
 

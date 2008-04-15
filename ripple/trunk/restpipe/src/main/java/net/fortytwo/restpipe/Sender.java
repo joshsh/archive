@@ -11,9 +11,9 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Sink;
 
-public class Sender implements Sink<Resource>
+public class Sender implements Sink<Resource, RippleException>
 {
 	private URI remoteUri;
 	private Client client;

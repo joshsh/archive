@@ -9,8 +9,8 @@ import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.rdf.RdfUtils;
-import net.fortytwo.ripple.util.Collector;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.flow.Collector;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.util.StringUtils;
 import net.fortytwo.ripple.util.UriMap;
 
@@ -84,7 +84,7 @@ final StringBuilder message = new StringBuilder();
 message.append( "Filter URI: " + filterUri + "\n" );
 message.append( "Sink URI: " + sinkUri + "\n" );
 
-			Collector<StackContext> outStacks = new Collector<StackContext>();
+			Collector<StackContext, RippleException> outStacks = new Collector<StackContext, RippleException>();
 			ModelConnection mc = model.getConnection( "for PipeRestlet.handle()" );
 			RippleValue filterValue = model.getBridge().get(
 				new RdfValue( mc.createUri( filterUri ) ) );
@@ -97,7 +97,7 @@ message.append( "inStack = " + inStack + "\n" );
 
 			final PostSink postSink = new PostSink( sinkUri );
 
-			Sink<StackContext> resultSink = new Sink<StackContext>()
+			Sink<StackContext, RippleException> resultSink = new Sink<StackContext, RippleException>()
 			{
 				public void put( final StackContext arg ) throws RippleException
 				{

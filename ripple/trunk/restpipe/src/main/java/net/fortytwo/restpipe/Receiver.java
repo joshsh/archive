@@ -26,8 +26,9 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.SailConnection;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.*;
-import net.fortytwo.ripple.util.Sink;
+import net.fortytwo.ripple.rdf.RdfCollector;
+import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.rdfwiki.RdfRepresentation;
 
 public class Receiver extends Resource
@@ -183,8 +184,8 @@ public class Receiver extends Resource
         {
             selfRepresentation = new RdfCollector();
 
-            Sink<Namespace> nsSink = selfRepresentation.namespaceSink();
-            Sink<Statement> stSink = selfRepresentation.statementSink();
+            Sink<Namespace, RippleException> nsSink = selfRepresentation.namespaceSink();
+            Sink<Statement, RippleException> stSink = selfRepresentation.statementSink();
 
             nsSink.put( new NamespaceImpl( "rdf", RDF.NAMESPACE ) );
             nsSink.put( new NamespaceImpl( "rdfs", RDFS.NAMESPACE ) );
