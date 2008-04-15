@@ -12,5 +12,6 @@
     <module>restpipe</module>
     <module>ripple-media</module>
     <module>ripple-server</module>
+    <module>ripple-demo</module>
   </modules>
 </project>

@@ -1,0 +1,135 @@
+
+
+# If a parameter is used more than once in the template, all but the first
+# occurrence are ignored.  This is merely a by-product of the template
+# transform rule, but it might as well have been a design choice.  The
+# other option would be to ignore all but the *last* occurrence.
+@define x x redund: 2 x mul >> .
+7 3 :redund >> .  # 14 (not 6)
+
+
+
+# The arguments represented by empty lists really do need to be empty lists.
+# If they are non-lists or non-empty lists, they will not simply drop out of the
+# result as you might expect.
+@define () x () weirdChooseMiddle: x .
+() 2 () :weirdChooseMiddle >> .  # 2
+
+
+@define redef: "one".
+@define redef: "two".
+:redef >> .  # "one", "two"
+@redefine redef: "three".
+:redef >> .  # "three"
+
+@define (a b) (c d) rearrange: a (c d) b .
+("a" "b") ("c" "d") :rearrange >> 2 ary >> .
+
+
+@define x y subtract: x y sub >> .
+10 5 :subtract >> .  # 5
+
+@define x y average: x y add >> 2 div >> .
+
+@define a pow3: a a mul >> a mul >> .
+2 :pow3 >> .
+
+@define x y weird: y x add >> (2 y mul >> (x add >>) >>) dip >> mul >>.
+3 5 :weird >> .  # 104
+
+                   5 3 add >> (2 5 mul >> (3 add >>) >>) dip >> mul >>.
+
+@define x weird5:  5 x add >> (2 5 mul >> (x add >>) >>) dip >> mul >>.
+3 :weird5 >> .  # 104
+@define y weird3:  y 3 add >> (2 y mul >> (3 add >>) >>) dip >> mul >>.
+5 :weird3 >> .  # 104
+
+
+
+@define x y z ignoreY: z x mul >> .
+2 3 5 :ignoreY >> .  # 10
+
+
+@define x y addsquares: x x mul >> y y mul >> add >> .
+2 3 :addsquares >> .  # 13
+
+
+
+
+@define x y addem: x y add >> . 
+2 3 :addem >> .  # 5
+
+@define x newId: (x) >> . 
+
+@define x strangeIncr: (1 x add >>) >>. 
+10 :strangeIncr >> .  # 11
+
+
+@define x const2: 2 .
+3 :const2 >> .  # 2
+
+
+@define x another: (x x add >>) >> x add >> .
+5 :another >> .  # 15
+
+@define x twice: x x add >> .
+7 :twice >> .  # 14
+
+@define x twiceAgain: (x x add >>) >> .
+7 :twiceAgain >> .  # 14
+
+
+
+
+dup >> ((dup >> add >>) cons >>) dip >> add >>
+       ((dup >> add >>) cons >> >>)
+
+3 dup >> ((add >>) cons >> (2 5 mul >>) dip >> >>) cons >> ((5) dip >> add >>) dip >> dip >> mul >>
+3 3 ((add >>) cons >> (2 5 mul >>) dip >> >>) cons >> ((5) dip >> add >>) dip >> dip >> mul >>
+3 (3 (add >>) cons >> (2 5 mul >>) dip >> >>) ((5) dip >> add >>) dip >> dip >> mul >>
+3 (5) dip >> add >> (3 (add >>) cons >> (2 5 mul >>) dip >> >>) dip >> mul >>
+3 (5) dip >> add >> (3 (add >>) cons >> (2 5 mul >>) dip >> >>) dip >> mul >>
+5 3 add >> (3 (add >>) cons >> (2 5 mul >>) dip >> >>) dip >> mul >>
+8 (3 (add >>) cons >> (2 5 mul >>) dip >> >>) dip >> mul >>
+3 (add >>) cons >> (2 5 mul >>) dip >> >> 8 mul >>
+(3 add >>) (2 5 mul >>) dip >> >> 8 mul >>
+2 5 mul >> (3 add >>) >> 8 mul >>
+10 (3 add >>) >> 8 mul >>
+10 3 add >> 8 mul >>
+13 8 mul >>
+104
+
+
+
+
+
+
+
+
+5 dup >> ((dup >> add >>) cons >>) dip >> add >>
+5 5 ((dup >> add >>) cons >>) dip >> add >>
+5 (dup >> add >>) cons >> 5 add >>
+(5 dup >> add >>) 5 add >>
+
+5 dup >> add >> 5 add >>
+5 5 add >> 5 add >>
+10 5 add >>
+15
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

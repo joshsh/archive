@@ -1,7 +1,7 @@
 /*
- * $URL$
- * $Revision$
- * $Author$
+ * $URL: http://svn.fortytwo.net/projects/ripple/trunk/ripple-core/src/main/java/net/fortytwo/ripple/Demo.java $
+ * $Revision: 1046 $
+ * $Author: josh $
  *
  * Copyright (C) 2007 Joshua Shinavier
  */

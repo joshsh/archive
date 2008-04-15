@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <exclude-output />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library name="net.fortytwo.ripple:ripple-core:0.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-core/0.5/ripple-core-0.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-core/0.5/ripple-core-0.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-core/0.5/ripple-core-0.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="net.fortytwo.ripple:ripple-utils:0.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-utils/0.5/ripple-utils-0.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-utils/0.5/ripple-utils-0.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-utils/0.5/ripple-utils-0.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="log4j:log4j:1.2.14">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/log4j/log4j/1.2.14/log4j-1.2.14.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/log4j/log4j/1.2.14/log4j-1.2.14-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/log4j/log4j/1.2.14/log4j-1.2.14-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.slf4j:slf4j-log4j12:1.0.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/slf4j/slf4j-log4j12/1.0.1/slf4j-log4j12-1.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/slf4j/slf4j-log4j12/1.0.1/slf4j-log4j12-1.0.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/slf4j/slf4j-log4j12/1.0.1/slf4j-log4j12-1.0.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-model:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-model/2.0/openrdf-model-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-model/2.0/openrdf-model-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-model/2.0/openrdf-model-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="info.aduna:aduna-collections:1.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-collections/1.4/aduna-collections-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-collections/1.4/aduna-collections-1.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-collections/1.4/aduna-collections-1.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="info.aduna:aduna-concurrent:1.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-concurrent/1.4/aduna-concurrent-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-concurrent/1.4/aduna-concurrent-1.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-concurrent/1.4/aduna-concurrent-1.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.slf4j:slf4j-api:1.3.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/slf4j/slf4j-api/1.3.0/slf4j-api-1.3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/slf4j/slf4j-api/1.3.0/slf4j-api-1.3.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/slf4j/slf4j-api/1.3.0/slf4j-api-1.3.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="info.aduna:aduna-iteration:1.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-iteration/1.5/aduna-iteration-1.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-iteration/1.5/aduna-iteration-1.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-iteration/1.5/aduna-iteration-1.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-rio-n3:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-n3/2.0/openrdf-rio-n3-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-n3/2.0/openrdf-rio-n3-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-n3/2.0/openrdf-rio-n3-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-rio-api:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-api/2.0/openrdf-rio-api-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-api/2.0/openrdf-rio-api-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-api/2.0/openrdf-rio-api-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="info.aduna:aduna-lang:1.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-lang/1.4/aduna-lang-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-lang/1.4/aduna-lang-1.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-lang/1.4/aduna-lang-1.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="info.aduna:aduna-net:1.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-net/1.5/aduna-net-1.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-net/1.5/aduna-net-1.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-net/1.5/aduna-net-1.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="info.aduna:aduna-text:1.3">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-text/1.3/aduna-text-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-text/1.3/aduna-text-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-text/1.3/aduna-text-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-rio-turtle:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-turtle/2.0/openrdf-rio-turtle-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-turtle/2.0/openrdf-rio-turtle-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-turtle/2.0/openrdf-rio-turtle-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="info.aduna:aduna-io:1.3">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-io/1.3/aduna-io-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-io/1.3/aduna-io-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-io/1.3/aduna-io-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-rio-ntriples:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-ntriples/2.0/openrdf-rio-ntriples-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-ntriples/2.0/openrdf-rio-ntriples-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-ntriples/2.0/openrdf-rio-ntriples-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-rio-rdfxml:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-rdfxml/2.0/openrdf-rio-rdfxml-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-rdfxml/2.0/openrdf-rio-rdfxml-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-rdfxml/2.0/openrdf-rio-rdfxml-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="info.aduna:aduna-xml:1.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-xml/1.5/aduna-xml-1.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-xml/1.5/aduna-xml-1.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/info/aduna/aduna-xml/1.5/aduna-xml-1.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-rio-trig:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-trig/2.0/openrdf-rio-trig-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-trig/2.0/openrdf-rio-trig-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-trig/2.0/openrdf-rio-trig-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-rio-trix:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-trix/2.0/openrdf-rio-trix-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-trix/2.0/openrdf-rio-trix-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-rio-trix/2.0/openrdf-rio-trix-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="net.fortytwo.ripple:linkeddata:0.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/linkeddata/0.1/linkeddata-0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/linkeddata/0.1/linkeddata-0.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/linkeddata/0.1/linkeddata-0.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="net.fortytwo.ripple:ripple-rdf:0.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-rdf/0.5/ripple-rdf-0.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-rdf/0.5/ripple-rdf-0.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-rdf/0.5/ripple-rdf-0.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="net.fortytwo.ripple:ripple-base:0.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-base/0.5/ripple-base-0.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-base/0.5/ripple-base-0.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/fortytwo/ripple/ripple-base/0.5/ripple-base-0.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.restlet:org.restlet:1.0.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/restlet/org.restlet/1.0.5/org.restlet-1.0.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/restlet/org.restlet/1.0.5/org.restlet-1.0.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/restlet/org.restlet/1.0.5/org.restlet-1.0.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-httpclient:commons-httpclient:3.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-logging:commons-logging:1.0.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-codec:commons-codec:1.2">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-codec/commons-codec/1.2/commons-codec-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-codec/commons-codec/1.2/commons-codec-1.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-codec/commons-codec/1.2/commons-codec-1.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-sail-api:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-api/2.0/openrdf-sail-api-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-api/2.0/openrdf-sail-api-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-api/2.0/openrdf-sail-api-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-query:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-query/2.0/openrdf-query-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-query/2.0/openrdf-query-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-query/2.0/openrdf-query-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-queryalgebra-model:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryalgebra-model/2.0/openrdf-queryalgebra-model-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryalgebra-model/2.0/openrdf-queryalgebra-model-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryalgebra-model/2.0/openrdf-queryalgebra-model-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-queryalgebra-evaluation:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryalgebra-evaluation/2.0/openrdf-queryalgebra-evaluation-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryalgebra-evaluation/2.0/openrdf-queryalgebra-evaluation-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryalgebra-evaluation/2.0/openrdf-queryalgebra-evaluation-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.neo4j:neo:1.0-b6">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/neo4j/neo/1.0-b6/neo-1.0-b6.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/neo4j/neo/1.0-b6/neo-1.0-b6-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/neo4j/neo/1.0-b6/neo-1.0-b6-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="javax.transaction:jta:1.0.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/javax/transaction/jta/1.0.1/jta-1.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/javax/transaction/jta/1.0.1/jta-1.0.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/javax/transaction/jta/1.0.1/jta-1.0.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="antlr:antlr:2.7.2">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/antlr/antlr/2.7.2/antlr-2.7.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/antlr/antlr/2.7.2/antlr-2.7.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/antlr/antlr/2.7.2/antlr-2.7.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jdom:jdom:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/jdom/jdom/1.0/jdom-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/jdom/jdom/1.0/jdom-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/jdom/jdom/1.0/jdom-1.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jline:jline:0.9.9">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/jline/jline/0.9.9/jline-0.9.9.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/jline/jline/0.9.9/jline-0.9.9-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/jline/jline/0.9.9/jline-0.9.9-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="junit:junit:3.8.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="urbanophile:java-getopt:1.0.9">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/urbanophile/java-getopt/1.0.9/java-getopt-1.0.9.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/urbanophile/java-getopt/1.0.9/java-getopt-1.0.9-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/urbanophile/java-getopt/1.0.9/java-getopt-1.0.9-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.deri.sw:semanticsitemap:0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/deri/sw/semanticsitemap/0/semanticsitemap-0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/deri/sw/semanticsitemap/0/semanticsitemap-0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/deri/sw/semanticsitemap/0/semanticsitemap-0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="xml-apis:xml-apis:1.0.b2">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-sail-memory:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-memory/2.0/openrdf-sail-memory-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-memory/2.0/openrdf-sail-memory-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-memory/2.0/openrdf-sail-memory-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-sail-inferencer:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-inferencer/2.0/openrdf-sail-inferencer-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-inferencer/2.0/openrdf-sail-inferencer-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-sail-inferencer/2.0/openrdf-sail-inferencer-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-queryparser-api:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryparser-api/2.0/openrdf-queryparser-api-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryparser-api/2.0/openrdf-queryparser-api-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryparser-api/2.0/openrdf-queryparser-api-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.openrdf:openrdf-queryparser-serql:2.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryparser-serql/2.0/openrdf-queryparser-serql-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryparser-serql/2.0/openrdf-queryparser-serql-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/openrdf/openrdf-queryparser-serql/2.0/openrdf-queryparser-serql-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntryProperties />
+  </component>
+</module>
+
