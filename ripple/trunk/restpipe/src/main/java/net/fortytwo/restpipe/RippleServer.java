@@ -1,6 +1,7 @@
 package net.fortytwo.restpipe;
 
 import net.fortytwo.ripple.Ripple;
+import net.fortytwo.ripple.RippleException;
 
 import org.restlet.Component;
 import org.restlet.Restlet;
@@ -12,10 +13,10 @@ import java.util.HashMap;
 
 public class RippleServer
 {
-    private static HashMap<String, RepresentationSink> uriToSinkMap
-		    = new HashMap<String, RepresentationSink>();
+    private static HashMap<String, RepresentationSink<RippleException>> uriToSinkMap
+		    = new HashMap<String, RepresentationSink<RippleException>>();
 
-    public static RepresentationSink getSink( final String uri )
+    public static RepresentationSink<RippleException> getSink( final String uri )
     {
         return uriToSinkMap.get( uri );
     }

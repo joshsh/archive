@@ -14,7 +14,7 @@ import net.fortytwo.ripple.rdf.RdfUtils;
  * Date: Feb 27, 2008
  * Time: 2:14:21 PM
  */
-public class DebugSink implements RepresentationSink
+public class DebugSink implements RepresentationSink<RippleException>
 {
     public String getComment()
     {

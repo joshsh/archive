@@ -12,7 +12,7 @@ import java.util.List;
  * Date: Feb 17, 2008
  * Time: 12:31:27 PM
  */
-public interface RepresentationSink extends Sink<Representation, RippleException>
+public interface RepresentationSink<E extends Exception> extends Sink<Representation, E>
 {
 	List<Variant> getVariants();
 

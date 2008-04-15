@@ -35,10 +35,10 @@ public class Receiver extends Resource
 {
     // TODO: move these to a common location
     private static String NS = "http://fortytwo.net/2008/02/rpp#";
-    private static URI INPUTTYPE = new URIImpl("http://fortytwo.net/2008/02/rpp#inputType");
-    private static URI SINK = new URIImpl("http://fortytwo.net/2008/02/rpp#Sink");
+    private static URI INPUTTYPE = new URIImpl( NS + "inputType" );
+    private static URI SINK = new URIImpl( NS + "Sink" );
 
-    protected RepresentationSink sink;
+    protected RepresentationSink<RippleException> sink;
     protected org.openrdf.model.URI selfUri;
     protected RdfCollector selfRepresentation = null;
 
