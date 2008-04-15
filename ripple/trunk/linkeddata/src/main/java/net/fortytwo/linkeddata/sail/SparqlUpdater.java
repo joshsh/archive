@@ -14,14 +14,13 @@ import java.io.PrintStream;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.UriMap;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffContextFilter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSource;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.UriMap;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -89,7 +88,7 @@ source.writeTo( sink );
 	private void postUpdate( final String url, final RdfDiffSource source )
 		throws RippleException
 	{
-		String postData = createPostData( source );
+        String postData = createPostData( source );
 System.out.println( "posting update to url <" + url + ">: " + postData );
 
 		PostMethod method = HttpUtils.createSparqlUpdateMethod( url.toString() );

@@ -1,9 +1,9 @@
 package net.fortytwo.restpipe;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.UriMap;
 import net.fortytwo.ripple.model.*;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.query.Evaluator;
@@ -12,18 +12,9 @@ import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.flow.Collector;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.util.StringUtils;
-import net.fortytwo.ripple.util.UriMap;
 
-import org.restlet.Component;
 import org.restlet.Restlet;
-import org.restlet.Server;
-import org.restlet.data.CharacterSet;
-import org.restlet.data.ClientInfo;
-import org.restlet.data.Encoding;
-import org.restlet.data.Language;
 import org.restlet.data.MediaType;
-import org.restlet.data.Preference;
-import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;

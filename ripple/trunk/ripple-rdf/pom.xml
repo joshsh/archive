@@ -32,6 +32,11 @@
             <artifactId>org.restlet</artifactId>
             <version>1.0.5</version>
         </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+    </dependency>
         <dependency>
             <groupId>org.openrdf</groupId>
             <artifactId>openrdf-model</artifactId>
@@ -72,6 +77,12 @@
             <artifactId>openrdf-rio-turtle</artifactId>
             <version>2.0</version>
         </dependency>
+                <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                        <version>3.8.1</version>
+                        <scope>test</scope>
+                </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>

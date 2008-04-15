@@ -11,13 +11,12 @@ package net.fortytwo.linkeddata.sail;
 
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.io.WebClosure;
 import net.fortytwo.ripple.rdf.diff.RdfDiffBuffer;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffTee;
 import net.fortytwo.ripple.rdf.diff.SynchronizedRdfDiffSink;
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.UriMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;

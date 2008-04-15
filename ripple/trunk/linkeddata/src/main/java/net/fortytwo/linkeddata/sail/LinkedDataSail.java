@@ -13,17 +13,9 @@ import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.RippleProperties;
-import net.fortytwo.ripple.io.ContextMemo;
-import net.fortytwo.ripple.io.FileUriDereferencer;
-import net.fortytwo.ripple.io.HttpUriDereferencer;
-import net.fortytwo.ripple.io.JarUriDereferencer;
-import net.fortytwo.ripple.io.VerbatimRdfizer;
-import net.fortytwo.ripple.io.WebClosure;
-import net.fortytwo.ripple.io.ImageRdfizer;
-import net.fortytwo.ripple.io.Rdfizer;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
-import net.fortytwo.ripple.util.UriMap;
+import net.fortytwo.ripple.UriMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -46,7 +38,7 @@ import java.util.Map;
  */
 public class LinkedDataSail implements StackableSail
 {
-	private static final String LOG_FAILED_URIS = "net.fortytwo.ripple.rdf.sail.logFailedUris";
+	private static final String LOG_FAILED_URIS = "net.fortytwo.linkeddata.logFailedUris";
 
 	private static final Logger LOGGER = Logger.getLogger( LinkedDataSail.class );
 

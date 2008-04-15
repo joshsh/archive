@@ -11,9 +11,6 @@ package net.fortytwo.ripple.rdf;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.util.HttpUtils;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.log4j.Logger;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -21,18 +18,18 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
-import org.openrdf.sail.Sail;
-//import org.openrdf.sail.memory.MemoryStore;
 import org.restlet.resource.Variant;
 import org.restlet.data.MediaType;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.*;
+import java.util.Map;
+import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Iterator;
+
 
 public final class RdfUtils
 {
@@ -166,159 +163,6 @@ System.out.println( "    " + v + " -- " + v.getMediaType().getName() + " -- " + 
 		}
 
 		return format;
-	}
-
-	public static RDFFormat read( final HttpMethod method,
-								final SesameInputAdapter sa,
-								final String baseUri,
-								RDFFormat format ) throws RippleException
-	{
-		HttpUtils.registerMethod( method );
-
-		InputStream body;
-
-		HttpClient client = HttpUtils.createClient();
-		
-		try
-		{
-			client.executeMethod( method );
-	        body = method.getResponseBodyAsStream();
-		}
-		
-		catch ( Throwable t )
-		{
-			throw new RippleException( t );
-		}
-        
-        if ( null == format )
-        {
-        	format = guessRdfFormat( method.getPath(),
-        			method.getResponseHeader( HttpUtils.CONTENT_TYPE ).getValue() );
-        	
-        	if ( null == format )
-        	{
-        		// TODO: logger message?
-//System.out.println("coudn't guess format");
-        		return null;
-        	}
-        }
-        
-		read( body, sa, baseUri, format );
-		
-		try
-		{
-			body.close();
-		}
-		
-		catch ( IOException e )
-		{
-			throw new RippleException( e );
-		}
-		
-        method.releaseConnection();
-
-		return format;		
-	}
-
-	public static RDFFormat read( final URL url,
-								final SesameInputAdapter sa,
-								final String baseUri,
-								RDFFormat format ) throws RippleException
-	{
-		String urlStr = url.toString();
-		
-		if ( urlStr.startsWith( "jar:" ) )
-		{
-			if ( null == format )
-			{
-				format = guessRdfFormat( urlStr, null );
-			}
-			
-			JarURLConnection jc;
-			InputStream is;
-			
-			try
-			{
-				jc = (JarURLConnection) url.openConnection();
-				is = jc.getInputStream();
-			}
-			
-			catch ( IOException e )
-			{
-				throw new RippleException( e );
-			}
-			
-			read( is, sa, baseUri, format );
-			
-			try
-			{
-				is.close();
-				
-				// Note: apparently it's not necessary to disconnect from a
-				// JarURLConnection.
-			}
-			
-			catch ( IOException e )
-			{
-				throw new RippleException( e );
-			}
-			
-			return format;
-		}
-		
-		else if ( urlStr.startsWith( "file:" ) )
-		{
-			if ( null == format )
-			{
-				format = guessRdfFormat( urlStr, null );
-			}
-			
-			InputStream is;
-			
-			try
-			{
-				is = new FileInputStream( urlStr.substring( 5 ) );
-			}
-			
-			catch ( IOException e )
-			{
-				throw new RippleException( e );
-			}
-			
-			read( is, sa, baseUri, format );
-			
-			try
-			{
-				is.close();
-			}
-			
-			catch ( IOException e )
-			{
-				throw new RippleException( e );
-			}
-			
-			return format;
-		}
-		
-		else
-		{
-			HttpMethod method = HttpUtils.createRdfGetMethod( url.toString() );
-			return read( method, sa, baseUri, format );
-		}
-		/*
-		URLConnection uc = HttpUtils.openConnection( url );
-		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
-
-		return readPrivate( uc, sa, baseUri, format );
-		*/
-	}
-
-	public static RDFFormat read( final URL url,
-								final SesameInputAdapter sa,
-								final String baseUri )
-		throws RippleException
-	{
-		return read( url, sa, baseUri, null );
 	}
 
 	public static SesameOutputAdapter createOutputAdapter(
@@ -620,5 +464,3 @@ System.out.println( RDFFormat.TURTLE.getName() + ": " + RDFFormat.TURTLE.getMIME
 		return memo;
 	}
 }
-
-// kate: tab-width 4
