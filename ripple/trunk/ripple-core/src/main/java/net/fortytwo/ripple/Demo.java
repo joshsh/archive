@@ -22,7 +22,7 @@ import net.fortytwo.ripple.rdf.CloseableIterationSource;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SailInserter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
-import net.fortytwo.ripple.rdf.sail.LinkedDataSail;
+import net.fortytwo.linkeddata.sail.LinkedDataSail;
 import net.fortytwo.ripple.flow.Source;
 import net.fortytwo.ripple.util.UriMap;
 import org.apache.log4j.Logger;

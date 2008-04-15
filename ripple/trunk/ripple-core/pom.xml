@@ -147,6 +147,16 @@
 
   <dependencies>
     <dependency>
+        <groupId>net.fortytwo.ripple</groupId>
+        <artifactId>ripple-utils</artifactId>
+        <version>0.5</version>
+    </dependency>
+    <dependency>
+        <groupId>net.fortytwo.ripple</groupId>
+        <artifactId>linkeddata</artifactId>
+        <version>0.1</version>
+    </dependency>
+    <dependency>
       <groupId>org.neo4j</groupId>
       <artifactId>neo</artifactId>
       <version>1.0-b6</version>

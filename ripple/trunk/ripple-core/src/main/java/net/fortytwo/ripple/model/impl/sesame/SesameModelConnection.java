@@ -26,7 +26,7 @@ import net.fortytwo.ripple.rdf.RdfSource;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
-import net.fortytwo.ripple.rdf.sail.SailConnectionListenerAdapter;
+import net.fortytwo.linkeddata.sail.SailConnectionListenerAdapter;
 import net.fortytwo.ripple.flow.NullSource;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.flow.Source;
