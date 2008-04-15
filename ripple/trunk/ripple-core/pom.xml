@@ -148,7 +148,7 @@
   <dependencies>
     <dependency>
         <groupId>net.fortytwo.ripple</groupId>
-        <artifactId>ripple-utils</artifactId>
+        <artifactId>ripple-base</artifactId>
         <version>0.5</version>
     </dependency>
     <dependency>

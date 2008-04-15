@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
 	<groupId>net.fortytwo.ripple</groupId>
-	<artifactId>ripple-utils</artifactId>
+	<artifactId>ripple-base</artifactId>
 	<version>0.5</version>
-	<name>Ripple utilities</name>
-	<description>...</description>
+	<name>Ripple base</name>
+	<description>basic data structures and utilities</description>
 	<repositories>
     <repository>
       <id>aduna-repo</id>
