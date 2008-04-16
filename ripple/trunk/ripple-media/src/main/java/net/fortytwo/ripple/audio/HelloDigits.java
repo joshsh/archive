@@ -1,4 +1,13 @@
 /*
+ * $URL$
+ * $Revision$
+ * $Author$
+ *
+ * Copyright (C) 2007-2008 Joshua Shinavier
+ */
+
+
+/*
  * Copyright 2004 Carnegie Mellon University.
  * Portions Copyright 2004 Sun Microsystems, Inc.
  * Portions Copyright 2004 Mitsubishi Electric Research Laboratories.

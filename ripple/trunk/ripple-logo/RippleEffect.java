@@ -1,3 +1,12 @@
+/*
+ * $URL$
+ * $Revision$
+ * $Author$
+ *
+ * Copyright (C) 2007-2008 Joshua Shinavier
+ */
+
+
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.Graphics;

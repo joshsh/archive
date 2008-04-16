@@ -13,7 +13,7 @@ echo "/*
 
 " > $HEADER
 
-for file in `find -name "*.java"`
+for file in `find . -name "*.java"`
 do
     svn propset svn:keywords "LastChangedDate LastChangedRevision LastChangedBy HeadURL Id" ${file}
 
