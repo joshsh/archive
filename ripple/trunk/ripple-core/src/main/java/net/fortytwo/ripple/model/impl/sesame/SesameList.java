@@ -40,7 +40,7 @@ public class SesameList extends RippleList
     private static void initialize() throws RippleException
     {
         RippleProperties props = Ripple.getProperties();
-        expressionOrder = props.getExpressionOrder( Ripple.EXPRESSION_ORDER );
+        expressionOrder = ExpressionOrder.find(props.getString( Ripple.EXPRESSION_ORDER ) );
         printPadded = props.getBoolean( Ripple.LIST_PADDING );
         initialized = true;
     }

@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.util.RdfHttpUtils;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
@@ -47,7 +48,7 @@ mc.commit();
 		{
 			RdfImporter importer = new RdfImporter( mc, context );
 			SesameInputAdapter sc = new SesameInputAdapter( importer );
-			RdfUtils.read( url, sc, context.toString(), format );
+			RdfHttpUtils.read( url, sc, context.toString(), format );
 mc.commit();
 		}
 

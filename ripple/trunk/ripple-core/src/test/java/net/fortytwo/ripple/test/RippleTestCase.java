@@ -12,6 +12,7 @@ package net.fortytwo.ripple.test;
 import junit.framework.TestCase;
 
 import org.openrdf.sail.Sail;
+import org.openrdf.sail.memory.MemoryStore;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
@@ -21,7 +22,6 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
-import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.linkeddata.sail.LinkedDataSail;
 import net.fortytwo.ripple.UriMap;
 
@@ -146,7 +146,8 @@ public abstract class RippleTestCase extends TestCase
 		if ( null == sail )
 		{
 			// Warning: we never call shutDown() on this Sail.
-			sail = RdfUtils.createMemoryStoreSail();
+            sail = new MemoryStore();
+            sail.initialize();
 		}
 		
 		return sail;

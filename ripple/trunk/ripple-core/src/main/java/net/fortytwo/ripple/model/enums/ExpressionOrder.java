@@ -30,7 +30,6 @@ public enum ExpressionOrder
             }
         }
 
-        String msg = "unknown ExpressionOrder: '" + name + "'";
-        throw new RippleException( msg );
+        throw new RippleException( "unknown ExpressionOrder: '" + name + "'" );
     }
 }

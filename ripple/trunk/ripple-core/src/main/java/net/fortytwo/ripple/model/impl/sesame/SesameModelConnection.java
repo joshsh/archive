@@ -44,6 +44,7 @@ import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
+import org.openrdf.rio.RDFFormat;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -713,12 +714,25 @@ public class SesameModelConnection implements ModelConnection
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
-	
-	public void exportNamespace( final String ns, final OutputStream os )
+
+    private RDFFormat getExportFormat() throws RippleException
+    {
+        String formatStr = Ripple.getProperties().getString( Ripple.EXPORT_FORMAT );
+        RDFFormat format = RdfUtils.findFormat( formatStr );
+        
+        if ( null == format )
+        {
+            throw new RippleException( "unknown RDF format: " + formatStr );
+        }
+
+        return format;
+    }
+
+    public void exportNamespace( final String ns, final OutputStream os )
 		throws RippleException
 	{
 		SesameOutputAdapter adapter = RdfUtils.createOutputAdapter(
-                os, Ripple.getProperties().getRdfFormat( Ripple.EXPORT_FORMAT ) );
+                os, getExportFormat() );
 	
 		final Sink<Resource, RippleException> bnodeClosure = new BNodeClosureFilter(
 			adapter.statementSink(), getSailConnection() );

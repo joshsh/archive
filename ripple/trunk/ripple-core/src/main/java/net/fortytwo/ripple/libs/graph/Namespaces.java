@@ -18,6 +18,7 @@ import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.RdfHttpUtils;
 import net.fortytwo.ripple.flow.NullSink;
 import net.fortytwo.ripple.flow.Sink;
 
@@ -61,7 +62,7 @@ public class Namespaces extends PrimitiveStackMapping
 
 		HttpMethod method = HttpUtils.createGetMethod( uri );
 		HttpUtils.setRdfAcceptHeader( method );
-		RdfUtils.read( method, sc, uri, null );
+		RdfHttpUtils.read( method, sc, uri, null );
 		/*
 		URLConnection uc = HttpUtils.openConnection( uri.toString() );
 		HttpUtils.prepareUrlConnectionForRdfRequest( uc );

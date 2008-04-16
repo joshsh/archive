@@ -22,6 +22,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.StringUtils;
+import net.fortytwo.ripple.util.RdfHttpUtils;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Namespace;
@@ -159,7 +160,7 @@ URI ctx = mc.createUri( url.toString() );
 		final SesameInputAdapter sc = new SesameInputAdapter( responseWatcher );
 
 // TODO: enclose in a timeout wrapper
-		RdfUtils.read( url, sc, url.toString() );
+		RdfHttpUtils.read( url, sc, url.toString() );
 
 		buffer.flush();
 	}

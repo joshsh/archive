@@ -15,6 +15,7 @@ import net.fortytwo.ripple.rdf.RdfCollector;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.util.RdfHttpUtils;
 
 import org.openrdf.rio.RDFFormat;
 
@@ -31,7 +32,7 @@ public class RdfFormatsTest extends RippleTestCase
 			collector.clear();
 
 			URL url = RdfFormatsTest.class.getResource( "rdfformatstest.n3" );
-			RDFFormat format = RdfUtils.read( url, sesameAdapter, url.toString() );
+			RDFFormat format = RdfHttpUtils.read( url, sesameAdapter, url.toString() );
 
 			assertEquals( format, RDFFormat.N3 );
 			assertEquals( collector.countStatements(), 4 );
@@ -48,7 +49,7 @@ public class RdfFormatsTest extends RippleTestCase
 			collector.clear();
 
 			URL url = RdfFormatsTest.class.getResource( "rdfformatstest.nt" );
-			RDFFormat format = RdfUtils.read( url, sesameAdapter, url.toString() );
+			RDFFormat format = RdfHttpUtils.read( url, sesameAdapter, url.toString() );
 
 			assertEquals( format, RDFFormat.NTRIPLES );
 			assertEquals( collector.countStatements(), 3 );
@@ -65,7 +66,7 @@ public class RdfFormatsTest extends RippleTestCase
 			collector.clear();
 
 			URL url = RdfFormatsTest.class.getResource( "rdfformatstest.rdf" );
-			RDFFormat format = RdfUtils.read( url, sesameAdapter, url.toString() );
+			RDFFormat format = RdfHttpUtils.read( url, sesameAdapter, url.toString() );
 
 			assertEquals( format, RDFFormat.RDFXML );
 			assertEquals( collector.countStatements(), 4 );
@@ -82,7 +83,7 @@ public class RdfFormatsTest extends RippleTestCase
 			collector.clear();
 
 			URL url = RdfFormatsTest.class.getResource( "rdfformatstest.trig" );
-			RDFFormat format = RdfUtils.read( url, sesameAdapter, url.toString() );
+			RDFFormat format = RdfHttpUtils.read( url, sesameAdapter, url.toString() );
 
 			assertEquals( format, RDFFormat.TRIG );
 			assertEquals( collector.countStatements(), 6 );
@@ -99,7 +100,7 @@ public class RdfFormatsTest extends RippleTestCase
 			collector.clear();
 
 			URL url = RdfFormatsTest.class.getResource( "rdfformatstest.trix" );
-			RDFFormat format = RdfUtils.read( url, sesameAdapter, url.toString() );
+			RDFFormat format = RdfHttpUtils.read( url, sesameAdapter, url.toString() );
 
 			assertEquals( format, RDFFormat.TRIX );
 			assertEquals( collector.countStatements(), 3 );
@@ -116,7 +117,7 @@ public class RdfFormatsTest extends RippleTestCase
 			collector.clear();
 
 			URL url = RdfFormatsTest.class.getResource( "rdfformatstest.ttl" );
-			RDFFormat format = RdfUtils.read( url, sesameAdapter, url.toString() );
+			RDFFormat format = RdfHttpUtils.read( url, sesameAdapter, url.toString() );
 
 			assertEquals( format, RDFFormat.TURTLE );
 			assertEquals( collector.countStatements(), 3 );

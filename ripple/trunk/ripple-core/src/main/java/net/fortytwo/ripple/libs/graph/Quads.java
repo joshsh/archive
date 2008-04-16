@@ -22,6 +22,7 @@ import net.fortytwo.ripple.rdf.RdfSink;
 import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.RdfHttpUtils;
 
 import org.apache.commons.httpclient.HttpMethod;
 import org.openrdf.model.Namespace;
@@ -64,7 +65,7 @@ public class Quads extends PrimitiveStackMapping
 
 		HttpMethod method = HttpUtils.createGetMethod( uri );
 		HttpUtils.setRdfAcceptHeader( method );
-		RdfUtils.read( method, sc, uri, null );
+		RdfHttpUtils.read( method, sc, uri, null );
 	}
 
 	static SesameInputAdapter createAdapter( final StackContext arg,
