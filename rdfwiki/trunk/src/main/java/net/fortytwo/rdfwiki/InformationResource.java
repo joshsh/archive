@@ -1,6 +1,11 @@
 package net.fortytwo.rdfwiki;
 
-import net.fortytwo.ripple.rdf.*;
+import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.SailInserter;
+import net.fortytwo.ripple.rdf.SesameOutputAdapter;
+import net.fortytwo.ripple.rdf.CloseableIterationSource;
+import net.fortytwo.ripple.rdf.RdfCollector;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
@@ -14,6 +19,7 @@ import org.restlet.resource.Resource;
 import org.restlet.resource.Variant;
 
 import java.util.List;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,15 +66,36 @@ public class InformationResource extends Resource
     @Override
     public List<Variant> getVariants()
     {
-    	return RdfUtils.getRdfVariants();
+        try
+        {
+            return RdfUtils.getRdfVariants();
+        }
+
+        catch (RippleException e)
+        {
+            e.logError();
+            return new LinkedList<Variant>();
+        }
     }
     
     @Override
     public Representation getRepresentation( final Variant variant )
     {
         MediaType type = variant.getMediaType();
-        RDFFormat format = RdfUtils.findRdfFormat( type );
-        
+        RDFFormat format = null;
+        try
+        {
+            format = RdfUtils.findRdfFormat( type );
+        }
+
+        catch (RippleException e)
+        {
+            e.logError();
+
+            // TODO: this will probably come across as a 404 error, which is not accurate
+            return null;
+        }
+
         if ( null != format )
         {
         	return getRdfRepresentation( format );

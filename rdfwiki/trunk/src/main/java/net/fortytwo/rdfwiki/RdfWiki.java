@@ -1,20 +1,10 @@
 package net.fortytwo.rdfwiki;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.restlet.Component;
 import org.restlet.Context;
-import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
 import org.restlet.data.Request;
-import org.restlet.resource.Variant;
 
 public class RdfWiki
 {

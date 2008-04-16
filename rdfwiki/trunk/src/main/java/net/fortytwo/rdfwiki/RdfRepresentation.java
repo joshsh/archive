@@ -1,6 +1,11 @@
 package net.fortytwo.rdfwiki;
 
-import net.fortytwo.ripple.rdf.*;
+import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.SesameOutputAdapter;
+import net.fortytwo.ripple.rdf.RdfSource;
+import net.fortytwo.ripple.rdf.SesameInputAdapter;
+import net.fortytwo.ripple.rdf.RdfCollector;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
@@ -46,7 +51,7 @@ public class RdfRepresentation extends OutputRepresentation
 		return source;
 	}
 	
-	public RdfRepresentation( final RdfSource source, final RDFFormat format )
+	public RdfRepresentation( final RdfSource source, final RDFFormat format ) throws RippleException
 	{
 		super( RdfUtils.findMediaType( format ) );
 		
