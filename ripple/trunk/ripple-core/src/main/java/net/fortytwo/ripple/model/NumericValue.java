@@ -11,7 +11,8 @@ package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.io.RipplePrintStream;
-import net.fortytwo.ripple.model.impl.sesame.SesameNumericValue;
+import org.openrdf.model.Literal;
+import org.openrdf.model.Value;
 
 /**
  * A numeric (xsd:integer or xsd:double) literal value.
@@ -126,19 +127,31 @@ public abstract class NumericValue implements RippleValue
 
 		else if ( other instanceof RdfValue )
 		{
-			try
-			{
-				// Note: wasty
-				return compareTo( new SesameNumericValue( (RdfValue) other ) );
-			}
+            Value v = ( (RdfValue) other ).getRdfValue();
+            if ( v instanceof Literal )
+            {
+                Literal l = (Literal) v;
+                try
+                {
+                    Number num = new Double(l.getLabel());
+                    double n = number.doubleValue(),
+                        nOther =  num.doubleValue();
+                    return ( n > nOther ) ? 1 : ( n < nOther ) ? -1 : 0;
+                }
 
-			catch ( RippleException e )
-			{
-				// Log the error, but otherwise ignore it and call the objects equal.
-				e.logError();
-				return 0;
-			}
-		}
+                catch ( Exception e )
+                {
+                    // Fornow, log the error, but otherwise ignore it and call the objects equal.
+                    new RippleException(e).logError();
+                    return 0;
+                }
+            }
+
+            else
+            {
+                return RippleList.class.getName().compareTo( other.getClass().getName() );
+            }
+        }
 
 		else
 		{

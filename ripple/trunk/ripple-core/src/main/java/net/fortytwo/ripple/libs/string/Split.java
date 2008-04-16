@@ -55,7 +55,7 @@ public class Split extends PrimitiveStackMapping
 		try
 		{
 			String [] array = s.split( regex );
-			RippleList result = RippleList.NIL;
+			RippleList result = mc.list();
 			for ( int i = array.length - 1; i >= 0; i-- )
 			{
 				result = result.push( mc.value( array[i] ) );

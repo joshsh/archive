@@ -41,7 +41,7 @@ public class Pop extends PrimitiveStackMapping
 		RippleList stack = arg.getStack();
 		stack = stack.getRest();
 
-		if ( RippleList.NIL != stack )
+		if ( !stack.isNil() )
 		{
 			sink.put( arg.with(	stack ) );
 		}

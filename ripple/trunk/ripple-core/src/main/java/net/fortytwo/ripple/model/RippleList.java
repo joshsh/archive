@@ -10,13 +10,10 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.model.impl.sesame.SesameList;
 import net.fortytwo.ripple.ListNode;
 
 public abstract class RippleList extends ListNode<RippleValue> implements RippleValue
 {
-	public static final RippleList NIL = new SesameList();
-	
 	protected RippleValue first;
 	protected RippleList rest;
 
@@ -35,7 +32,7 @@ public abstract class RippleList extends ListNode<RippleValue> implements Ripple
 		int l = 0;
 
 		RippleList cur = this;
-		while ( NIL != cur )
+		while ( !cur.isNil() )
 		{
 			l++;
 			cur = cur.getRest();
@@ -55,7 +52,7 @@ public abstract class RippleList extends ListNode<RippleValue> implements Ripple
 		RippleList cur = this;
 		for ( int j = 0; j < i; j++ )
 		{
-			if ( NIL == cur )
+			if ( cur.isNil() )
 			{
 				throw new RippleException( "list index out of bounds: " + i );
 			}
@@ -66,5 +63,6 @@ public abstract class RippleList extends ListNode<RippleValue> implements Ripple
 		return cur.getFirst();
 	}
 	
-	public abstract RippleList push( RippleValue v );
+	public abstract RippleList push( RippleValue v ) throws RippleException;
+    public abstract boolean isNil();
 }

@@ -100,7 +100,8 @@ public interface ModelConnection
 // FIXME: this should use an implementation-independent URI class
 	RippleValue value( URI uri );
 	
-	RippleList list( RippleValue v );
+    RippleList list();
+    RippleList list( RippleValue v );
 	RippleList list( RippleValue v, RippleList rest );
 	RippleList invert( RippleList l );
 	RippleList concat( RippleList head, RippleList tail );

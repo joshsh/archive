@@ -137,7 +137,7 @@ public class ListAst extends ListNode<Ast> implements Ast<RippleList>
 	{
 		if ( isNil( astList ) )
 		{
-			sink.put( RippleList.NIL );
+			sink.put( mc.list() );
 		}
 
 		else

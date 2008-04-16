@@ -40,14 +40,14 @@ public class ListDequotation implements StackMapping
 		RippleList in = list;
 		RippleList out = stack;
 
-		while ( RippleList.NIL != in )
+		while ( !in.isNil() )
 		{
 			out = out.push( in.getFirst() );
 			in = in.getRest();
 		}
 
 		// Never emit an empty stack.
-		if ( RippleList.NIL != out )
+		if ( !out.isNil() )
 		{
 			sink.put( arg.with( out ) );
 		}

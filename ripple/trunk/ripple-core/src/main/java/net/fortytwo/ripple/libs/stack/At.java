@@ -63,7 +63,7 @@ public class At extends PrimitiveStackMapping
 				for ( int j = 1; j < i; j++ )
 				{
 					list = list.getRest();
-					if ( RippleList.NIL == list )
+					if ( list.isNil() )
 					{
 						throw new RippleException( "list index out of bounds: " + i );
 					}

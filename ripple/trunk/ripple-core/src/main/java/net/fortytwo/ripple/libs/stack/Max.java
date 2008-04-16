@@ -53,7 +53,7 @@ public class Max extends PrimitiveStackMapping
 			public void put( RippleList list ) throws RippleException
 			{
 				RippleValue result = null;
-				while ( RippleList.NIL != list )
+				while ( !list.isNil() )
 				{
 					RippleValue v = list.getFirst();
 		

@@ -41,7 +41,7 @@
     <dependencies>
         <dependency>
             <groupId>net.fortytwo.ripple</groupId>
-            <artifactId>ripple-core</artifactId>
+            <artifactId>ripple-sesame</artifactId>
             <version>0.5</version>
         </dependency>
             <dependency>

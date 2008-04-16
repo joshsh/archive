@@ -63,7 +63,7 @@ public class Fold extends PrimitiveStackMapping
 				RippleList lList = mc.invert( list );
 				RippleList result = rest.push( v );
 		
-				while ( RippleList.NIL != lList )
+				while ( !lList.isNil() )
 				{
 					result = result.push( lList.getFirst() )
 						.push( f )

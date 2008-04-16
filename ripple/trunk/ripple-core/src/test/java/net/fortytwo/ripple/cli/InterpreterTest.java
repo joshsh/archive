@@ -12,7 +12,6 @@ package net.fortytwo.ripple.cli;
 import net.fortytwo.ripple.cli.ast.ListAst;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.PipedIOStream;
-import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.flow.Collector;
 import net.fortytwo.ripple.flow.NullSink;
 import net.fortytwo.ripple.RippleException;
@@ -21,7 +20,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class InterpreterTest extends RippleTestCase
+import junit.framework.TestCase;
+
+public class InterpreterTest extends TestCase
 {
 	private static final long WAIT_INTERVAL = 100l;
 	private static final byte[] NEWLINE = { '\n' };
@@ -270,32 +271,24 @@ System.out.println( "########## got an exception: " + e );
 
 	////////////////////////////////////////////////////////////////////////////
 
-	private class SuccessCasesTest extends TestRunnable
-	{
-		public void test()
-			throws Exception
-		{
-			InputStream is = InterpreterTest.class.getResourceAsStream( "successCases.rpl" );
-			parse( is, true );
-			is.close();
-		}
-	}
+    public void testNothing() throws Exception
+    {
 
-	private class FailureCasesTest extends TestRunnable
-	{
-		public void test()
-			throws Exception
-		{
-			InputStream is = InterpreterTest.class.getResourceAsStream( "failureCases.rpl" );
-			parse( is, false );
-			is.close();
-		}
-	}
+    }
+    
+/*
+    public void testSuccessCasesTest() throws Exception
+    {
+        InputStream is = InterpreterTest.class.getResourceAsStream( "successCases.rpl" );
+        parse( is, true );
+        is.close();
+    }
 
-	public void runTests()
-		throws Exception
-	{
-//		testSynchronous( new SuccessCasesTest() );
-//		testSynchronous( new FailureCasesTest() );
-	}
+    public void testFailureCases() throws Exception
+    {
+        InputStream is = InterpreterTest.class.getResourceAsStream( "failureCases.rpl" );
+        parse( is, false );
+        is.close();
+    }
+*/
 }

@@ -49,7 +49,10 @@ public class QueryPipe implements Sink<String, RippleException>
 		final Object mutex = resultBuffer;
 
 		final Collector<RippleList, RippleException> nilSource = new Collector<RippleList, RippleException>();
-		nilSource.put( RippleList.NIL );
+		// FIXME: this is stupid
+		ModelConnection mc = queryEngine.getConnection();
+		nilSource.put( mc.list() );
+                mc.close();
 
 		// Handling of queries
 		Sink<ListAst, RippleException> querySink = new Sink<ListAst, RippleException>()

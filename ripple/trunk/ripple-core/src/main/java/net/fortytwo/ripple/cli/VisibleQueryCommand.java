@@ -83,7 +83,7 @@ public class VisibleQueryCommand extends Command
 		};
 
 Collector<RippleList, RippleException> nilSource = new Collector<RippleList, RippleException>();
-nilSource.put( RippleList.NIL );
+nilSource.put( mc.list() );
 		Command cmd = new RippleQueryCmd( ast, derefSink,
 			( continued
 				? resultHistory.getSource( 1 )

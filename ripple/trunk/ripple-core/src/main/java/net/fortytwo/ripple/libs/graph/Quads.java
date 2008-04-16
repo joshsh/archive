@@ -87,7 +87,7 @@ public class Quads extends PrimitiveStackMapping
                             rest.push( bridge.get( new RdfValue( st.getSubject() ) ) )
                                     .push( bridge.get( new RdfValue( st.getPredicate() ) ) )
                                     .push( bridge.get( new RdfValue( st.getObject() ) ) )
-                                    .push( ( null == context ) ? RippleList.NIL : bridge.get( new RdfValue( context ) ) ) ) );
+                                    .push( ( null == context ) ? mc.list() : bridge.get( new RdfValue( context ) ) ) ) );
                 }
             };
 

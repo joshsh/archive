@@ -39,7 +39,7 @@ public class Has extends PrimitiveStackMapping
 	private boolean has( RippleList l, final RippleValue v )
 		throws RippleException
 	{
-		while ( RippleList.NIL != l )
+		while ( !l.isNil() )
 		{
 			if ( 0 == l.getFirst().compareTo( v ) )
 			{

@@ -53,7 +53,7 @@ public class Each extends PrimitiveStackMapping
 		{
 			public void put( RippleList list ) throws RippleException
 			{
-				while ( RippleList.NIL != list )
+				while ( !list.isNil() )
 				{
 					sink.put( arg.with(
 							rest.push( list.getFirst() ) ) );

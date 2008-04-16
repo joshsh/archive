@@ -11,7 +11,10 @@ package net.fortytwo.restpipe;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.logging.Level;
+import java.net.URISyntaxException;
 
 import org.restlet.Context;
 import org.restlet.data.Request;
@@ -42,11 +45,6 @@ import net.fortytwo.rdfwiki.RdfRepresentation;
 
 public class Receiver extends Resource
 {
-    // TODO: move these to a common location
-    private static String NS = "http://fortytwo.net/2008/02/rpp#";
-    private static URI INPUTTYPE = new URIImpl( NS + "inputType" );
-    private static URI SINK = new URIImpl( NS + "Sink" );
-
     protected RepresentationSink<RippleException> sink;
     protected org.openrdf.model.URI selfUri;
     protected RdfCollector selfRepresentation = null;
@@ -198,15 +196,15 @@ public class Receiver extends Resource
 
             nsSink.put( new NamespaceImpl( "rdf", RDF.NAMESPACE ) );
             nsSink.put( new NamespaceImpl( "rdfs", RDFS.NAMESPACE ) );
-            nsSink.put( new NamespaceImpl( "rpp", NS ) );
+            nsSink.put( new NamespaceImpl( "rpp", RPP.NAMESPACE ) );
 
             stSink.put( valueFactory.createStatement(
-                    selfUri, RDF.TYPE, SINK ) );
+                    selfUri, RDF.TYPE, RPP.SINK ) );
             stSink.put( valueFactory.createStatement(
                     selfUri, RDFS.COMMENT, valueFactory.createLiteral( sink.getComment() ) ) );
             for ( Variant v : getVariants() )
             {
-                stSink.put( valueFactory.createStatement( selfUri, INPUTTYPE,
+                stSink.put( valueFactory.createStatement( selfUri, RPP.INPUTTYPE,
                         valueFactory.createLiteral( v.getMediaType().getName() ) ) );
             }
         }
@@ -217,5 +215,63 @@ public class Receiver extends Resource
         RDFFormat format = RdfUtils.findRdfFormat( type );
 
         return ( null == format ) ? null : new RdfRepresentation( selfRepresentation, format );
+    }
+
+    protected static java.net.URI createURI( final String s ) throws RippleException
+    {
+        try {
+            return new java.net.URI( s );
+        } catch (URISyntaxException e) {
+            throw new RippleException( e );
+        }
+    }
+
+
+
+
+
+
+
+
+    protected String getParameter( final String key ) throws RippleException
+    {
+        return getParameters().get( key );
+    }
+
+    protected int getIntParameter( final String key ) throws RippleException
+    {
+        try {
+            return new Integer( getParameters().get( key ) ).intValue();
+        } catch ( NumberFormatException e ) {
+            throw new RippleException( e );
+        }
+    }
+
+
+    private Map<String, String> parameters;
+
+    // TODO: it seems like Restlet should make this unnecessary
+    private Map<String, String> getParameters()
+    {
+        if ( null == parameters )
+        {
+            parameters = new HashMap<String, String>();
+            String uri = selfUri.toString();
+
+            if ( uri.contains( "?" ) )
+            {
+                String query = uri.substring( uri.indexOf( "?" ) + 1 );
+                String[] pairs = query.split( "&" );
+                for ( int i = 0; i < pairs.length; i++ )
+                {
+                    String[] pair = pairs[i].split( "=" );
+                    String key = pair[0];
+                    String value = pair[1];
+                    parameters.put( key, value );
+                }
+            }
+        }
+
+        return parameters;
     }
 }

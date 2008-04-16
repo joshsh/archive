@@ -16,7 +16,6 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.model.impl.sesame.SesameList;
 
 /**
  * A primitive which consumes an RDF container and produces all items in the
@@ -52,7 +51,7 @@ public class Contains extends PrimitiveStackMapping
 		{
 			public void put( final RippleValue v ) throws RippleException
 			{
-				sink.put( arg.with( new SesameList( v, rest ) ) );
+				sink.put( arg.with( rest.push( v ) ) );
 			}
 		};		
 		

@@ -38,7 +38,7 @@ public class LazyEvaluator extends StackEvaluator
 			this.mapping = mapping;
 			this.sink = sink;
 //System.out.println( this + "( " + mapping + ", " + sink + ")" );
-//System.out.println( "mapping.arity() = " + mapping.arity() );
+//System.out.println( "    mapping.arity() = " + mapping.arity() );
 		}
 
 		public void put( final StackContext arg ) throws RippleException
@@ -48,8 +48,6 @@ public class LazyEvaluator extends StackEvaluator
 				return;
 			}
 
-//System.out.println( this + ".put( " + stack + " )" );
-//System.out.println( "   first = " + stack.getFirst() );
 			if ( mapping.arity() == 1 )
 			{
 				mapping.applyTo( arg, sink );
@@ -90,7 +88,7 @@ public class LazyEvaluator extends StackEvaluator
 
 			RippleList stack = arg.getStack();
 //LOGGER.info( this + ".put( " + stack + " )" );
-//System.out.println( this + ".put( " + stack + " )" );
+//System.out.println( this + " -- stack = " + stack );
 			RippleValue first = stack.getFirst();
 //LOGGER.info( "   first = " + stack.getFirst() );
 //LOGGER.info( "   first.isActive() = " + first.isActive() );
@@ -118,7 +116,7 @@ public class LazyEvaluator extends StackEvaluator
 				{
 					// We simply ignore stacks which can't be reduced to
 					// something with a passive item on top.
-					if ( RippleList.NIL == rest )
+					if ( rest.isNil() )
 					{
 						return;
 //						sink.put( stack );
@@ -145,12 +143,20 @@ public class LazyEvaluator extends StackEvaluator
 						final Sink<StackContext, RippleException> sink )
 		throws RippleException
 	{
-if ( RippleList.NIL == arg.getStack() )
+if ( arg.getStack().isNil() )
 {
 	return;
 }
 
-		EvaluatorSink evalSink = new EvaluatorSink( sink );
+/*Sink<StackContext, RippleException> debugSink = new Sink<StackContext, RippleException>() {
+    public void put(final StackContext ctx) throws RippleException {
+        System.out.println("yielding value: " + ctx.getStack());
+        sink.put(ctx);
+    }
+};*/
+
+        EvaluatorSink evalSink = new EvaluatorSink( sink );
+//        EvaluatorSink evalSink = new EvaluatorSink( debugSink );
 		stopped = false;
 
 		try
