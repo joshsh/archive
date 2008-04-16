@@ -3,7 +3,7 @@
  * $Revision: $
  * $Author: josh $
  *
- * Copyright (C) 2007 Joshua Shinavier
+ * Copyright (C) 2007-2008 Joshua Shinavier
  */
 
 
