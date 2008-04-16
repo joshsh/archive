@@ -12,23 +12,25 @@ package net.fortytwo.ripple.libs.media;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpClient;
 
-public class Show extends PrimitiveFunction
+public class Show extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 
@@ -45,15 +47,15 @@ public class Show extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final ModelConnection mc )
-		throws RippleException
+    public void applyTo( final StackContext arg,
+                         final Sink<StackContext, RippleException> sink )
+            throws RippleException
 	{
-		URI uri;
+        ModelConnection mc = arg.getModelConnection();
+        RippleList stack = arg.getStack();
 
-		uri = mc.uriValue( stack.getFirst() );
-//		stack = stack.getRest();
+        URI uri = mc.createUri( mc.toString( stack.getFirst() ) );
+		//stack = stack.getRest();
 
 		ImagePanel panel;
 
@@ -79,7 +81,7 @@ public class Show extends PrimitiveFunction
 		}
 
 		// Pass the stack along, unaltered.
-		sink.put( stack );
+		sink.put( arg.with( stack ) );
 	}
 
 	//panel used to draw image on
@@ -90,31 +92,40 @@ public class Show extends PrimitiveFunction
 		//image object
 		public Image img;
 		
-		public ImagePanel( final URI uri )
-			throws RippleException
+		public ImagePanel( final URI uri ) throws RippleException
 		{
-			try
-			{
-				URL url = new URL( uri.toString() );
-				URLConnection conn = url.openConnection();
-				HttpUtils.prepareUrlConnectionForRequest( conn, mimeTypes );
-				conn.connect();
-				InputStream is = conn.getInputStream();
+            HttpMethod method = HttpUtils.createRdfGetMethod( uri.toString() );
+            HttpUtils.setAcceptHeader( method, mimeTypes );
+            HttpUtils.registerMethod( method );
+            HttpClient client = HttpUtils.createClient();
 
-				//load image
-				img = ImageIO.read( is );
+            InputStream is;
 
-				is.close();
-			}
+            try {
+                client.executeMethod( method );
+                is = method.getResponseBodyAsStream();
+            } catch ( IOException e ) {
+                throw new RippleException( e );
+            }
 
-			catch ( Exception e )
-			{
-				throw new RippleException( e );
-			}
+            try {
+                //load image
+                img = ImageIO.read( is );
+            } catch ( IOException e ) {
+                throw new RippleException( e );
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    throw new RippleException( e );
+                }
+            }
 
 			if ( null == img )
-				throw new RippleException( "no displayable image found at URI " + uri );
-		}
+            {
+                throw new RippleException( "no displayable image found at URI " + uri );
+            }
+        }
 		
 		//override paint method of panel
 		public void paint( final Graphics g )
@@ -127,5 +138,3 @@ public class Show extends PrimitiveFunction
 		}
 	}
 }
-
-// kate: tab-width 4

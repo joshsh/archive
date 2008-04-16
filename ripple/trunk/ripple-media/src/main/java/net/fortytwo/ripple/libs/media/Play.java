@@ -10,22 +10,24 @@
 package net.fortytwo.ripple.libs.media;
 
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.IOException;
 
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequencer;
 
 import net.fortytwo.ripple.RippleException;
+import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelConnection;
-import net.fortytwo.ripple.model.PrimitiveFunction;
 import net.fortytwo.ripple.model.RippleList;
+import net.fortytwo.ripple.model.PrimitiveStackMapping;
+import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.Sink;
 
 import org.openrdf.model.URI;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpClient;
 
-public class Play extends PrimitiveFunction
+public class Play extends PrimitiveStackMapping
 {
 	private static final int ARITY = 1;
 
@@ -40,15 +42,15 @@ public class Play extends PrimitiveFunction
 		return ARITY;
 	}
 
-	public void applyTo( RippleList stack,
-						final Sink<RippleList> sink,
-						final ModelConnection mc )
-		throws RippleException
+    public void applyTo( final StackContext arg,
+                         final Sink<StackContext, RippleException> sink )
+            throws RippleException
 	{
-		URI uri;
+        ModelConnection mc = arg.getModelConnection();
+        RippleList stack = arg.getStack();
 
-		uri = mc.uriValue( stack.getFirst() );
-//		stack = stack.getRest();
+        URI uri = mc.createUri( mc.toString( stack.getFirst() ) );
+		//stack = stack.getRest();
 
 		try
 		{
@@ -62,61 +64,39 @@ System.out.println( "error: " + e );
 		}
 
 		// Pass the stack along, unaltered.
-		sink.put( stack );
+		sink.put( arg.with( stack ) );
 	}
 
-	void play( final URI uri )
-		throws RippleException
+	private void play( final URI uri ) throws RippleException
 	{
-		URLConnection conn;
+		String[] mimeTypes = { "audio/midi" };
+        HttpMethod method = HttpUtils.createRdfGetMethod( uri.toString() );
+        HttpUtils.setAcceptHeader( method, mimeTypes );
+        HttpUtils.registerMethod( method );
+		HttpClient client = HttpUtils.createClient();
 
-		try
-		{
-			URL url = new URL( uri.toString() );
-			conn = url.openConnection();
-		}
+        InputStream is;
 
-		catch ( java.net.MalformedURLException e )
-		{
-			throw new RippleException( e );
-		}
+        try {
+            client.executeMethod( method );
+            is = method.getResponseBodyAsStream();
+        } catch ( IOException e ) {
+            throw new RippleException( e );
+        }
 
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		String []mimeTypes = { "audio/midi" };
-		HttpUtils.prepareUrlConnectionForRequest( conn, mimeTypes );
-
-		InputStream is;
-
-		try
-		{
-			conn.connect();
-			is = conn.getInputStream();
-		}
-
-		catch ( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
-
-		play( is );
-
-		try
-		{
-			is.close();
-		}
-
-		catch( java.io.IOException e )
-		{
-			throw new RippleException( e );
-		}
+        try {
+            play( is );
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                throw new RippleException( e );
+            }
+        }
 	}
 
 	// Note: we won't try to play more than one MIDI at a time.
-	synchronized void play( final InputStream is )
+	private synchronized void play( final InputStream is )
 		throws RippleException
 	{
 		// Play once
@@ -170,5 +150,3 @@ System.out.println( "error: " + e );
 		}
 	}
 }
-
-// kate: tab-width 4

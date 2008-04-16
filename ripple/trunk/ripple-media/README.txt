@@ -24,10 +24,11 @@ java -jar bin/FreeTTSHelloWorld.jar kevin
 
 
 
-<http://dbpedia.org/resource/Innsbruck>/rdfs:comment
-    /dup /lang "en" /equal
-        id scrap /branch
-    /speak.
+<http://dbpedia.org/resource/Innsbruck>
+    rdfs:comment >>
+    dup >> lang >> "en" equal >>
+        id scrap branch >>
+    speak >> .
 
 
 

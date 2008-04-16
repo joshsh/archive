@@ -6,7 +6,6 @@ import net.fortytwo.ripple.RippleException;
 import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.VirtualHost;
-import org.restlet.Router;
 import org.restlet.data.Protocol;
 
 import java.util.HashMap;
@@ -48,8 +47,8 @@ public class RippleServer
             // Some other temporary stuff, for experimental purposes
             Restlet infoRestlet = new InfoRestlet();
             host.attach( "/info/", infoRestlet);
-            Restlet pipeRestlet = new PipeRestlet();
-            host.attach( "/pipe/", pipeRestlet );
+            //Restlet pipeRestlet = new PipeRestlet();
+            //host.attach( "/pipe/", pipeRestlet );
 
             // Now, let's start the component!
             // Note that the HTTP server connector is also automatically started.
