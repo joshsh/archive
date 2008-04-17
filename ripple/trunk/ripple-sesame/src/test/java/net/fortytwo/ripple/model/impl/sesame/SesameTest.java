@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.model.impl.sesame;
 
 import info.aduna.iteration.CloseableIteration;
-import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.RDFSink;
 import net.fortytwo.ripple.rdf.SailInserter;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
@@ -20,8 +20,6 @@ import org.apache.log4j.Logger;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.sail.Sail;
@@ -30,7 +28,6 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class SesameTest extends RippleTestCase
@@ -155,7 +152,7 @@ public class SesameTest extends RippleTestCase
 		SailConnection sc = sail.getConnection();
 		SailInserter inserter = new SailInserter( sc );
 		SesameOutputAdapter outAdapter = new SesameOutputAdapter( inserter );
-		RdfSink scp = new SingleContextPipe( outAdapter, context, sail.getValueFactory() );
+		RDFSink scp = new SingleContextPipe( outAdapter, context, sail.getValueFactory() );
 		SesameInputAdapter inAdapter = new SesameInputAdapter( scp );
 		parser.setRDFHandler( inAdapter );
 

@@ -14,15 +14,14 @@ import net.fortytwo.ripple.flow.Buffer;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
-import net.fortytwo.ripple.io.RdfImporter;
-import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.io.RDFImporter;
+import net.fortytwo.ripple.rdf.RDFSink;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.StringUtils;
-import net.fortytwo.ripple.util.RdfHttpUtils;
+import net.fortytwo.ripple.util.RDFHTTPUtils;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Namespace;
@@ -99,13 +98,13 @@ public class SwoogleIt extends PrimitiveStackMapping
 
 		final RippleList stackFinal = stack;
 URI ctx = mc.createUri( url.toString() );
-		final RdfImporter importer = new RdfImporter( mc, ctx );
+		final RDFImporter importer = new RDFImporter( mc, ctx );
 
 		// Output is buffered so that the entire document is imported into the
 		// model before results are processed.
 		final Buffer<StackContext, RippleException> buffer = new Buffer<StackContext, RippleException>( sink );
 
-		RdfSink responseWatcher = new RdfSink()
+		RDFSink responseWatcher = new RDFSink()
 		{
 			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
@@ -160,7 +159,7 @@ URI ctx = mc.createUri( url.toString() );
 		final SesameInputAdapter sc = new SesameInputAdapter( responseWatcher );
 
 // TODO: enclose in a timeout wrapper
-		RdfHttpUtils.read( url, sc, url.toString() );
+		RDFHTTPUtils.read( url, sc, url.toString() );
 
 		buffer.flush();
 	}

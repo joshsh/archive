@@ -10,8 +10,6 @@
 package net.fortytwo.ripple.cli;
 
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
@@ -27,7 +25,7 @@ import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.CollectorHistory;
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAST;
 import net.fortytwo.ripple.cli.jline.DirectiveCompletor;
 import net.fortytwo.ripple.control.Scheduler;
 import net.fortytwo.ripple.control.TaskQueue;
@@ -87,9 +85,9 @@ private boolean lastQueryContinued = false;
 		queryEngine = qe;
 
 		// Handling of queries
-		Sink<ListAst, RippleException> querySink = new Sink<ListAst, RippleException>()
+		Sink<ListAST, RippleException> querySink = new Sink<ListAST, RippleException>()
 		{
-			public void put( final ListAst ast ) throws RippleException
+			public void put( final ListAST ast ) throws RippleException
 			{
 				addCommand( new VisibleQueryCommand( ast, queryResultHistory, lastQueryContinued ) );
 				lastQueryContinued = false;
@@ -99,9 +97,9 @@ private boolean lastQueryContinued = false;
 		};
 
 		// Handling of "continuing" queries
-		Sink<ListAst, RippleException> continuingQuerySink = new Sink<ListAst, RippleException>()
+		Sink<ListAST, RippleException> continuingQuerySink = new Sink<ListAST, RippleException>()
 		{
-			public void put( final ListAst ast ) throws RippleException
+			public void put( final ListAST ast ) throws RippleException
 			{
 				addCommand( new VisibleQueryCommand( ast, queryResultHistory, lastQueryContinued ) );
 				lastQueryContinued = true;

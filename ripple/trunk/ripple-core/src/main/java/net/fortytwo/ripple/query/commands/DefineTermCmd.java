@@ -11,7 +11,7 @@ package net.fortytwo.ripple.query.commands;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Collector;
-import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAST;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
@@ -22,10 +22,10 @@ import org.openrdf.model.URI;
 
 public class DefineTermCmd extends Command
 {
-	private ListAst list;
+	private ListAST list;
 	private String name;
 
-	public DefineTermCmd( final String name, final ListAst list)
+	public DefineTermCmd( final String name, final ListAST list)
 	{
 		this.list = list;
 		this.name = name;
@@ -36,7 +36,7 @@ public class DefineTermCmd extends Command
         return name;
     }
 
-    public ListAst getList()
+    public ListAST getList()
     {
         return list;
     }

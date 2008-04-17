@@ -15,7 +15,7 @@ import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.HTTPUtils;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.StringUtils;
 import org.apache.commons.httpclient.HttpClient;
@@ -100,12 +100,12 @@ public class Uriqr extends PrimitiveStackMapping
 			+ StringUtils.urlEncode( s );
 
 		String []mimeTypes = { "application/xhtml+xml", "application/xml", "text/xml" };
-		HttpMethod method = HttpUtils.createGetMethod( urlStr );
-		HttpUtils.setAcceptHeader( method, mimeTypes );
+		HttpMethod method = HTTPUtils.createGetMethod( urlStr );
+		HTTPUtils.setAcceptHeader( method, mimeTypes );
 //		uc.setConnectTimeout( (int) Ripple.urlConnectTimeout() );
-		HttpUtils.registerMethod( method );
+		HTTPUtils.registerMethod( method );
 	
-		HttpClient client = HttpUtils.createClient();
+		HttpClient client = HTTPUtils.createClient();
 		
 		InputStream body;
 		

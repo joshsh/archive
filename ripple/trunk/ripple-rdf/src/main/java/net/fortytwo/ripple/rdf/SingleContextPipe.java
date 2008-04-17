@@ -18,13 +18,13 @@ import org.openrdf.model.ValueFactory;
 
 import net.fortytwo.ripple.flow.Sink;
 
-public class SingleContextPipe implements RdfSink
+public class SingleContextPipe implements RDFSink
 {
 	private Sink<Statement, RippleException> stSink;
 	private Sink<Namespace, RippleException> nsSink;
 	private Sink<String, RippleException> cmtSink;
 
-	public SingleContextPipe( final RdfSink sink,
+	public SingleContextPipe( final RDFSink sink,
 							final Resource context,
 							final ValueFactory valueFactory )
 	{

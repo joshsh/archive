@@ -9,25 +9,25 @@
 
 package net.fortytwo.ripple.rdf.diff;
 
-import net.fortytwo.ripple.rdf.RdfSink;
-import net.fortytwo.ripple.rdf.SynchronizedRdfSink;
+import net.fortytwo.ripple.rdf.RDFSink;
+import net.fortytwo.ripple.rdf.SynchronizedRDFSink;
 
 public class SynchronizedRdfDiffSink implements RdfDiffSink
 {
-	private RdfSink addSink, subSink;
+	private RDFSink addSink, subSink;
 
 	public SynchronizedRdfDiffSink( final RdfDiffSink sink, final Object synch )
 	{
-		addSink = new SynchronizedRdfSink( sink.adderSink(), synch );
-		subSink = new SynchronizedRdfSink( sink.subtractorSink(), synch );
+		addSink = new SynchronizedRDFSink( sink.adderSink(), synch );
+		subSink = new SynchronizedRDFSink( sink.subtractorSink(), synch );
 	}
 
-	public RdfSink adderSink()
+	public RDFSink adderSink()
 	{
 		return addSink;
 	}
 
-	public RdfSink subtractorSink()
+	public RDFSink subtractorSink()
 	{
 		return subSink;
 	}

@@ -1,9 +1,9 @@
 package net.fortytwo.restpipe;
 
-import net.fortytwo.rdfwiki.RdfRepresentation;
+import net.fortytwo.rdfwiki.RDFRepresentation;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfSource;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFSource;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
@@ -12,12 +12,9 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
-import org.restlet.resource.Resource;
 import org.restlet.resource.Variant;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +56,7 @@ public abstract class StatefulResource extends RPPResource {
     @Override
     public List<Variant> getVariants() {
         try {
-            return RdfUtils.getRdfVariants();
+            return RDFUtils.getRdfVariants();
         } catch (RippleException e) {
             e.logError();
             return new LinkedList<Variant>();
@@ -71,13 +68,13 @@ public abstract class StatefulResource extends RPPResource {
         MediaType type = variant.getMediaType();
 
         try {
-            RDFFormat format = RdfUtils.findRdfFormat(type);
+            RDFFormat format = RDFUtils.findRdfFormat(type);
 
             if (null == format) {
                 return null;
             }
 
-            return new RdfRepresentation(createRdfSource(), format);
+            return new RDFRepresentation(createRdfSource(), format);
         }
 
         catch (Throwable t) {
@@ -86,5 +83,5 @@ public abstract class StatefulResource extends RPPResource {
         }
     }
 
-    protected abstract RdfSource createRdfSource() throws RippleException;
+    protected abstract RDFSource createRdfSource() throws RippleException;
 }

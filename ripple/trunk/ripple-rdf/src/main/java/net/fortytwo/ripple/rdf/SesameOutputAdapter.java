@@ -19,7 +19,7 @@ import org.openrdf.rio.RDFHandler;
 /**
  * An RdfSink which passes its input into an RDFHandler.
  */
-public class SesameOutputAdapter implements RdfSink
+public class SesameOutputAdapter implements RDFSink
 {
 	private RDFHandler handler;
 

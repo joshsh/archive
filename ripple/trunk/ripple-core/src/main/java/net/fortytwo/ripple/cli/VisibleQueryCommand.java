@@ -11,7 +11,7 @@ package net.fortytwo.ripple.cli;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAST;
 import net.fortytwo.ripple.control.TaskSet;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RdfValue;
@@ -35,14 +35,14 @@ public class VisibleQueryCommand extends Command
 {
 	private static RdfValue RDF_FIRST = new RdfValue( RDF.FIRST );
 	
-	private ListAst ast;
+	private ListAST ast;
 	private CollectorHistory<RippleList, RippleException> resultHistory;
 	private boolean continued;
 	private TaskSet taskSet;
 
 	private Switch<RippleList, RippleException> results;
 
-	public VisibleQueryCommand( final ListAst query,
+	public VisibleQueryCommand( final ListAST query,
 							final CollectorHistory<RippleList, RippleException> history,
 							final boolean continued )
 	{

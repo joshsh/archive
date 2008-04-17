@@ -13,7 +13,7 @@ import net.fortytwo.ripple.model.Lexicon;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
@@ -38,7 +38,7 @@ System.out.println("--- d");
 			sc.setNamespace( "ns1", ns1 );
 			sc.setNamespace( "ns2", ns2 );
 System.out.println("--- f");
-			UriMap uriMap = new UriMap();
+			URIMap uriMap = new URIMap();
 			Model model = new SesameModel( sail, uriMap );
 System.out.println("--- g");
 			QueryEngine qe = new QueryEngine( model, new LazyEvaluator(), System.out, System.err );

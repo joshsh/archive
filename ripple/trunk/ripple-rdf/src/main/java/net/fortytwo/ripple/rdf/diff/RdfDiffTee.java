@@ -9,7 +9,7 @@
 
 package net.fortytwo.ripple.rdf.diff;
 
-import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.RDFSink;
 import net.fortytwo.ripple.rdf.RdfTee;
 
 public class RdfDiffTee implements RdfDiffSink
@@ -22,12 +22,12 @@ public class RdfDiffTee implements RdfDiffSink
 		subtractorTee = new RdfTee( sinkA.subtractorSink(), sinkB.subtractorSink() );
 	}
 
-	public RdfSink adderSink()
+	public RDFSink adderSink()
 	{
 		return adderTee;
 	}
 
-	public RdfSink subtractorSink()
+	public RDFSink subtractorSink()
 	{
 		return subtractorTee;
 	}

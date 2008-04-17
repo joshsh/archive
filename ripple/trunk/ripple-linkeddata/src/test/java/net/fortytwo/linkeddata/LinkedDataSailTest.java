@@ -10,7 +10,7 @@
 package net.fortytwo.linkeddata;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.linkeddata.sail.LinkedDataSail;
 
@@ -38,16 +38,16 @@ public class LinkedDataSailTest extends TestCase
         baseSail = new MemoryStore();
         baseSail.initialize();
 
-        UriMap uriMap = new UriMap();
+        URIMap URIMap = new URIMap();
 
         // This is an example where HttpDereferencer fails by requesting the
         // full URI of a resource (rather than stripping off the local part).
         // Here, we define a mapping to a local file, so dereferencing
         // succeeds.
-        uriMap.put( "http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging",
+        URIMap.put( "http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging",
                 LinkedDataSailTest.class.getResource( "tags.owl" ).toString() );
 
-        sail = new LinkedDataSail(baseSail, uriMap);
+        sail = new LinkedDataSail(baseSail, URIMap);
         sail.initialize();
     }
 

@@ -14,13 +14,13 @@ import java.io.PrintStream;
 import java.util.Iterator;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.UriMap;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.URIMap;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffContextFilter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSource;
-import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.HTTPUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -36,11 +36,11 @@ public class SparqlUpdater
 {
 	private RdfDiffContextFilter contextFilter;
 	private RdfDiffSink sink;
-	private UriMap uriMap;
+	private URIMap URIMap;
 
-	public SparqlUpdater( final UriMap uriMap, final RdfDiffSink sink )
+	public SparqlUpdater( final URIMap URIMap, final RdfDiffSink sink )
 	{
-		this.uriMap = uriMap;
+		this.URIMap = URIMap;
 		this.sink = sink;
 
 		contextFilter = new RdfDiffContextFilter();
@@ -62,9 +62,9 @@ public class SparqlUpdater
 			// Some statements cannot be written to the Semantic Web.
 			if ( null != context
 					&& context instanceof URI
-					&& RdfUtils.isHttpUri( (URI) context ) )
+					&& RDFUtils.isHttpUri( (URI) context ) )
 			{
-				String url = uriMap.get( context.toString() );
+				String url = URIMap.get( context.toString() );
 
 				try
 				{
@@ -91,14 +91,14 @@ source.writeTo( sink );
         String postData = createPostData( source );
 System.out.println( "posting update to url <" + url + ">: " + postData );
 
-		PostMethod method = HttpUtils.createSparqlUpdateMethod( url.toString() );
+		PostMethod method = HTTPUtils.createSparqlUpdateMethod( url.toString() );
         NameValuePair[] data = {   // FIXME: is this correct?
-                new NameValuePair( HttpUtils.BODY, postData )
+                new NameValuePair( HTTPUtils.BODY, postData )
               };
 		method.setRequestBody(data);
-		HttpUtils.registerMethod( method );
+		HTTPUtils.registerMethod( method );
 
-		HttpClient client = HttpUtils.createClient();
+		HttpClient client = HTTPUtils.createClient();
 		
 		int responseCode;
 
@@ -126,7 +126,7 @@ System.out.println( "response code = " + responseCode );
 		PrintStream ps = new PrintStream( bos );
 
 		SesameOutputAdapter adapter
-			= RdfUtils.createOutputAdapter( bos, RDFFormat.TURTLE );
+			= RDFUtils.createOutputAdapter( bos, RDFFormat.TURTLE );
 
 		ps.println( "INSERT {" );
 		adapter.startRDF();

@@ -13,9 +13,9 @@ import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.RippleProperties;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 import org.apache.log4j.Logger;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -66,14 +66,14 @@ public class LinkedDataSail implements StackableSail
 	
 	private Sail baseSail;
 	private WebClosure webClosure;
-	private UriMap uriMap;
+	private URIMap URIMap;
 	
 	private boolean initialized = false;
 	
 	/**
 	 * @param baseSail  (should be initialized before this object is used)
 	 */
-	public LinkedDataSail( final Sail baseSail, final UriMap uriMap )
+	public LinkedDataSail( final Sail baseSail, final URIMap URIMap )
 		throws RippleException
 	{
 		if (null == properties)
@@ -83,7 +83,7 @@ public class LinkedDataSail implements StackableSail
 		}
 		
 		this.baseSail = baseSail;
-		this.uriMap = uriMap;
+		this.URIMap = URIMap;
 
 		webClosure = createDefaultWebClosure();
 	}
@@ -100,7 +100,7 @@ public class LinkedDataSail implements StackableSail
 			throw new SailException( "LinkedDataSail has not been initialized" );
 		}
 		
-		return new LinkedDataSailConnection( baseSail, webClosure, uriMap );
+		return new LinkedDataSailConnection( baseSail, webClosure, URIMap );
 	}
 
 	public File getDataDir()
@@ -163,7 +163,7 @@ return null;
 	public synchronized LinkedDataSailConnection getConnection( final RdfDiffSink listenerSink )
 		throws SailException
 	{
-		return new LinkedDataSailConnection( baseSail, webClosure, uriMap, listenerSink );
+		return new LinkedDataSailConnection( baseSail, webClosure, URIMap, listenerSink );
 	}
 
 public WebClosure getClosureManager()
@@ -185,25 +185,25 @@ public WebClosure getClosureManager()
 
 	private WebClosure createDefaultWebClosure() throws RippleException
 	{
-		WebClosure wc = new WebClosure( uriMap, getValueFactory() );
+		WebClosure wc = new WebClosure( URIMap, getValueFactory() );
 
 		// Add URI dereferencers.
-		HttpUriDereferencer hdref = new HttpUriDereferencer( wc );
+		HTTPURIDereferencer hdref = new HTTPURIDereferencer( wc );
 		for ( int i = 0; i < BADEXT.length; i++ )
 		{
 			hdref.blackListExtension( BADEXT[i] );
 		}
 		wc.addDereferencer( "http", hdref );
-		wc.addDereferencer( "jar", new JarUriDereferencer() );
-		wc.addDereferencer( "file", new FileUriDereferencer() );
+		wc.addDereferencer( "jar", new JarURIDereferencer() );
+		wc.addDereferencer( "file", new FileURIDereferencer() );
 
 		// Add rdfizers.
-		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.RDFXML ), new VerbatimRdfizer( RDFFormat.RDFXML ) );
-		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.TURTLE ), new VerbatimRdfizer( RDFFormat.TURTLE ) );
-		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.N3 ), new VerbatimRdfizer( RDFFormat.N3 ), 0.9 );
-		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIG ), new VerbatimRdfizer( RDFFormat.TRIG ), 0.8 );
-		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.TRIX ), new VerbatimRdfizer( RDFFormat.TRIX ), 0.8 );
-		wc.addRdfizer( RdfUtils.findMediaType( RDFFormat.NTRIPLES ), new VerbatimRdfizer( RDFFormat.NTRIPLES ), 0.5 );
+		wc.addRdfizer( RDFUtils.findMediaType( RDFFormat.RDFXML ), new VerbatimRdfizer( RDFFormat.RDFXML ) );
+		wc.addRdfizer( RDFUtils.findMediaType( RDFFormat.TURTLE ), new VerbatimRdfizer( RDFFormat.TURTLE ) );
+		wc.addRdfizer( RDFUtils.findMediaType( RDFFormat.N3 ), new VerbatimRdfizer( RDFFormat.N3 ), 0.9 );
+		wc.addRdfizer( RDFUtils.findMediaType( RDFFormat.TRIG ), new VerbatimRdfizer( RDFFormat.TRIG ), 0.8 );
+		wc.addRdfizer( RDFUtils.findMediaType( RDFFormat.TRIX ), new VerbatimRdfizer( RDFFormat.TRIX ), 0.8 );
+		wc.addRdfizer( RDFUtils.findMediaType( RDFFormat.NTRIPLES ), new VerbatimRdfizer( RDFFormat.NTRIPLES ), 0.5 );
         Rdfizer imageRdfizer = new ImageRdfizer();
         // Mainstream EXIF-compatible image types: JPEG, TIFF
         wc.addRdfizer( MediaType.IMAGE_JPEG, imageRdfizer );

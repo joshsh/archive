@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.model;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -26,7 +26,7 @@ public abstract class Library
 {
 	private static final RdfValue OWL_SAMEAS = new RdfValue( OWL.SAMEAS );
 
-	public abstract void load( UriMap uf, ModelConnection mc )
+	public abstract void load( URIMap uf, ModelConnection mc )
 		throws RippleException;
 
 	protected PrimitiveStackMapping registerPrimitive( final Class c,

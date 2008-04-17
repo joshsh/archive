@@ -18,11 +18,10 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.ModelBridge;
-import net.fortytwo.ripple.rdf.RdfSink;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFSink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
-import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.RdfHttpUtils;
+import net.fortytwo.ripple.util.HTTPUtils;
+import net.fortytwo.ripple.util.RDFHTTPUtils;
 
 import org.apache.commons.httpclient.HttpMethod;
 import org.openrdf.model.Namespace;
@@ -63,9 +62,9 @@ public class Quads extends PrimitiveStackMapping
 
 		SesameInputAdapter sc = createAdapter( arg, sink );
 
-		HttpMethod method = HttpUtils.createGetMethod( uri );
-		HttpUtils.setRdfAcceptHeader( method );
-		RdfHttpUtils.read( method, sc, uri, null );
+		HttpMethod method = HTTPUtils.createGetMethod( uri );
+		HTTPUtils.setRdfAcceptHeader( method );
+		RDFHTTPUtils.read( method, sc, uri, null );
 	}
 
 	static SesameInputAdapter createAdapter( final StackContext arg,
@@ -75,7 +74,7 @@ public class Quads extends PrimitiveStackMapping
 		final RippleList rest = arg.getStack().getRest();
         final ModelBridge bridge = mc.getModel().getBridge();
 
-		RdfSink rdfSink = new RdfSink()
+		RDFSink rdfSink = new RDFSink()
 		{
 			// Push statements.
 			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()

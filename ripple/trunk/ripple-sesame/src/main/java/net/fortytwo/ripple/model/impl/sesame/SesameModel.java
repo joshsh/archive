@@ -22,7 +22,7 @@ import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.ModelBridge;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 
 import org.apache.log4j.Logger;
 import org.openrdf.sail.Sail;
@@ -40,7 +40,7 @@ public class SesameModel implements Model
 		return bridge;
 	}
 
-	public SesameModel( final Sail baseSail, final UriMap uriMap )
+	public SesameModel( final Sail baseSail, final URIMap uriMap )
 		throws RippleException
 	{
 		LOGGER.debug( "Creating new Model" );
@@ -76,7 +76,7 @@ public class SesameModel implements Model
 		}
 	}
 	
-	private void loadSymbols( final UriMap uriMap )
+	private void loadSymbols( final URIMap uriMap )
 		throws RippleException
 	{
 		ModelConnection mc = getConnection( "for Model.loadSymbols" );

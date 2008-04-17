@@ -11,7 +11,7 @@ package net.fortytwo.ripple.query.commands;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Collector;
-import net.fortytwo.ripple.cli.ast.UriAst;
+import net.fortytwo.ripple.cli.ast.URIAST;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.model.ModelConnection;
@@ -23,9 +23,9 @@ import org.openrdf.model.impl.NamespaceImpl;
 public class DefinePrefixCmd extends Command
 {
 	private String prefix;
-	private UriAst uri;
+	private URIAST uri;
 
-	public DefinePrefixCmd( final String prefix, final UriAst uri )
+	public DefinePrefixCmd( final String prefix, final URIAST uri )
 	{
 		this.prefix = prefix;
 		this.uri = uri;
@@ -36,7 +36,7 @@ public class DefinePrefixCmd extends Command
         return prefix;
     }
 
-    public UriAst getUri()
+    public URIAST getUri()
     {
         return uri;
     }

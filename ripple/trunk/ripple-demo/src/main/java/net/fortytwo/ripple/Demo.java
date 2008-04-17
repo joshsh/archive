@@ -19,7 +19,7 @@ import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.StackEvaluator;
 import net.fortytwo.ripple.rdf.CloseableIterationSource;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.SailInserter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.linkeddata.sail.LinkedDataSail;
@@ -76,7 +76,7 @@ public final class Demo
 	{
 		String value = Ripple.getProperties().getString( name );
 
-		RDFFormat format = RdfUtils.findFormat( value );
+		RDFFormat format = RDFUtils.findFormat( value );
 
 		if ( null == format )
 		{
@@ -102,7 +102,7 @@ public final class Demo
 			loadFromFile( baseSail, store, cacheFormat );
 		}
 		
-		UriMap uriMap = new UriMap();
+		URIMap uriMap = new URIMap();
 		Sail sail = new LinkedDataSail( baseSail, uriMap );
 		
 		try

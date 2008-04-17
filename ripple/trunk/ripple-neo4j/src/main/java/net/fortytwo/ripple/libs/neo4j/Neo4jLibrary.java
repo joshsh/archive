@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.neo4j;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 
 // kate: tab-width 4
 /**
@@ -22,7 +22,7 @@ public class Neo4jLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/neo4j#";
 
-	public void load( final UriMap uf, final ModelConnection mc )
+	public void load( final URIMap uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.put( NS, getClass().getResource( "neo4j.ttl" ) + "#" );

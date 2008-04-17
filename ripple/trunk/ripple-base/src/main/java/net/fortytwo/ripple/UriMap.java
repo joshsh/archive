@@ -17,9 +17,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class UriMap
+public class URIMap
 {
-	private static final Logger LOGGER = Logger.getLogger( UriMap.class );
+	private static final Logger LOGGER = Logger.getLogger( URIMap.class );
 
 	private Map<String, String> map;
 
@@ -28,7 +28,7 @@ public class UriMap
 
 	private boolean upToDate = true;
 
-	public UriMap()
+	public URIMap()
 	{
 		map = new Hashtable<String, String>();
 	}

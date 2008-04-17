@@ -12,7 +12,7 @@ package net.fortytwo.linkeddata.sail;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.NullSink;
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.RDFSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 
 import org.openrdf.model.Namespace;
@@ -23,13 +23,13 @@ import org.openrdf.model.Statement;
 public class SailConnectionOutputAdapter implements RdfDiffSink
 {
 	private LinkedDataSailConnection sailConnection;
-	private RdfSink addSink, subtractSink;
+	private RDFSink addSink, subtractSink;
 
 	public SailConnectionOutputAdapter( final LinkedDataSailConnection sc )
 	{
 		sailConnection = sc;
 
-		addSink = new RdfSink()
+		addSink = new RDFSink()
 		{
 			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
@@ -67,7 +67,7 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 			}
 		};
 
-		subtractSink = new RdfSink()
+		subtractSink = new RDFSink()
 		{
 			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
@@ -104,12 +104,12 @@ public class SailConnectionOutputAdapter implements RdfDiffSink
 		};
 	}
 
-	public RdfSink adderSink()
+	public RDFSink adderSink()
 	{
 		return addSink;
 	}
 
-	public RdfSink subtractorSink()
+	public RDFSink subtractorSink()
 	{
 		return subtractSink;
 	}

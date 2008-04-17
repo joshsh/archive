@@ -10,12 +10,11 @@
 package net.fortytwo.ripple.query.commands;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAST;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
 import net.fortytwo.ripple.query.Command;
-import net.fortytwo.ripple.query.Evaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.query.StackEvaluator;
 import net.fortytwo.ripple.flow.Collector;
@@ -24,13 +23,13 @@ import net.fortytwo.ripple.flow.Source;
 
 public class RippleQueryCmd extends Command
 {
-	private ListAst listAst;
+	private ListAST listAst;
 	private Sink<RippleList, RippleException> sink;
 	private Source<RippleList, RippleException> composedWith;
 	private StackEvaluator evaluator;
 	private Collector<RippleList, RippleException> expressions;
 
-	public RippleQueryCmd( final ListAst listAst,
+	public RippleQueryCmd( final ListAST listAst,
 							final Sink<RippleList, RippleException> sink,
 							final Source<RippleList, RippleException> composedWith )
 	{

@@ -24,7 +24,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.HTTPUtils;
 
 import org.openrdf.model.URI;
 import org.apache.commons.httpclient.HttpMethod;
@@ -94,10 +94,10 @@ public class Show extends PrimitiveStackMapping
 		
 		public ImagePanel( final URI uri ) throws RippleException
 		{
-            HttpMethod method = HttpUtils.createRdfGetMethod( uri.toString() );
-            HttpUtils.setAcceptHeader( method, mimeTypes );
-            HttpUtils.registerMethod( method );
-            HttpClient client = HttpUtils.createClient();
+            HttpMethod method = HTTPUtils.createRdfGetMethod( uri.toString() );
+            HTTPUtils.setAcceptHeader( method, mimeTypes );
+            HTTPUtils.registerMethod( method );
+            HttpClient client = HTTPUtils.createClient();
 
             InputStream is;
 

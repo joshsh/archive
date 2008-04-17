@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFUtils;
 
 /**
  * Author: josh
@@ -34,7 +34,7 @@ public class DebugSink implements RepresentationSink<RippleException>
     {
         try
         {
-            return RdfUtils.getRdfVariants();
+            return RDFUtils.getRdfVariants();
         }
 
         catch (RippleException e)

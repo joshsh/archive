@@ -29,15 +29,15 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.rio.RDFFormat;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfCollector;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFCollector;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.rdfwiki.RdfRepresentation;
+import net.fortytwo.rdfwiki.RDFRepresentation;
 
 public class Receiver extends RPPResource
 {
     protected RepresentationSink<RippleException> sink;
-    protected RdfCollector selfRepresentation = null;
+    protected RDFCollector selfRepresentation = null;
 
     public Receiver( final Context context,
 			final Request request,
@@ -173,7 +173,7 @@ public class Receiver extends RPPResource
     {
         if ( null == selfRepresentation )
         {
-            selfRepresentation = new RdfCollector();
+            selfRepresentation = new RDFCollector();
 
             Sink<Namespace, RippleException> nsSink = selfRepresentation.namespaceSink();
             Sink<Statement, RippleException> stSink = selfRepresentation.statementSink();
@@ -196,9 +196,9 @@ public class Receiver extends RPPResource
         MediaType type = variant.getMediaType();
 //        MediaType type = ( null == variant ) ? new MediaType( "application/rdf+xml" ) : variant.getMediaType();
 
-        RDFFormat format = RdfUtils.findRdfFormat( type );
+        RDFFormat format = RDFUtils.findRdfFormat( type );
 
-        return ( null == format ) ? null : new RdfRepresentation( selfRepresentation, format );
+        return ( null == format ) ? null : new RDFRepresentation( selfRepresentation, format );
     }
 
     protected static java.net.URI createURI( final String s ) throws RippleException

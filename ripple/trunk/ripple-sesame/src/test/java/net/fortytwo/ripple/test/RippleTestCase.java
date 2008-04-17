@@ -24,7 +24,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 //import net.fortytwo.ripple.model.impl.sesame.SesameModel;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 import net.fortytwo.linkeddata.sail.LinkedDataSail;
 
 import java.util.Iterator;
@@ -141,7 +141,7 @@ public abstract class RippleTestCase extends TestCase
 
 	private static Sail sail = null;
 	private static Model model = null;
-	private static UriMap uriMap = null;
+	private static URIMap uriMap = null;
 	
 	protected static Sail getTestSail() throws Exception
 	{
@@ -160,7 +160,7 @@ public abstract class RippleTestCase extends TestCase
 	{
 		if ( null == model )
 		{
-			uriMap = new UriMap();
+			uriMap = new URIMap();
 
             // TODO: we should not have to use LinkedDataSail for testing
             LinkedDataSail ldSail = new LinkedDataSail( getTestSail(), uriMap );
@@ -172,7 +172,7 @@ public abstract class RippleTestCase extends TestCase
 		return model;
 	}
 	
-	protected static UriMap getTestUriMap() throws Exception
+	protected static URIMap getTestUriMap() throws Exception
 	{
 		//getTestModel();
 		return uriMap;

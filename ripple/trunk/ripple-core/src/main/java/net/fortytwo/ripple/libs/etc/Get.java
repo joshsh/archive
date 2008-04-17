@@ -14,7 +14,7 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.util.HttpUtils;
+import net.fortytwo.ripple.util.HTTPUtils;
 import net.fortytwo.ripple.flow.Sink;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
@@ -55,10 +55,10 @@ public class Get extends PrimitiveStackMapping
 		String uriStr = mc.toUri( stack.getFirst() ).toString();
 		stack = stack.getRest();
 
-		HttpMethod method = HttpUtils.createGetMethod( uriStr );
-		HttpUtils.registerMethod( method );
+		HttpMethod method = HTTPUtils.createGetMethod( uriStr );
+		HTTPUtils.registerMethod( method );
 		
-		HttpClient client = HttpUtils.createClient();
+		HttpClient client = HTTPUtils.createClient();
 		
 		InputStream body;
 		

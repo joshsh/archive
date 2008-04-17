@@ -19,7 +19,7 @@ import net.fortytwo.ripple.cli.Interpreter;
 import net.fortytwo.ripple.cli.ParserExceptionSink;
 import net.fortytwo.ripple.cli.RecognizerAdapter;
 import net.fortytwo.ripple.cli.RecognizerEvent;
-import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAST;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.query.commands.RippleQueryCmd;
@@ -55,9 +55,9 @@ public class QueryPipe implements Sink<String, RippleException>
                 mc.close();
 
 		// Handling of queries
-		Sink<ListAst, RippleException> querySink = new Sink<ListAst, RippleException>()
+		Sink<ListAST, RippleException> querySink = new Sink<ListAST, RippleException>()
 		{
-			public void put( final ListAst ast ) throws RippleException
+			public void put( final ListAST ast ) throws RippleException
 			{
 //System.out.println( "### received: " + ast );
 				synchronized ( mutex )
@@ -79,9 +79,9 @@ public class QueryPipe implements Sink<String, RippleException>
 		};
 
 		// Handling of "continuing" queries
-		Sink<ListAst, RippleException> continuingQuerySink = new Sink<ListAst, RippleException>()
+		Sink<ListAST, RippleException> continuingQuerySink = new Sink<ListAST, RippleException>()
 		{
-			public void put( final ListAst ast ) throws RippleException
+			public void put( final ListAST ast ) throws RippleException
 			{
 				synchronized ( mutex )
 				{

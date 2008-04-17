@@ -22,15 +22,15 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 
-import net.fortytwo.ripple.cli.ast.ListAst;
-import net.fortytwo.ripple.cli.ast.StringAst;
+import net.fortytwo.ripple.cli.ast.ListAST;
+import net.fortytwo.ripple.cli.ast.StringAST;
 import net.fortytwo.ripple.model.Model;
 import net.fortytwo.ripple.model.impl.sesame.SesameModel;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.LazyEvaluator;
 import net.fortytwo.ripple.query.QueryEngine;
 import net.fortytwo.ripple.test.RippleTestCase;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 
 public class DefinitionsTest extends RippleTestCase
 {
@@ -43,13 +43,13 @@ public class DefinitionsTest extends RippleTestCase
 			sail.initialize();
 			SailConnection sc = sail.getConnection();
 
-			UriMap uriMap = new UriMap();
+			URIMap uriMap = new URIMap();
 			Model model = new SesameModel( sail, uriMap );
 			QueryEngine qe = new QueryEngine( model, new LazyEvaluator(), System.out, System.err );
 
 			
-			ListAst foobar = new ListAst( new StringAst( "foo"), new ListAst( new StringAst( "bar" ), new ListAst() ) );
-			ListAst foobar2 = new ListAst( new StringAst( "foo2"), new ListAst( new StringAst( "bar2" ), new ListAst() ) );
+			ListAST foobar = new ListAST( new StringAST( "foo"), new ListAST( new StringAST( "bar" ), new ListAST() ) );
+			ListAST foobar2 = new ListAST( new StringAST( "foo2"), new ListAST( new StringAST( "bar2" ), new ListAST() ) );
 			URI foobarUri = sail.getValueFactory().createURI( qe.getDefaultNamespace() + "foobar" );
 			Literal foo = sail.getValueFactory().createLiteral( "foo", XMLSchema.STRING );
 			Literal foo2 = sail.getValueFactory().createLiteral( "foo2", XMLSchema.STRING );

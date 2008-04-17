@@ -16,7 +16,7 @@ import net.fortytwo.ripple.model.LexiconUpdater;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.LibraryLoader;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 
 import java.util.Collection;
 
@@ -28,7 +28,7 @@ import java.util.Collection;
 public class Neo4jModel implements Model {
 	private ModelBridge bridge;
 
-    public Neo4jModel(final UriMap uriMap) throws RippleException {
+    public Neo4jModel(final URIMap uriMap) throws RippleException {
         bridge = new ModelBridge();
         loadSymbols(uriMap);
     }
@@ -58,7 +58,7 @@ public class Neo4jModel implements Model {
     }
 
     // FIXME: code duplicated from SesameModel
-    private void loadSymbols( final UriMap uriMap )
+    private void loadSymbols( final URIMap uriMap )
 		throws RippleException
 	{
 		ModelConnection mc = getConnection( "for Model.loadSymbols" );

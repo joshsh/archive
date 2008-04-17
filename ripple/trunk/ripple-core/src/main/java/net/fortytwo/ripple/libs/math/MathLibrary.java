@@ -10,7 +10,7 @@
 package net.fortytwo.ripple.libs.math;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
@@ -30,7 +30,7 @@ public class MathLibrary extends Library
             tanVal, atanVal,
             logVal, expVal;
 
-    public void load( final UriMap uf, final ModelConnection mc )
+    public void load( final URIMap uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.put(

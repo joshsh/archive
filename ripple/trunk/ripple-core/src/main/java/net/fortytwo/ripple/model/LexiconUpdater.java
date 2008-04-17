@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.RDFSink;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 
 import org.openrdf.model.Namespace;
@@ -32,7 +32,7 @@ public class LexiconUpdater implements RdfDiffSink
 	private static final Pattern PREFIX_PATTERN
 		= Pattern.compile( "[A-Za-z][-0-9A-Z_a-z]*" );
 
-	private RdfSink addSink, subSink;
+	private RDFSink addSink, subSink;
 
 	public LexiconUpdater( final Lexicon lexicon ) throws RippleException
     {
@@ -41,7 +41,7 @@ public class LexiconUpdater implements RdfDiffSink
 		final boolean allowDuplicateNamespaces = Ripple.getProperties().getBoolean(
                 Ripple.ALLOW_DUPLICATE_NAMESPACES );
 
-		addSink = new RdfSink()
+		addSink = new RDFSink()
 		{
 			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
@@ -115,7 +115,7 @@ public class LexiconUpdater implements RdfDiffSink
 		};
 
 // TODO
-		subSink = new RdfSink()
+		subSink = new RDFSink()
 		{
 			private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 			{
@@ -155,12 +155,12 @@ public class LexiconUpdater implements RdfDiffSink
 		};
 	}
 
-	public RdfSink adderSink()
+	public RDFSink adderSink()
 	{
 		return addSink;
 	}
 
-	public RdfSink subtractorSink()
+	public RDFSink subtractorSink()
 	{
 		return subSink;
 	}

@@ -17,7 +17,7 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RdfValue;
 import net.fortytwo.ripple.model.GetStatementsQuery;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfSource;
+import net.fortytwo.ripple.rdf.RDFSource;
 import net.fortytwo.ripple.flow.Sink;
 import org.openrdf.model.URI;
 import org.openrdf.model.Statement;
@@ -261,7 +261,7 @@ public class Neo4jModelConnection implements ModelConnection {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public RdfSource getSource() {
+    public RDFSource getSource() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }// TODO: Namespaces should not be part of the ModelConnection API
 

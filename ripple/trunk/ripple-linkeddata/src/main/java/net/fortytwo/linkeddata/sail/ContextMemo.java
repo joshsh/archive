@@ -152,7 +152,7 @@ public class ContextMemo
 		this.mediaType = mt;
 	}
 
-	public void setUriDereferencer( final UriDereferencer dref )
+	public void setUriDereferencer( final URIDereferencer dref )
 	{
 		this.uriDereferencer = dref.getClass().getName();
 	}

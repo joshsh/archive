@@ -11,12 +11,12 @@ package net.fortytwo.linkeddata.sail;
 
 import net.fortytwo.ripple.Ripple;
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 import net.fortytwo.ripple.StringUtils;
-import net.fortytwo.ripple.rdf.BNodeToUriFilter;
-import net.fortytwo.ripple.rdf.RdfBuffer;
-import net.fortytwo.ripple.rdf.RdfSink;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.BNodeToURIFilter;
+import net.fortytwo.ripple.rdf.RDFBuffer;
+import net.fortytwo.ripple.rdf.RDFSink;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.rdf.SingleContextPipe;
 import org.apache.log4j.Logger;
@@ -58,17 +58,17 @@ public class WebClosure  // TODO: the name is a little misleading...
 			= new HashMap<MediaType, MediaTypeInfo>();
 
 	// Maps URI schemes to Dereferencers
-	private Map<String, UriDereferencer> dereferencers = new HashMap<String, UriDereferencer>();
+	private Map<String, URIDereferencer> dereferencers = new HashMap<String, URIDereferencer>();
 
-    private UriMap uriMap;
+    private URIMap URIMap;
 	private ValueFactory valueFactory;
     private boolean useBlankNodes;
 
     private String acceptHeader = null;
 
-	public WebClosure( final UriMap uriMap, final ValueFactory vf ) throws RippleException
+	public WebClosure( final URIMap URIMap, final ValueFactory vf ) throws RippleException
 	{
-        this.uriMap = uriMap;
+        this.URIMap = URIMap;
 		valueFactory = vf;
         useBlankNodes = Ripple.getProperties().getBoolean(Ripple.USE_BLANK_NODES);
     }
@@ -144,7 +144,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 		addRdfizer( mediaType, rdfizer, 1.0 );
 	}
 
-	public void addDereferencer( final String scheme, final UriDereferencer uriDereferencer )
+	public void addDereferencer( final String scheme, final URIDereferencer uriDereferencer )
 	{
 		dereferencers.put( scheme, uriDereferencer );
 	}
@@ -159,7 +159,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 		return memos;
 	}
 
-	public ContextMemo.Status extend( final URI uri, final RdfSink resultSink ) throws RippleException
+	public ContextMemo.Status extend( final URI uri, final RDFSink resultSink ) throws RippleException
 	{
 		ContextMemo.Status status = extendPrivate( uri, resultSink );
 
@@ -177,13 +177,13 @@ public class WebClosure  // TODO: the name is a little misleading...
 		return status;
 	}
 
-	private ContextMemo.Status extendPrivate( final URI uri, final RdfSink resultSink ) throws RippleException
+	private ContextMemo.Status extendPrivate( final URI uri, final RDFSink resultSink ) throws RippleException
 	{
 		// TODO: memos should be inferred in a scheme-specific way
-		String memoUri = RdfUtils.inferContext( uri );
+		String memoUri = RDFUtils.inferContext( uri );
 
 		ContextMemo memo;
-		UriDereferencer dref;
+		URIDereferencer dref;
 
 		// Note: this URL should be treated as a "black box" once created; it
 		// need not resemble the URI it was created from.
@@ -202,7 +202,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 
 			try
 			{
-				mapped = uriMap.get( memoUri );
+				mapped = URIMap.get( memoUri );
 			}
 
 			catch ( RippleException e )
@@ -302,12 +302,12 @@ public class WebClosure  // TODO: the name is a little misleading...
 		}
 
 		// Note: any pre-existing context information is discarded.
-		RdfSink scp = new SingleContextPipe( resultSink, context, valueFactory );
+		RDFSink scp = new SingleContextPipe( resultSink, context, valueFactory );
 		
-		RdfBuffer results = new RdfBuffer( scp );
+		RDFBuffer results = new RDFBuffer( scp );
 		RDFHandler hdlr = new SesameInputAdapter( useBlankNodes
 				? results
-				: new BNodeToUriFilter( results, valueFactory ) );
+				: new BNodeToURIFilter( results, valueFactory ) );
 
 		InputStream is;
 
@@ -344,7 +344,7 @@ public class WebClosure  // TODO: the name is a little misleading...
 		return logStatus( uri, status );
 	}
 
-	private UriDereferencer chooseDereferencer( final String uri ) throws RippleException
+	private URIDereferencer chooseDereferencer( final String uri ) throws RippleException
 	{
 		String scheme;
 

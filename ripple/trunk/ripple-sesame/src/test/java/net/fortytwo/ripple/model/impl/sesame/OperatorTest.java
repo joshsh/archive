@@ -15,9 +15,9 @@ import java.io.InputStream;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFFormat;
 
-import net.fortytwo.ripple.io.RdfImporter;
+import net.fortytwo.ripple.io.RDFImporter;
 import net.fortytwo.ripple.libs.stack.Dup;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.flow.Collector;
@@ -28,7 +28,6 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.ListDequotation;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RdfPredicateMapping;
 import net.fortytwo.ripple.model.NullStackMapping;
 
@@ -61,9 +60,9 @@ public class OperatorTest extends RippleTestCase
 			ModelConnection mc = model.getConnection( "for CreateOperatorTest" );
 			
 			InputStream is = new ByteArrayInputStream( TEST_1.getBytes() );
-			RdfImporter importer = new RdfImporter( mc );
+			RDFImporter importer = new RDFImporter( mc );
 			SesameInputAdapter sc = new SesameInputAdapter( importer );
-			RdfUtils.read( is, sc, "", RDFFormat.TURTLE );
+			RDFUtils.read( is, sc, "", RDFFormat.TURTLE );
 			mc.commit();
 			is.close();
 			

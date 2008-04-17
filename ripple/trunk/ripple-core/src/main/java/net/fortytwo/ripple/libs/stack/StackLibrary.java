@@ -14,7 +14,7 @@ import net.fortytwo.ripple.model.Library;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleValue;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 
 /**
  * A collection of stack manipulation primitives.  Compare with Joy and other
@@ -28,7 +28,7 @@ public class StackLibrary extends Library
 	private static RippleValue branchVal, trueVal, falseVal;
 	private static PrimitiveStackMapping optApplyVal, starApplyVal, plusApplyVal, timesApplyVal, rangeApplyVal;
 
-	public void load( final UriMap uf, final ModelConnection mc )
+	public void load( final URIMap uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.put(

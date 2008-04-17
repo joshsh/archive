@@ -6,26 +6,26 @@ import java.util.Properties;
 import java.util.List;
 import java.util.LinkedList;
 
-import net.fortytwo.ripple.cli.ast.Ast;
-import net.fortytwo.ripple.cli.ast.BooleanAst;
-import net.fortytwo.ripple.cli.ast.BlankNodeAst;
-import net.fortytwo.ripple.cli.ast.DoubleAst;
-import net.fortytwo.ripple.cli.ast.IntegerAst;
-import net.fortytwo.ripple.cli.ast.KeywordAst;
-import net.fortytwo.ripple.cli.ast.LambdaAst;
-import net.fortytwo.ripple.cli.ast.ListAst;
-import net.fortytwo.ripple.cli.ast.OperatorAst;
-import net.fortytwo.ripple.cli.ast.PropertyAnnotatedAst;
-import net.fortytwo.ripple.cli.ast.QNameAst;
-import net.fortytwo.ripple.cli.ast.StringAst;
-import net.fortytwo.ripple.cli.ast.TemplateAst;
-import net.fortytwo.ripple.cli.ast.TypedLiteralAst;
-import net.fortytwo.ripple.cli.ast.UriAst;
+import net.fortytwo.ripple.cli.ast.AST;
+import net.fortytwo.ripple.cli.ast.BooleanAST;
+import net.fortytwo.ripple.cli.ast.BlankNodeAST;
+import net.fortytwo.ripple.cli.ast.DoubleAST;
+import net.fortytwo.ripple.cli.ast.IntegerAST;
+import net.fortytwo.ripple.cli.ast.KeywordAST;
+import net.fortytwo.ripple.cli.ast.LambdaAST;
+import net.fortytwo.ripple.cli.ast.ListAST;
+import net.fortytwo.ripple.cli.ast.OperatorAST;
+import net.fortytwo.ripple.cli.ast.AnnotatedAST;
+import net.fortytwo.ripple.cli.ast.QNameAST;
+import net.fortytwo.ripple.cli.ast.StringAST;
+import net.fortytwo.ripple.cli.ast.TemplateAST;
+import net.fortytwo.ripple.cli.ast.TypedLiteralAST;
+import net.fortytwo.ripple.cli.ast.URIAST;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.commands.CountStatementsCmd;
 import net.fortytwo.ripple.query.commands.DefinePrefixCmd;
 import net.fortytwo.ripple.query.commands.DefineTermCmd;
-import net.fortytwo.ripple.query.commands.ExportNsCmd;
+import net.fortytwo.ripple.query.commands.ExportCmd;
 import net.fortytwo.ripple.query.commands.QuitCmd;
 import net.fortytwo.ripple.query.commands.RedefineTermCmd;
 import net.fortytwo.ripple.query.commands.ShowContextsCmd;
@@ -105,7 +105,7 @@ SCHARACTER
 
 protected
 UCHARACTER
-	: (' '..';') | '=' | ('?'..'[')  // excludes: '>', '\\' and '<' (the last of which is not excluded by Turtle)
+	: (' '..';') | '=' | ('?'..'[')  // excludes: '>', '\\' and '<' (the lAST of which is not excluded by Turtle)
 	| (']'..'\uFFFF')  // Note: '\u10FFFF' in Turtle
 	| "\\u" HEX HEX HEX HEX
 	| "\\U" HEX HEX HEX HEX HEX HEX HEX HEX
@@ -265,14 +265,14 @@ options
 		adapter.putCommand( cmd );
 	}
 
-	public void matchQuery( final ListAst ast )
+	public void matchQuery( final ListAST AST )
 	{
-		adapter.putQuery( ast );
+		adapter.putQuery( AST );
 	}
 
-	public void matchContinuingQuery( final ListAst ast )
+	public void matchContinuingQuery( final ListAST AST )
 	{
-		adapter.putContinuingQuery( ast );
+		adapter.putContinuingQuery( AST );
 	}
 
 	public void matchQuit()
@@ -301,7 +301,7 @@ nt_Ws
 
 nt_Statement
 {
-	ListAst r;
+	ListAST r;
 }
 	// A directive is executed as soon as PERIOD is matched in the individual
 	// rule.
@@ -313,15 +313,15 @@ nt_Statement
  		| SEMI { matchContinuingQuery( r ); } )
 
 	// Empty statements are effectively ignored.
-	| PERIOD { matchQuery( new ListAst() ); }
-	| SEMI { matchContinuingQuery( new ListAst() ); }
+	| PERIOD { matchQuery( new ListAST() ); }
+	| SEMI { matchContinuingQuery( new ListAST() ); }
 	;
 
 
-nt_List returns [ ListAst list ]
+nt_List returns [ ListAST list ]
 {
-	Ast first;
-	ListAst rest = null;
+	AST first;
+	ListAST rest = null;
 	list = null;
 	boolean modified = false;
 }
@@ -345,23 +345,23 @@ nt_List returns [ ListAst list ]
 			{
 				if ( null == rest )
 				{
-					rest = new ListAst();
+					rest = new ListAST();
 				}
 
 				if ( modified )
 				{
-					rest = new ListAst( new OperatorAst(), rest );
+					rest = new ListAST( new OperatorAST(), rest );
 				}
 
-				list = new ListAst( first, rest );
+				list = new ListAST( first, rest );
 			}
 	;
 
 
-nt_TemplateList returns [ ListAst list ]
+nt_TemplateList returns [ ListAST list ]
 {
-	Ast first;
-	ListAst rest = null;
+	AST first;
+	ListAST rest = null;
 	list = null;
 }
 	:   // Head of the list.
@@ -381,21 +381,21 @@ nt_TemplateList returns [ ListAst list ]
 			{
 				if ( null == rest )
 				{
-					rest = new ListAst();
+					rest = new ListAST();
 				}
 
-				list = new ListAst( first, rest );
+				list = new ListAST( first, rest );
 			}
 	;
-nt_ParenthesizedTemplateList returns [ ListAst r ]
+nt_ParenthesizedTemplateList returns [ ListAST r ]
 {
 	r = null;
 }
 	: L_PAREN (nt_Ws)? (
 		( r = nt_TemplateList /*(nt_Ws)?*/ R_PAREN )
-		| R_PAREN { r = new ListAst(); } )
+		| R_PAREN { r = new ListAST(); } )
 	;
-nt_TemplateNode returns [ Ast r ]
+nt_TemplateNode returns [ AST r ]
 {
 	r = null;
 }
@@ -405,7 +405,7 @@ nt_TemplateNode returns [ Ast r ]
 	;
 		
 
-nt_Node returns [ Ast r ]
+nt_Node returns [ AST r ]
 {
 	r = null;
 	Properties props;
@@ -415,7 +415,7 @@ nt_Node returns [ Ast r ]
 		| r=nt_ParenthesizedList
 		| r=nt_Operator
 		)
-	  (( (WS)? L_BRACKET ) => ( (WS)? props=nt_Properties { r = new PropertyAnnotatedAst( r, props ); } )
+	  (( (WS)? L_BRACKET ) => ( (WS)? props=nt_Properties { r = new AnnotatedAST( r, props ); } )
 	  | ())
 	;
 
@@ -446,20 +446,20 @@ nt_PropertyName returns [ String name ]
 	;
 	
 	
-nt_ParenthesizedList returns [ ListAst r ]
+nt_ParenthesizedList returns [ ListAST r ]
 {
 	r = null;
 }
 	: L_PAREN (nt_Ws)? (
 		( r = nt_List /*(nt_Ws)?*/ R_PAREN )
-		| R_PAREN { r = new ListAst(); } )
+		| R_PAREN { r = new ListAST(); } )
 	;
 
 
-nt_Literal returns [ Ast r ]
+nt_Literal returns [ AST r ]
 {
 	r = null;
-	Ast dataType = null;
+	AST dataType = null;
 }
 	: ( t:STRING
 
@@ -470,8 +470,8 @@ nt_Literal returns [ Ast r ]
 	)
 		{
 			r = ( null == dataType )
-				? new StringAst( t.getText(), adapter.getLanguageTag() )
-				: new TypedLiteralAst( t.getText(), dataType );
+				? new StringAST( t.getText(), adapter.getLanguageTag() )
+				: new TypedLiteralAST( t.getText(), dataType );
 		}
 	| u:NUMBER
 		{
@@ -480,18 +480,18 @@ nt_Literal returns [ Ast r ]
 
 			if ( s.contains( "." ) )
 			{
-				r = new DoubleAst( ( new Double( s ) ).doubleValue() );
+				r = new DoubleAST( ( new Double( s ) ).doubleValue() );
 			}
 
 			else
 			{
-				r = new IntegerAst( ( new Integer( s ) ).intValue() );
+				r = new IntegerAST( ( new Integer( s ) ).intValue() );
 			}
 		}
 	;
 
 
-nt_Resource returns [ Ast r ]
+nt_Resource returns [ AST r ]
 {
 	r = null;
 }
@@ -502,13 +502,13 @@ nt_Resource returns [ Ast r ]
 	;
 
 
-nt_URIRef returns [ UriAst r ]
+nt_URIRef returns [ URIAST r ]
 {
 	r = null;
 }
 	: uri:URIREF
 		{
-			r = new UriAst( uri.getText() );
+			r = new URIAST( uri.getText() );
 		}
 	;
 
@@ -521,16 +521,16 @@ nt_PrefixName returns [ String prefix ]
 	;
 
 
-nt_Keyword returns [ Ast r ]
+nt_Keyword returns [ AST r ]
 {
 	String keyword;
 	r = null;
 }
-	: keyword=nt_Name { r = new KeywordAst( keyword ); }
+	: keyword=nt_Name { r = new KeywordAST( keyword ); }
 	;
 
 
-nt_QName returns [ Ast r ]
+nt_QName returns [ AST r ]
 {
 	String nsPrefix = "", localName = "";
 	r = null;
@@ -542,19 +542,19 @@ nt_QName returns [ Ast r ]
 //		| (~(NAME_OR_PREFIX | NAME_NOT_PREFIX)) => {} )
 	  )
 		{
-			r = new QNameAst( nsPrefix, localName );
+			r = new QNameAST( nsPrefix, localName );
 		}
 	;
 
 
-nt_BNodeRef returns [ Ast r ]
+nt_BNodeRef returns [ AST r ]
 {
 	r = null;
 	String localName = null;
 }
 	: NODEID_PREFIX localName=nt_Name
 		{
-			r = new BlankNodeAst( localName );
+			r = new BlankNodeAST( localName );
 		}
 	;
 
@@ -568,17 +568,17 @@ nt_Name returns [ String name ]
 	;
 
 
-nt_Operator returns [ OperatorAst ast ]
+nt_Operator returns [ OperatorAST AST ]
 {
-	ast = null;
+	AST = null;
 	boolean inverse = false;
 }
-	: (OP_APPLY_POST { ast = new OperatorAst(); }
-	    | OP_INVERSE_APPLY {inverse = true; ast = new OperatorAst( OperatorAst.Type.InverseApply ); }
+	: (OP_APPLY_POST { AST = new OperatorAST(); }
+	    | OP_INVERSE_APPLY {inverse = true; AST = new OperatorAST( OperatorAST.Type.InverseApply ); }
 	    )
-	  (OP_SUFFIX_OPTIONAL { ast = new OperatorAst( inverse ? OperatorAst.Type.InverseOption : OperatorAst.Type.Option ); }
-	    | OP_SUFFIX_STAR { ast = new OperatorAst( inverse ? OperatorAst.Type.InverseStar : OperatorAst.Type.Star ); }
-	    | OP_SUFFIX_PLUS { ast = new OperatorAst( inverse ? OperatorAst.Type.InversePlus : OperatorAst.Type.Plus ); }
+	  (OP_SUFFIX_OPTIONAL { AST = new OperatorAST( inverse ? OperatorAST.Type.InverseOption : OperatorAST.Type.Option ); }
+	    | OP_SUFFIX_STAR { AST = new OperatorAST( inverse ? OperatorAST.Type.InverseStar : OperatorAST.Type.Star ); }
+	    | OP_SUFFIX_PLUS { AST = new OperatorAST( inverse ? OperatorAST.Type.InversePlus : OperatorAST.Type.Plus ); }
 	    | L_CURLY (nt_Ws)? min:NUMBER (nt_Ws)? ( COMMA (nt_Ws)? max:NUMBER (nt_Ws)? )? R_CURLY
 		  {
 			// Note: floating-point values are syntactically valid, but will be
@@ -587,13 +587,13 @@ nt_Operator returns [ OperatorAst ast ]
 
 			if ( null == max )
 			{
-				ast = new OperatorAst( minVal, inverse );
+				AST = new OperatorAST( minVal, inverse );
 			}
 
 			else
 			{
 				int maxVal = new Double( max.getText() ).intValue();
-				ast = new OperatorAst( minVal, maxVal, inverse );
+				AST = new OperatorAST( minVal, maxVal, inverse );
 			}
 	      }
 	    )?
@@ -601,7 +601,7 @@ nt_Operator returns [ OperatorAst ast ]
 
 nt_Directive
 {
-	UriAst ns;
+	URIAST ns;
 
 	// Default to the empty (but non-null) prefix.
 	String nsPrefix = "";
@@ -614,9 +614,9 @@ nt_Directive
 	//       namespace, which is strange and probably not what the programmer
 	//       intended.
 	// TODO: however, in combination with template parameters, an empty expression may have a meaning other than rdf:nil
-	ListAst rhs;
+	ListAST rhs;
 
-	ListAst lhs = new ListAst();
+	ListAST lhs = new ListAST();
 	boolean redefine = false;
 }
 	: DRCTV_COUNT nt_Ws "statements" (nt_Ws)? PERIOD
@@ -629,10 +629,10 @@ nt_Directive
 	        nt_Ws lhs=nt_TemplateList /*(nt_Ws)?*/ COLON (nt_Ws)? rhs=nt_List /*(nt_Ws)?*/ PERIOD
 		{
             lhs = lhs.invert();
-            keyword = ( (KeywordAst) lhs.getFirst() ).getName();
+            keyword = ( (KeywordAST) lhs.getFirst() ).getName();
             lhs = lhs.getRest().invert();
 
-		    rhs = new TemplateAst( lhs, rhs );
+		    rhs = new TemplateAST( lhs, rhs );
 
 			matchCommand( redefine
 			        ? new RedefineTermCmd( keyword, rhs )
@@ -641,7 +641,7 @@ nt_Directive
 
 	| DRCTV_EXPORT ( nt_Ws ( nsPrefix=nt_PrefixName (nt_Ws)? )? )? COLON (nt_Ws)? exFile:STRING (nt_Ws)? PERIOD
 		{
-			matchCommand( new ExportNsCmd( nsPrefix, exFile.getText() ) );
+			matchCommand( new ExportCmd( nsPrefix, exFile.getText() ) );
 		}
 
 	| DRCTV_HELP (nt_Ws)? PERIOD

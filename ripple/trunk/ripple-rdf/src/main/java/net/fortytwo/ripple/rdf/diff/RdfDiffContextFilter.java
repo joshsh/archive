@@ -15,7 +15,7 @@ import java.util.Map;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.rdf.RdfSink;
+import net.fortytwo.ripple.rdf.RDFSink;
 
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -25,7 +25,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 {
 	private Map<Resource, RdfDiffCollector> contextToCollectorMap;
 
-	private RdfSink addSink = new RdfSink()
+	private RDFSink addSink = new RDFSink()
 	{
 		private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
@@ -76,7 +76,7 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 		}
 	};
 
-	private RdfSink subSink = new RdfSink()
+	private RDFSink subSink = new RDFSink()
 	{
 		private Sink<Statement, RippleException> stSink = new Sink<Statement, RippleException>()
 		{
@@ -157,12 +157,12 @@ public final class RdfDiffContextFilter implements RdfDiffSink
 		contextToCollectorMap.remove( context );
 	}
 
-	public RdfSink adderSink()
+	public RDFSink adderSink()
 	{
 		return addSink;
 	}
 
-	public RdfSink subtractorSink()
+	public RDFSink subtractorSink()
 	{
 		return subSink;
 	}

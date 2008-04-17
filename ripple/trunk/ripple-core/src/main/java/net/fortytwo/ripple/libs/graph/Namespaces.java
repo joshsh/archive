@@ -14,11 +14,10 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.StackContext;
-import net.fortytwo.ripple.rdf.RdfSink;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFSink;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
-import net.fortytwo.ripple.util.HttpUtils;
-import net.fortytwo.ripple.util.RdfHttpUtils;
+import net.fortytwo.ripple.util.HTTPUtils;
+import net.fortytwo.ripple.util.RDFHTTPUtils;
 import net.fortytwo.ripple.flow.NullSink;
 import net.fortytwo.ripple.flow.Sink;
 
@@ -60,9 +59,9 @@ public class Namespaces extends PrimitiveStackMapping
 
 		SesameInputAdapter sc = createAdapter( arg, sink );
 
-		HttpMethod method = HttpUtils.createGetMethod( uri );
-		HttpUtils.setRdfAcceptHeader( method );
-		RdfHttpUtils.read( method, sc, uri, null );
+		HttpMethod method = HTTPUtils.createGetMethod( uri );
+		HTTPUtils.setRdfAcceptHeader( method );
+		RDFHTTPUtils.read( method, sc, uri, null );
 		/*
 		URLConnection uc = HttpUtils.openConnection( uri.toString() );
 		HttpUtils.prepareUrlConnectionForRdfRequest( uc );
@@ -75,7 +74,7 @@ public class Namespaces extends PrimitiveStackMapping
 		final ModelConnection mc = arg.getModelConnection();
 		final RippleList rest = arg.getStack().getRest();
 
-		RdfSink rdfSink = new RdfSink()
+		RDFSink rdfSink = new RDFSink()
 		{
 			// Discard statements.
 			private Sink<Statement, RippleException> stSink = new NullSink<Statement, RippleException>();

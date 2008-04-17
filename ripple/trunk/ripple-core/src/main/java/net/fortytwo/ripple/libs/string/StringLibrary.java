@@ -12,7 +12,7 @@ package net.fortytwo.ripple.libs.string;
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 
 /**
  * A collection of string manipulation primitives.
@@ -21,7 +21,7 @@ public class StringLibrary extends Library
 {
 	private static final String NS = "http://fortytwo.net/2007/08/ripple/string#";
 
-	public void load( final UriMap uf, final ModelConnection mc )
+	public void load( final URIMap uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.put(

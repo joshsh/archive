@@ -13,7 +13,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Library;
 import net.fortytwo.ripple.model.PrimitiveStackMapping;
-import net.fortytwo.ripple.UriMap;
+import net.fortytwo.ripple.URIMap;
 
 /**
  * A collection of miscellaneous primitives.
@@ -24,7 +24,7 @@ public class EtcLibrary extends Library
 
     private static PrimitiveStackMapping invertVal;
 
-    public void load( final UriMap uf, final ModelConnection mc )
+    public void load( final URIMap uf, final ModelConnection mc )
 		throws RippleException
 	{
 		uf.put(

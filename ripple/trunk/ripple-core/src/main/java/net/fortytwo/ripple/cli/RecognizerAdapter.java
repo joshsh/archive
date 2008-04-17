@@ -13,12 +13,12 @@ import java.io.PrintStream;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.flow.Sink;
-import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAST;
 import net.fortytwo.ripple.query.Command;
 
 public class RecognizerAdapter
 {
-	private Sink<ListAst, RippleException> querySink, continuingQuerySink;
+	private Sink<ListAST, RippleException> querySink, continuingQuerySink;
 	private Sink<Command, RippleException> commandSink;
 	private Sink<RecognizerEvent, RippleException> eventSink;
 	private PrintStream errorStream;
@@ -26,8 +26,8 @@ public class RecognizerAdapter
 	// A helper variable for the lexer and parser.
 	private String languageTag;
 
-	public RecognizerAdapter( final Sink<ListAst, RippleException> querySink,
-								final Sink<ListAst, RippleException> continuingQuerySink,
+	public RecognizerAdapter( final Sink<ListAST, RippleException> querySink,
+								final Sink<ListAST, RippleException> continuingQuerySink,
 								final Sink<Command, RippleException> commandSink,
 								final Sink<RecognizerEvent, RippleException> eventSink,
 								final PrintStream errorStream )
@@ -39,7 +39,7 @@ public class RecognizerAdapter
 		this.errorStream = errorStream;
 	}
 
-	public void putQuery( final ListAst ast )
+	public void putQuery( final ListAST ast )
 	{
 		try
 		{
@@ -53,7 +53,7 @@ public class RecognizerAdapter
 		}
 	}
 
-	public void putContinuingQuery( final ListAst ast )
+	public void putContinuingQuery( final ListAST ast )
 	{
 		try
 		{

@@ -10,36 +10,36 @@
 package net.fortytwo.ripple.rdf.diff;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfCollector;
-import net.fortytwo.ripple.rdf.RdfSink;
-import net.fortytwo.ripple.rdf.RdfSource;
+import net.fortytwo.ripple.rdf.RDFCollector;
+import net.fortytwo.ripple.rdf.RDFSink;
+import net.fortytwo.ripple.rdf.RDFSource;
 
 public class RdfDiffCollector implements RdfDiffSource, RdfDiffSink
 {
-	private RdfCollector adderCollector, subtractorCollector;
+	private RDFCollector adderCollector, subtractorCollector;
 
 	public RdfDiffCollector()
 	{
-		adderCollector = new RdfCollector();
-		subtractorCollector = new RdfCollector();
+		adderCollector = new RDFCollector();
+		subtractorCollector = new RDFCollector();
 	}
 
-	public RdfSink adderSink()
+	public RDFSink adderSink()
 	{
 		return adderCollector;
 	}
 
-	public RdfSink subtractorSink()
+	public RDFSink subtractorSink()
 	{
 		return subtractorCollector;
 	}
 
-	public RdfSource adderSource()
+	public RDFSource adderSource()
 	{
 		return adderCollector;
 	}
 
-	public RdfSource subtractorSource()
+	public RDFSource subtractorSource()
 	{
 		return subtractorCollector;
 	}

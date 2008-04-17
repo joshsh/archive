@@ -17,8 +17,8 @@ import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.RdfValue;
-import net.fortytwo.ripple.io.RdfImporter;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.io.RDFImporter;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
 import net.fortytwo.ripple.test.RippleTestCase;
 import net.fortytwo.ripple.flow.Collector;
@@ -36,9 +36,9 @@ public class RippleListTest extends RippleTestCase
 			ModelConnection mc = getTestModel().getConnection( "for FromRdfTest" );
 
 			InputStream is = RippleListTest.class.getResourceAsStream( "listTest.ttl" );
-			RdfImporter importer = new RdfImporter( mc );
+			RDFImporter importer = new RDFImporter( mc );
 			SesameInputAdapter sc = new SesameInputAdapter( importer );
-			RdfUtils.read( is, sc, "", RDFFormat.TURTLE );
+			RDFUtils.read( is, sc, "", RDFFormat.TURTLE );
 			mc.commit();
 			is.close();
 

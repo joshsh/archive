@@ -9,7 +9,7 @@
 
 package net.fortytwo.ripple.cli;
 
-import net.fortytwo.ripple.cli.ast.ListAst;
+import net.fortytwo.ripple.cli.ast.ListAST;
 import net.fortytwo.ripple.query.Command;
 import net.fortytwo.ripple.query.PipedIOStream;
 import net.fortytwo.ripple.flow.Collector;
@@ -42,8 +42,8 @@ public class InterpreterTest extends TestCase
 
 		Collector<Exception, RippleException> exceptions = new Collector<Exception, RippleException>();
 		RecognizerAdapter ra = new RecognizerAdapter(
-				new NullSink<ListAst, RippleException>(),
-				new NullSink<ListAst, RippleException>(),
+				new NullSink<ListAST, RippleException>(),
+				new NullSink<ListAST, RippleException>(),
 				new NullSink<Command, RippleException>(),
 				new NullSink<RecognizerEvent, RippleException>(),
 				System.err );

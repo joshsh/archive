@@ -17,6 +17,7 @@ import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.RippleProperties;
 import net.fortytwo.ripple.model.enums.ExpressionOrder;
 import net.fortytwo.ripple.io.RipplePrintStream;
+import net.fortytwo.ripple.io.RDFImporter;
 import net.fortytwo.ripple.model.ModelConnection;
 import net.fortytwo.ripple.model.Operator;
 import net.fortytwo.ripple.model.RdfValue;
@@ -120,7 +121,7 @@ public class SesameList extends RippleList
 	{
 		if ( null == rdfEquivalent )
 		{
-net.fortytwo.ripple.io.RdfImporter importer = new net.fortytwo.ripple.io.RdfImporter( mc );
+RDFImporter importer = new RDFImporter( mc );
 			putRdfStatements( importer.statementSink(), mc );
 			
 			// This is important, because the caller of toRdf() may expect to

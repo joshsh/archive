@@ -31,8 +31,8 @@ import net.fortytwo.ripple.model.RippleList;
 import net.fortytwo.ripple.model.RippleValue;
 import net.fortytwo.ripple.model.GetStatementsQuery;
 import net.fortytwo.ripple.rdf.BNodeClosureFilter;
-import net.fortytwo.ripple.rdf.RdfSource;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFSource;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.diff.RdfDiffSink;
 import net.fortytwo.linkeddata.sail.SailConnectionListenerAdapter;
@@ -613,7 +613,7 @@ public class SesameModelConnection implements ModelConnection
 			{
 				sailConnection.addStatement(
 					(Resource) subjValue, (URI) predValue, objValue,
-					RdfUtils.inferContextUri( (URI) subjValue, valueFactory ) );
+					RDFUtils.inferContextUri( (URI) subjValue, valueFactory ) );
 			}
 	
 			else
@@ -732,7 +732,7 @@ public class SesameModelConnection implements ModelConnection
     private RDFFormat getExportFormat() throws RippleException
     {
         String formatStr = Ripple.getProperties().getString( Ripple.EXPORT_FORMAT );
-        RDFFormat format = RdfUtils.findFormat( formatStr );
+        RDFFormat format = RDFUtils.findFormat( formatStr );
         
         if ( null == format )
         {
@@ -745,7 +745,7 @@ public class SesameModelConnection implements ModelConnection
     public void exportNamespace( final String ns, final OutputStream os )
 		throws RippleException
 	{
-		SesameOutputAdapter adapter = RdfUtils.createOutputAdapter(
+		SesameOutputAdapter adapter = RDFUtils.createOutputAdapter(
                 os, getExportFormat() );
 	
 		final Sink<Resource, RippleException> bnodeClosure = new BNodeClosureFilter(
@@ -1313,9 +1313,9 @@ public class SesameModelConnection implements ModelConnection
 		}
 	}
 	
-	public RdfSource getSource()
+	public RDFSource getSource()
 	{
-		return new RdfSource()
+		return new RDFSource()
 		{
 			private Source<Statement, RippleException> stSource = new Source<Statement, RippleException>()
 			{
