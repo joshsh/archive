@@ -11,9 +11,6 @@ package net.fortytwo.restpipe;
 
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.logging.Level;
 import java.net.URISyntaxException;
 
 import org.restlet.Context;
@@ -21,21 +18,15 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
-import org.restlet.resource.Resource;
 import org.restlet.resource.Variant;
 import org.restlet.resource.Representation;
 import org.restlet.resource.StringRepresentation;
-import org.openrdf.model.ValueFactory;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Namespace;
-import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.impl.NamespaceImpl;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.sail.SailConnection;
 
 import net.fortytwo.ripple.RippleException;
 import net.fortytwo.ripple.rdf.RdfCollector;
@@ -43,14 +34,10 @@ import net.fortytwo.ripple.rdf.RdfUtils;
 import net.fortytwo.ripple.flow.Sink;
 import net.fortytwo.rdfwiki.RdfRepresentation;
 
-public class Receiver extends Resource
+public class Receiver extends RPPResource
 {
     protected RepresentationSink<RippleException> sink;
-    protected org.openrdf.model.URI selfUri;
     protected RdfCollector selfRepresentation = null;
-
-    // TODO: re-use a shared ValueFactory
-    protected ValueFactory valueFactory = new ValueFactoryImpl();
 
     public Receiver( final Context context,
 			final Request request,
@@ -59,9 +46,6 @@ public class Receiver extends Resource
         super( context, request, response );
 
         this.sink = RippleServer.getSink( request.getResourceRef().getLastSegment() );
-
-        selfUri = valueFactory.createURI(
-      	        request.getResourceRef().toString() );
     }
 
     @Override
@@ -224,54 +208,5 @@ public class Receiver extends Resource
         } catch (URISyntaxException e) {
             throw new RippleException( e );
         }
-    }
-
-
-
-
-
-
-
-
-    protected String getParameter( final String key ) throws RippleException
-    {
-        return getParameters().get( key );
-    }
-
-    protected int getIntParameter( final String key ) throws RippleException
-    {
-        try {
-            return new Integer( getParameters().get( key ) ).intValue();
-        } catch ( NumberFormatException e ) {
-            throw new RippleException( e );
-        }
-    }
-
-
-    private Map<String, String> parameters;
-
-    // TODO: it seems like Restlet should make this unnecessary
-    private Map<String, String> getParameters()
-    {
-        if ( null == parameters )
-        {
-            parameters = new HashMap<String, String>();
-            String uri = selfUri.toString();
-
-            if ( uri.contains( "?" ) )
-            {
-                String query = uri.substring( uri.indexOf( "?" ) + 1 );
-                String[] pairs = query.split( "&" );
-                for ( int i = 0; i < pairs.length; i++ )
-                {
-                    String[] pair = pairs[i].split( "=" );
-                    String key = pair[0];
-                    String value = pair[1];
-                    parameters.put( key, value );
-                }
-            }
-        }
-
-        return parameters;
     }
 }

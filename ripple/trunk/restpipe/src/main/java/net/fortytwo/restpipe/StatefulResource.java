@@ -27,11 +27,10 @@ import java.util.logging.Logger;
  * Date: Feb 6, 2008
  * Time: 2:13:18 PM
  */
-public abstract class StatefulResource extends Resource {
+public abstract class StatefulResource extends RPPResource {
     private static final Logger LOGGER = Logger.getLogger(StatefulResource.class.getName());
 
     protected URI selfUri;
-    protected Map<String, String> params;
 
     public StatefulResource(final Context context,
                             final Request request,
@@ -39,7 +38,6 @@ public abstract class StatefulResource extends Resource {
         super(context, request, response);
 
         selfUri = new URIImpl(request.getResourceRef().toString());
-        params = getParameters();
     }
 
     public boolean allowDelete() {
@@ -89,30 +87,4 @@ public abstract class StatefulResource extends Resource {
     }
 
     protected abstract RdfSource createRdfSource() throws RippleException;
-
-    // FIXME: this code is also in Receiver.java
-    private Map<String, String> parameters;
-    protected Map<String, String> getParameters()
-    {
-        if ( null == parameters )
-        {
-            parameters = new HashMap<String, String>();
-            String uri = selfUri.toString();
-
-            if ( uri.contains( "?" ) )
-            {
-                String query = uri.substring( uri.indexOf( "?" ) + 1 );
-                String[] pairs = query.split( "&" );
-                for ( int i = 0; i < pairs.length; i++ )
-                {
-                    String[] pair = pairs[i].split( "=" );
-                    String key = pair[0];
-                    String value = pair[1];
-                    parameters.put( key, value );
-                }
-            }
-        }
-
-        return parameters;
-    }
 }

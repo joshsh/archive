@@ -45,20 +45,15 @@ public class Collector<T, E extends Exception> implements Sink<T, E>, Source<T, 
 		count++;
 	}
 
-	public void writeTo( final Sink<T, E> sink ) throws E
+    public void writeTo( final Sink<T, E> sink ) throws E
 	{
 		Node cur = first;
 		while ( null != cur )
 		{
-            try {
-                // Any new items which are put() as a result of this call will
-                // eventually be passed into the sink as well (even if clear()
-                // is called).
-                sink.put( cur.value );
-            } catch ( Exception e ) {
-                System.err.println( "FIXME: exception in Collector.java should not need to be caught" );
-                e.printStackTrace( System.err );
-            }
+            // Any new items which are put() as a result of this call will
+            // eventually be passed into the sink as well (even if clear()
+            // is called).
+            sink.put( cur.value );
 
             cur = cur.next;
 		}
