@@ -1,3 +1,12 @@
+/*
+ * $URL$
+ * $Revision$
+ * $Author$
+ *
+ * Copyright (C) 2007-2008 Joshua Shinavier
+ */
+
+
 /**
  *
  */

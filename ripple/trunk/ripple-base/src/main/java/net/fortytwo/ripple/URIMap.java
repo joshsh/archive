@@ -1,7 +1,7 @@
 /*
- * $URL: http://svn.fortytwo.net/projects/ripple/trunk/ripple-base/src/main/java/net/fortytwo/ripple/UriMap.java $
- * $Revision: 1052 $
- * $Author: josh $
+ * $URL$
+ * $Revision$
+ * $Author$
  *
  * Copyright (C) 2007-2008 Joshua Shinavier
  */

@@ -22,52 +22,45 @@ For more information, including documentation and code samples, see:
 Run
 ================================================================================
 
-To begin an interpreter session, use one of the shortcut scripts (ripple or
+To begin an interpreter session, use one of the shortcut scripts (ripple.sh or
 ripple.bat):
 
-    $ ./ripple
+    $ ./ripple.sh
 
 or invoke the executable JAR directly:
 
     $ java -jar target/ripple-*-standalone.jar
 
-By default, Ripple uses a TriG cache file to save state between sessions.  To
-create a new cache, use the @saveas directive while talking to the interpreter:
+By default, this demo uses the LinkedDataSail semantic web querying and
+caching layer, with Sesame's MemoryStore as a cache for the duration of the
+command-line session.  To override Ripple's default behaviors, pass a Ripple
+configuration file to the startup script as an argument:
 
-    >>  @saveas "cache.trig".
+    $ ./ripple.sh example.properties
 
-To restore a previous session, specify the cache as an argument at the command
-line:
+Insofar as Ripple's configuration properties are documented at this time, you'll
+find them on the wiki at
 
-    $ ./ripple cache.trig
-
-When you quit the application, the triple store is written back to the cache.
-
-    >>  @quit.
+    http://code.google.com/p/ripple/w/list
 
 
 ================================================================================
 Build
 ================================================================================
 
-To build Ripple from scratch, issue the command:
+To build the demo application from scratch, issue the command:
 
     $ mvn install
 
-from the directory containing pom.xml (note: requires Maven 2 and Java 5).  To
-customize Ripple, modify this file:
-
-    ./src/main/resources/net/fortytwo/ripple/ripple.properties
-
-...then recompile.
+from the directory containing pom.xml (note: requires Maven 2 and Java 5).
 
 
 ================================================================================
 Bugs
 ================================================================================
 
-Please submit bug reports to the tracker at:
+Please submit bug reports to the issue tracker at:
 
-    http://projects.semwebcentral.org/tracker/?atid=573&group_id=125
+    http://code.google.com/p/ripple/issues/list
 
-or send mail to josh@fortytwo.net.
+or send mail to josh@fortytwo.net.  Thanks, and happy scripting!

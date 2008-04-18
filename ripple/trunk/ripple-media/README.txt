@@ -1,3 +1,14 @@
+================================================================================
+Overview
+================================================================================
+
+This package is an extension to the Ripple scripting language which includes a
+few additional, 'multimedia' primitives.  It is an experimental work in progress
+and is therefore undocumented.  Feel free to send mail to josh@fortytwo.net if
+you'd like to know more.
+
+
+
 
 java -cp target/ripple-media-*-standalone.jar net.fortytwo.ripple.audio.HelloDigits
 java -cp target/ripple-media-*-standalone.jar net.fortytwo.ripple.audio.Test kevin
