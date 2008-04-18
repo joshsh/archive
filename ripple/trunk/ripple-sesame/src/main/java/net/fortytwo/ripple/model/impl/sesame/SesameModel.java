@@ -1,7 +1,7 @@
 /*
- * $URL: http://svn.fortytwo.net/projects/ripple/trunk/ripple-core/src/main/java/net/fortytwo/ripple/model/impl/sesame/SesameModel.java $
- * $Revision: 1054 $
- * $Author: josh $
+ * $URL$
+ * $Revision$
+ * $Author$
  *
  * Copyright (C) 2007-2008 Joshua Shinavier
  */
