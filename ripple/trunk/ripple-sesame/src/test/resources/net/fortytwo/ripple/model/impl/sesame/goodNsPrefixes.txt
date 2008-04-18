@@ -1,8 +1,0 @@
-rdf
-twentyfourcharacterslong
-underscores_are_ok_
-dashes-are-ok-
-lowercase
-UPPERCASE
-MixedCase
-numbers12345

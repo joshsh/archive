@@ -1,4 +1,0 @@
-@prefix : <urn:example.org.test#>.
-
-:x :y :z.
-:x :x :x.
