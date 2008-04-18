@@ -10,11 +10,11 @@
 package net.fortytwo.rdfwiki;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.SailInserter;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
 import net.fortytwo.ripple.rdf.CloseableIterationSource;
-import net.fortytwo.ripple.rdf.RdfCollector;
+import net.fortytwo.ripple.rdf.RDFCollector;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
@@ -45,7 +45,7 @@ public class InformationResource extends Resource
     {
         super( context, request, response );
 
-        sail = RdfWiki.getWiki( context ).getSail( request );
+        sail = RDFWiki.getWiki( context ).getSail( request );
         
         selfUri = sail.getValueFactory().createURI(
         		request.getResourceRef().toString() );
@@ -77,7 +77,7 @@ public class InformationResource extends Resource
     {
         try
         {
-            return RdfUtils.getRdfVariants();
+            return RDFUtils.getRdfVariants();
         }
 
         catch (RippleException e)
@@ -94,7 +94,7 @@ public class InformationResource extends Resource
         RDFFormat format = null;
         try
         {
-            format = RdfUtils.findRdfFormat( type );
+            format = RDFUtils.findRdfFormat( type );
         }
 
         catch (RippleException e)
@@ -128,7 +128,7 @@ public class InformationResource extends Resource
     	try
     	{
     		// Note: the resource URI might not be very useful as a base URI.
-    		RdfRepresentation rep = new RdfRepresentation( entity, selfUri.toString() );
+    		RDFRepresentation rep = new RDFRepresentation( entity, selfUri.toString() );
 
     		sc = sail.getConnection();
     		open = true;
@@ -221,11 +221,11 @@ public class InformationResource extends Resource
     		CloseableIterationSource source	= new CloseableIterationSource(
 //    			sc.getStatements( null, null, null, false, uri ) );
     			sc.getStatements( selfUri, null, null, false ) );
- 			final RdfCollector collector = new RdfCollector();
+ 			final RDFCollector collector = new RDFCollector();
     		source.writeTo( collector.statementSink() );
 			sc.close();
 			open = false;
-    		return new RdfRepresentation( collector, format );
+    		return new RDFRepresentation( collector, format );
     	}
     	
     	catch ( Throwable t)

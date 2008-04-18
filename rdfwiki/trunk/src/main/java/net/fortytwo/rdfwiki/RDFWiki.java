@@ -15,16 +15,16 @@ import org.restlet.Context;
 import org.restlet.data.Protocol;
 import org.restlet.data.Request;
 
-public class RdfWiki
+public class RDFWiki
 {
 	public static final String WIKI_ATTR = "wiki";
 
 	private SailSelector sailSelector;
 	
 // FIXME: temporary
-private static RdfWiki singleWiki;
+private static RDFWiki singleWiki;
 
-	public static RdfWiki getWiki( final Context context )
+	public static RDFWiki getWiki( final Context context )
 	{
 //		return (RdfWiki) context.getAttributes().get( WIKI_ATTR );
 		return singleWiki;
@@ -35,7 +35,7 @@ private static RdfWiki singleWiki;
 		return sailSelector.selectSail( request );
 	}
 		
-	public RdfWiki( final SailSelector selector ) throws Exception
+	public RDFWiki( final SailSelector selector ) throws Exception
 	{
 singleWiki = this;
 

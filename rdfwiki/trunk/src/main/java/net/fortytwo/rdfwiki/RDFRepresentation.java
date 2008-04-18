@@ -10,11 +10,11 @@
 package net.fortytwo.rdfwiki;
 
 import net.fortytwo.ripple.RippleException;
-import net.fortytwo.ripple.rdf.RdfUtils;
+import net.fortytwo.ripple.rdf.RDFUtils;
 import net.fortytwo.ripple.rdf.SesameOutputAdapter;
-import net.fortytwo.ripple.rdf.RdfSource;
+import net.fortytwo.ripple.rdf.RDFSource;
 import net.fortytwo.ripple.rdf.SesameInputAdapter;
-import net.fortytwo.ripple.rdf.RdfCollector;
+import net.fortytwo.ripple.rdf.RDFCollector;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
@@ -27,18 +27,18 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RdfRepresentation extends OutputRepresentation
+public class RDFRepresentation extends OutputRepresentation
 {
 	private static final Logger LOGGER
-		= Logger.getLogger( RdfRepresentation.class.getName() );
+		= Logger.getLogger( RDFRepresentation.class.getName() );
 	
-	private RdfSource source;
+	private RDFSource source;
 	private RDFFormat format;
 	
-	public RdfRepresentation( final Representation other, final String baseUri ) throws Exception
+	public RDFRepresentation( final Representation other, final String baseUri ) throws Exception
 	{
 		super( other.getMediaType() );
-		RDFFormat format = RdfUtils.findRdfFormat( other.getMediaType() );
+		RDFFormat format = RDFUtils.findRdfFormat( other.getMediaType() );
 		
 		if ( null == format )
 		{
@@ -47,7 +47,7 @@ public class RdfRepresentation extends OutputRepresentation
 		
 		RDFParser parser = Rio.createParser( format );
 		
-		RdfCollector coll  = new RdfCollector();
+		RDFCollector coll  = new RDFCollector();
 		SesameInputAdapter sa = new SesameInputAdapter( coll );
 		parser.setRDFHandler( sa );
 		parser.parse( other.getStream(), baseUri );
@@ -55,14 +55,14 @@ public class RdfRepresentation extends OutputRepresentation
 		source = coll;
 	}
 	
-	public RdfSource getSource()
+	public RDFSource getSource()
 	{
 		return source;
 	}
 	
-	public RdfRepresentation( final RdfSource source, final RDFFormat format ) throws RippleException
+	public RDFRepresentation( final RDFSource source, final RDFFormat format ) throws RippleException
 	{
-		super( RdfUtils.findMediaType( format ) );
+		super( RDFUtils.findMediaType( format ) );
 		
 		this.source = source;
 		this.format = format;

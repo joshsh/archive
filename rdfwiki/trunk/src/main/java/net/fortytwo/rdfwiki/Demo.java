@@ -33,7 +33,7 @@ public class Demo
 		sail.initialize();
 		
 		// Add some test data.
-		addRdf( RdfWiki.class.getResourceAsStream( "dummydata.trig" ),
+		addRdf( RDFWiki.class.getResourceAsStream( "dummydata.trig" ),
 				RDFFormat.TRIG, "http://example.org/error/" );
 		
 		SailSelector selector = new SailSelector()
@@ -44,7 +44,7 @@ public class Demo
 			}
 		};
 		
-		new RdfWiki( selector );
+		new RDFWiki( selector );
 	}
 	
 	private static void addRdf( final InputStream is, final RDFFormat format, final String baseUri )
