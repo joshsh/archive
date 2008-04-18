@@ -1,0 +1,2 @@
+*  LinkedDataSail is analogous to the Virtuoso "sponger":
+    http://virtuoso.openlinksw.com/presentations/Virtuoso_Sponger_1/Virtuoso_Sponger_1.html

@@ -1,0 +1,27 @@
+
+
+# No named parameters:
+
+@define sq:
+    dup! mul!.
+
+    
+# This is dumb, because it requires different @define syntax for relations
+# with and without named parameters:
+
+@define sq(x):
+    x x mul!.
+
+    
+# This is better...
+
+@define sq x:
+    x x mul!.
+   
+    
+# This may be best of all, because it looks like a rewrite rule:
+
+@define x sq:
+    x x mul!.
+
+
