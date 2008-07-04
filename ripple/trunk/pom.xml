@@ -1,18 +1,10 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.fortytwo.ripple</groupId>
-  <artifactId>ripple</artifactId>
+  <artifactId>ripple-leftovers</artifactId>
   <version>1</version>
   <packaging>pom</packaging>
   <modules>
-    <module>ripple-base</module>
-    <module>ripple-rdf</module>
-    <module>ripple-linkeddata</module>
-    <module>ripple-core</module>
     <module>restpipe</module>
-    <module>ripple-sesame</module>
-    <module>ripple-neo4j</module>
-    <module>ripple-demo</module>
-    <module>ripple-media</module>
   </modules>
 </project>
