@@ -165,7 +165,7 @@ public class QueryPipeThreaded implements Sink<String, RippleException>
 		};
 
 		// Note: this thread is never terminated unless there is an error.
-		interpreterThread = new Thread( r );
+		interpreterThread = new Thread( r, "for QueryPipeThreaded" );
 		interpreterThread.start();
 	}
 
