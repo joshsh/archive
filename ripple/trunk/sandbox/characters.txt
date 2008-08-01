@@ -1,0 +1,19 @@
+@ -- directive
+# -- comment
+* -- star quantifier
+( -- begin list
+) -- end list
++ -- plus quantifier
+{ -- begin times or range qualifier
+} -- end times or range qualifier
+: -- qname delimiter
+; -- end of continuing query
+. -- end query
+? -- option quantifier
+[ -- begin metadata
+] -- end metadat
+, -- metadata delimiter
+^ -- (part of ^^, for typed literals)
+
+token characters: -_<>/"
+not used: ~`$%&=|'
