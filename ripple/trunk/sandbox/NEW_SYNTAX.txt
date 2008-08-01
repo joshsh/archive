@@ -1,0 +1,102 @@
+@redefine one two second: two .
+0 "one" "two" :second >> popd >> .  # "two"
+
+
+*  uses Restlet
+
+
+
+
+
+
+
+
+# Start Ripple. Give it the location of a Ripple configuration (optional) and
+# the location of a file to save the cache to (also optional).  If the save
+# file already exists, the previously saved cache will be restored.
+./ripple.sh -c example.properties savefile.trig
+
+
+########################################
+# begin Ripple stuff
+########################################
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+# Everyone Tim knows
+<http://www.w3.org/People/Berners-Lee/card#i> foaf:knows >> .
+
+# Pretty much the same thing, but a little more compactly, and also following
+# owl:sameAs links and including Tim himself (uses some proconstructed linked
+# programs)
+:timbl >> :foafStep >> .
+
+# If you only want their names 
+:timbl >> :foafStep >> foaf:name >> unique >> .
+
+# You can follow links in reverse, even from literals
+"Henry Story" foaf:name << .
+
+# Go two steps out from Tim (this will take a while)
+:timbl >> :foafStep >>{2} foaf:name >> unique >> .
+
+# The cache is now written to your save file.  Note: you find some extra stuff
+# in the file (Ripple's library API in RDF, the demo programs which were
+# fetched from ripple.fortytwo.net).  If you started Ripple with the example
+# properties file, the cache metadata will be in an "expanded" format which
+# will be easier for RDF tools to read.
+@quit.
+
+########################################
+# end Ripple stuff
+########################################
+
+:timbl >> :foafStep >>{2} foaf:name >> unique >> .
+
+:timbl >> :foafStep >>* foaf:name >> unique >> .
+
+:timbl >> :foafStep >>? foaf:name >> unique >> .
+
+:timbl >> :foafStep >>+ foaf:name >> unique >> .
+
+
+:timbl >> :foafStep {2}>> foaf:name >> unique >> .
+
+:timbl >> :foafStep *>> foaf:name >> unique >> .
+
+:timbl >> :foafStep ?>> foaf:name >> unique >> .
+
+:timbl >> :foafStep +>> foaf:name >> unique >> .
+
+
+:timbl >> :foafStep <<{2} foaf:name >> unique >> .
+
+:timbl >> :foafStep <<* foaf:name >> unique >> .
+
+:timbl >> :foafStep <<? foaf:name >> unique >> .
+
+:timbl >> :foafStep <<+ foaf:name >> unique >> .
+
+
+:timbl >> :foafStep {2}<< foaf:name >> unique >> .
+
+:timbl >> :foafStep *<< foaf:name >> unique >> .
+
+:timbl >> :foafStep ?<< foaf:name >> unique >> .
+
+:timbl >> :foafStep +<< foaf:name >> unique >> .
+
+
+
+:timbl >> :foafStep >{2}> foaf:name >> unique >> .
+
+:timbl >> :foafStep >*> foaf:name >> unique >> .
+
+:timbl >> :foafStep >?> foaf:name >> unique >> .
+
+:timbl >> :foafStep >+> foaf:name >> unique >> .
+
+
+# Need a symbol for: loop indefinitely
+:timbl >> :foafStep !>> .
+
