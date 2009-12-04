@@ -5,10 +5,21 @@ my projects repository.  It looks as though I had left off in the middle of
 some changes to file names, as I had to fix the #includes in various places to
 get the project to compile.  This is probably from the middle of January, 2005.
 
-# Installing SDL and SDL_image in Ubuntu Dapper:
+# Install flex, bison, SDL and SDL_image in Ubuntu Dapper:
+sudo apt-get install flex
+sudo apt-get install bison
 sudo apt-get install libsdl1.2-dev
 sudo apt-get install libsdl-image1.2
 cd <SDL_image source dir>
 sudo cp SDL_image.h /usr/include/SDL
 sudo ln -s /usr/lib/libSDL_image-1.2.so.0 /usr/lib/libSDL_image.so
+
+# Build everything
+make
+
+# Run SParse
+./sparse
+
+SNPL is no longer an active project, but questions and comments are welcome.
+Please send them to josh@fortytwo.net
 
