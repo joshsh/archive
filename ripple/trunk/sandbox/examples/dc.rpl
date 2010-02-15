@@ -1,92 +1,92 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/>.
 
 @define dcTerms:
-    dc:title
-    dc:creator
-    dc:subject
-    dc:description
-    dc:publisher
     dc:contributor
+    dc:coverage
+    dc:creator
     dc:date
-    dc:type
+    dc:description
     dc:format
     dc:identifier
-    dc:source
     dc:language
+    dc:publisher
     dc:relation
-    dc:coverage
     dc:rights
+    dc:source
+    dc:subject
+    dc:title
+    dc:type
     .
 
 @prefix dcterms: <http://purl.org/dc/terms/>.
 
 @define dctermsTerms:
-    dcterms:audience
-    dcterms:alternative
-    dcterms:tableOfContents
+    dcterms:Box
+    dcterms:DCMIType
+    dcterms:DDC
+    dcterms:DateScheme
+    dcterms:FormatScheme
+    dcterms:IMT
+    dcterms:ISO3166
+    dcterms:ISO639-2
+    dcterms:IdentifierScheme
+    dcterms:LCC
+    dcterms:LCSH
+    dcterms:LanguageScheme
+    dcterms:MESH
+    dcterms:NLM
+    dcterms:Period
+    dcterms:Point
+    dcterms:RFC1766
+    dcterms:RFC3066
+    dcterms:RelationScheme
+    dcterms:SourceScheme
+    dcterms:SpatialScheme
+    dcterms:SubjectScheme
+    dcterms:TGN
+    dcterms:TemporalScheme
+    dcterms:TypeScheme
+    dcterms:UDC
+    dcterms:URI
+    dcterms:W3CDTF
     dcterms:abstract
-    dcterms:created
-    dcterms:valid
+    dcterms:accessRights
+    dcterms:accrualMethod
+    dcterms:accrualPeriodicity
+    dcterms:accrualPolicy
+    dcterms:alternative
+    dcterms:audience
     dcterms:available
-    dcterms:issued
-    dcterms:modified
-    dcterms:extent
-    dcterms:medium
-    dcterms:isVersionOf
-    dcterms:hasVersion
-    dcterms:isReplacedBy
-    dcterms:replaces
-    dcterms:isRequiredBy
-    dcterms:requires
-    dcterms:isPartOf
-    dcterms:hasPart
-    dcterms:isReferencedBy
-    dcterms:references
-    dcterms:isFormatOf
-    dcterms:hasFormat
+    dcterms:bibliographicCitation
     dcterms:conformsTo
-    dcterms:spatial
-    dcterms:temporal
-    dcterms:mediator
+    dcterms:created
     dcterms:dateAccepted
     dcterms:dateCopyrighted
     dcterms:dateSubmitted
     dcterms:educationLevel
-    dcterms:accessRights
-    dcterms:bibliographicCitation
-    dcterms:license
-    dcterms:rightsHolder
-    dcterms:provenance
+    dcterms:extent
+    dcterms:hasFormat
+    dcterms:hasPart
+    dcterms:hasVersion
     dcterms:instructionalMethod
-    dcterms:accrualMethod
-    dcterms:accrualPeriodicity
-    dcterms:accrualPolicy
-    dcterms:SubjectScheme
-    dcterms:DateScheme
-    dcterms:FormatScheme
-    dcterms:LanguageScheme
-    dcterms:SpatialScheme
-    dcterms:TemporalScheme
-    dcterms:TypeScheme
-    dcterms:IdentifierScheme
-    dcterms:RelationScheme
-    dcterms:SourceScheme
-    dcterms:LCSH
-    dcterms:MESH
-    dcterms:DDC
-    dcterms:LCC
-    dcterms:UDC
-    dcterms:DCMIType
-    dcterms:IMT
-    dcterms:ISO639-2
-    dcterms:RFC1766
-    dcterms:URI
-    dcterms:Point
-    dcterms:ISO3166
-    dcterms:Box
-    dcterms:TGN
-    dcterms:Period
-    dcterms:W3CDTF
-    dcterms:RFC3066
-    dcterms:NLM
+    dcterms:isFormatOf
+    dcterms:isPartOf
+    dcterms:isReferencedBy
+    dcterms:isReplacedBy
+    dcterms:isRequiredBy
+    dcterms:isVersionOf
+    dcterms:issued
+    dcterms:license
+    dcterms:mediator
+    dcterms:medium
+    dcterms:modified
+    dcterms:provenance
+    dcterms:references
+    dcterms:replaces
+    dcterms:requires
+    dcterms:rightsHolder
+    dcterms:spatial
+    dcterms:tableOfContents
+    dcterms:temporal
+    dcterms:valid
     .

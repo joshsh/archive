@@ -1,5 +1,6 @@
-# Note: own prefix.
+# Note: own prefixes.
 @prefix geo: <http://www.geonames.org/ontology#>.
+@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 
 @define geoTerms:
     geo:alternateName
@@ -12,8 +13,8 @@
 
 # Alternate place names in various languages.
 <http://sws.geonames.org/5811696/>
-    /<http://www.geonames.org/ontology#alternateName>
-    /xml:lang.
+    geo:alternateName >>
+    xml:lang >>.
 
 
 
@@ -28,4 +29,4 @@
 <http://sws.geonames.org/6446645/>.
 
 # (not dereferenceable)
-<http://sws.geonames.org/6446645/>/owl:sameAs.
+<http://sws.geonames.org/6446645/> owl:sameAs >>.
