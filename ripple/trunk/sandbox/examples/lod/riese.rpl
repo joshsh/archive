@@ -1,0 +1,10 @@
+
+
+# Austria
+<http://riese.joanneum.at/dimension/geo/at> .
+
+# -> GeoNames
+# Note: no reciprocal link.
+<http://riese.joanneum.at/dimension/geo/at> owl:sameAs >> .
+
+

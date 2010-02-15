@@ -1,0 +1,42 @@
+# Note: own prefixes.
+@prefix resist: <http://resex.rkbexplorer.com/ontologies/resist#> .
+@prefix coref: <http://www.rkbexplorer.com/ontologies/coref#> .
+@prefix aktors: <http://www.aktors.org/ontology/portal#> .
+
+<http://wiki.rkbexplorer.com/id/resist> .
+<http://wiki.rkbexplorer.com/id/resist> aktors:has-project-member >> .
+
+<http://wiki.rkbexplorer.com/id/resist>
+    aktors:has-project-member >>
+    aktors:works-for >> distinct >> .
+
+
+# find co-workers
+<http://wiki.rkbexplorer.com/id/aad_vanmoorsel>
+    aktors:works-for >>
+    aktors:works-for << .
+
+    
+    
+    
+
+### linkage ####################################################################
+
+
+
+
+
+### ba #########################################################################
+
+# people are typed (additionally) as owl:Ontology, e.g.
+<http://wiki.rkbexplorer.com/id/aad_vanmoorsel>.
+
+
+### old ########################################################################
+
+# These don't work with Sesame because the document URI is the same as the
+# non-information resource URI.
+<http://nsf.rkbexplorer.com/id/person-6092a2a72319fc9437583fb2d04733ea>
+<http://southampton.rkbexplorer.com/id/eprints-13347>
+
+

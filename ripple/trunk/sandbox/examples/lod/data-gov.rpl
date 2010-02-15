@@ -1,0 +1,49 @@
+
+
+
+# Defined in the data set
+@prefix property: <http://data-gov.tw.rpi.edu/vocab/p/> .
+@prefix vocab: <http://data-gov.tw.rpi.edu/vocab/> .
+
+# Defined by me
+@prefix raw: <http://data-gov.tw.rpi.edu/raw/401/index.rdf#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix twc: <http://data-gov.tw.rpi.edu/2009/data-gov-twc.rdf#> .
+@prefix vocab401: <http://data-gov.tw.rpi.edu/vocab/p/401/> .
+
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+
+raw:me .
+
+# Can't find all of the terms in this vocabulary, as it uses the slash convention.
+vocab401: .
+vocab401:num1983 .
+
+wiki:Dataset_401.
+
+
+# These URIs are good.
+twc:DataEntry .
+
+# These are good.
+property:usesProperty .
+
+
+
+URIs like <http://data-gov.tw.rpi.edu/vocab/p/401/num1995> aren't accessible in <http://data-gov.tw.rpi.edu/raw/401/index.rdf>, although they are dereferenceable themselves (resolving to individual documents).
+
+
+1995 -- rdf:Property
+401/num1995 -- owl:ObjectProperty
+
+
+
+
+Not dereferenceable:
+<http://data-gov.tw.rpi.edu/raw/401/OMB_PBD_Auth8.rdf#entry-1727>
+(described in):
+http://data-gov.tw.rpi.edu/raw/401/OMB_PBD_Auth00008.rdf
+
+
+

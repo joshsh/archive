@@ -1,0 +1,29 @@
+
+
+# A film character
+<http://data.linkedmdb.org/resource/film_character/943> .
+
+# A film.
+<http://data.linkedmdb.org/resource/film/10161> .
+
+# A film location
+<http://data.linkedmdb.org/resource/film_location/100> .
+# back-links to movies
+<http://data.linkedmdb.org/resource/film_location/100> movie:location << .
+
+
+# -> Flickr Wrapper
+# Note: no photos
+<http://data.linkedmdb.org/resource/film/10161> dbpprop:hasPhotoCollection >> .
+
+# -> DBpedia, YAGO (?)
+<http://data.linkedmdb.org/resource/film/10161> owl:sameAs >> .
+# lots of pics in DBpedia
+<http://data.linkedmdb.org/resource/film/10161> owl:sameAs >> foaf:depiction >> .
+
+
+# -> GeoNames
+# Note: isn't it strange to find geo information for movies, and not for locations?
+# Note: very coarse-grained locations (e.g. USA)
+<http://data.linkedmdb.org/resource/film/856> foaf:based_near >> .
+

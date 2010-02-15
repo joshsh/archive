@@ -1,0 +1,15 @@
+
+@prefix label: <http://purl.org/net/vocab/2004/03/label#> .
+@prefix ov: <http://open.vocab.org/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2008/05/skos#> .
+@prefix status: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+
+ov:category.
+ov:depicts.
+ov:similarTo.
+ov:studies.
+ov:uses.
+
+

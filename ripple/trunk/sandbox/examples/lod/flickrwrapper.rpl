@@ -1,0 +1,19 @@
+
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+<http://dbpedia.org/resource/Brandenburg_Gate>.
+
+# This gets you one image.
+<http://dbpedia.org/resource/Brandenburg_Gate>/foaf:depiction.
+
+# This gets you into flickrwrappr...
+# Note: the property URI is not dereferenceable.
+<http://dbpedia.org/resource/Brandenburg_Gate> /<http://dbpedia.org/property/hasPhotoCollection>.
+
+# ...now check for depictions again, and you get a number of images.
+<http://dbpedia.org/resource/Brandenburg_Gate>/foaf:depiction.
+
+
+
+
+<http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Brandenburg_Gate>.

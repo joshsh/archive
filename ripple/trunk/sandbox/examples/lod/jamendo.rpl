@@ -1,0 +1,26 @@
+@prefix mo: <http://purl.org/ontology/mo/> .
+@prefix tags: <http://www.holygoat.co.uk/owl/redwood/0.1/tags/> .
+
+<http://dbtune.org/jamendo/artist/5> .
+
+# -> Zitgist music
+<http://dbtune.org/jamendo/artist/5> owl:sameAs >> .
+
+# -> GeoNames
+<http://dbtune.org/jamendo/artist/5> foaf:based_near >> .
+
+<http://dbtune.org/jamendo/artist/5> foaf:made >> .
+<http://dbtune.org/jamendo/artist/5> foaf:made >> tags:taggedWith >> .
+<http://dbtune.org/jamendo/artist/5> foaf:made >> mo:track >> .
+<http://dbtune.org/jamendo/artist/5> foaf:made >> mo:image >> .
+
+# -> Zitgist music
+<http://dbtune.org/jamendo/artist/5> foaf:made >> owl:sameAs >> .
+
+[...]
+
+
+
+
+
+
