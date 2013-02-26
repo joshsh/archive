@@ -77,3 +77,67 @@
 <http://www.w3.org/2004/02/skos/extensions#broaderInstantive>.
 <http://www.w3.org/2004/02/skos/extensions#narrowerInstantive>.
 
+
+################################################################################
+# SKOS crawler for Eric
+
+# method 1 #############################
+
+@define skosObjectProperties:
+    skos:altLabel
+    skos:broadMatch
+    skos:broader
+    skos:broaderTransitive
+    skos:changeNote
+    skos:closeMatch
+    skos:definition
+    skos:editorialNote
+    skos:exactMatch
+    skos:example
+    skos:hasTopConcept
+    skos:hiddenLabel
+    skos:historyNote
+    skos:inScheme
+    skos:mappingRelation
+    skos:member
+    skos:memberList
+    skos:narrowMatch
+    skos:narrower
+    skos:narrowerTransitive
+    skos:note
+    skos:prefLabel
+    skos:related
+    skos:relatedMatch
+    skos:scopeNote
+    skos:semanticRelation
+    skos:topConceptOf
+    .
+
+@define r skosStep:
+    r :skosObjectProperties each >> apply >>
+    distinct >> .
+
+
+# method 2 #############################
+
+@define s p o g skosObject:
+    o
+    (p toString >> "http://www.w3.org/2004/02/skos/core#" startsWith >>) require >> .
+
+@define r skosStep:
+    r links >>
+    :skosObject >>
+    distinct >> .
+
+
+# (FOAF test) ##########################
+
+@define s p o g foafObject:
+    o
+    (p toString >> "http://xmlns.com/foaf/0.1/" startsWith >>) require >> .
+
+@define r foafStep:
+    r links >>
+    :foafObject >>
+    distinct >> .
+    

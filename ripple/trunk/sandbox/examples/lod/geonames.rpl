@@ -30,3 +30,24 @@
 
 # (not dereferenceable)
 <http://sws.geonames.org/6446645/> owl:sameAs >>.
+
+
+
+
+@define beijing: <http://dbpedia.org/resource/Beijing> .
+
+@prefix geonames: <http://www.geonames.org/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+:beijing >> owl:sameAs? >> geonames:parentFeature* >> geonames:name >> .
+
+@define place hierarchy:
+    place owl:sameAs? >>
+    geonames:parentFeature* >>
+    geonames:name >> .
+    
+:beijing >> :hierarchy >> .
+
+@define spokane: <http://sws.geonames.org/5811696/> .
+
+:spokane >> :hierarchy >> .

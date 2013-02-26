@@ -1,3 +1,6 @@
+# SPARQL endpoint: http://dbpedia.org/sparql
+
+
 # Some DBPedia resources.
 <http://dbpedia.org/resource/Agatha_Christie>.
 <http://dbpedia.org/resource/Innsbruck>.
